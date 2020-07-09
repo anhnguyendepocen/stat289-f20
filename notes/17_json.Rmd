@@ -322,11 +322,10 @@ the `read_lines` function. Typically JSON data is sent without an extra
 "newline" character at the end in order to save space.
 
 ```{r, echo=FALSE}
-json_text <- read_lines(file.path("pageview_cache", "apple.json"))
+json_text <- read_lines(file.path("data", "src", "wiki_pageviews", "apple.json"))
 ```
 ```{r, eval=FALSE}
 json_text <- read_lines(url)
-json_text
 ```
 
 The result is a string containing JSON data. We can parse this using `parse_json`
@@ -389,13 +388,13 @@ The function `sm_check_download` can be used to check if a file exists locally,
 and download the file otherwise. It has arguments: `src` for the location of
 the URL and `dest` for the local location where the file is found. Here, we
 will use this function to store all of the json pageview files for our dataset
-in a directory called "pageview_cache".
+in a directory called "wiki_parse".
 
 ```{r}
 for (item in all_items)
 {
   src_url <- paste0(base_url, options, item)  
-  dest_path <- file.path("pageview_cache", paste0(item, ".json"))
+  dest_path <- file.path("data", "src", "wiki_pageviews", paste0(item, ".json"))
 
   sm_check_download(src = src_url, dest = dest_path)
 }
@@ -410,7 +409,7 @@ containing all of the data
 page_views_all <- NULL
 for (item in all_items)
 {
-  dest_path <- file.path("pageview_cache", paste0(item, ".json"))
+  dest_path <- file.path("data", "src", "wiki_pageviews", paste0(item, ".json"))
   obj <- read_json(dest_path)
 
 	views <- unlist(obj$query$pages[[1]]$pageviews)
