@@ -1,0 +1,101 @@
+page,link
+Apple,Banana
+Asparagus,Onion
+Asparagus,Chicken
+Asparagus,Shrimp
+Asparagus,Beef
+Asparagus,Tomato
+Avocado,Pear
+Avocado,Banana
+Avocado,Corn
+Avocado,Lime
+Avocado,Lemon
+Avocado,Celery
+Avocado,Lettuce
+Banana,Potato
+Banana,Mushroom
+Beef,Pork
+Beef,Milk
+Broccoli,Cabbage
+Broccoli,Cauliflower
+Cabbage,Broccoli
+Cabbage,Cauliflower
+Cabbage,Potato
+Carrot,Onion
+Carrot,Celery
+Cauliflower,Broccoli
+Cauliflower,Cabbage
+Cheese,Milk
+Cheese,Lamb
+Cheese,Celery
+Chicken,Turkey
+Clam,Oyster
+Clam,Scallop
+Cod,Haddock
+Cod,Lobster
+Corn,Quinoa
+Corn,Potato
+Cucumber,Corn
+Grapefruit,Orange
+Grapefruit,Grape
+Grapefruit,Lime
+Grapefruit,Lemon
+Halibut,Cod
+Halibut,Flounder
+Haddock,Cod
+Lemon,Lime
+Lemon,Grapefruit
+Lemon,Orange
+Lemon,Apple
+Lemon,Banana
+Lemon,Avocado
+Lime,Lemon
+Lime,Grapefruit
+Lime,Orange
+Milk,Yogurt
+Milk,Sour Cream
+Oat,Mushroom
+Oat,Corn
+Onion,Cheese
+Onion,Carrot
+Orange,Grapefruit
+Orange,Lemon
+Orange,Lime
+Oyster,Lemon
+Peach,Plum
+Pear,Apple
+Pear,Banana
+Plum,Peach
+Pork,Apple
+Pork,Beef
+Pork,Lamb
+Salmon,Catfish
+Scallop,Oyster
+Scallop,Clam
+Shrimp,Lobster
+Sour Cream,Milk
+Strawberry,Yogurt
+Strawberry,Apple
+Sweet Potato,Potato
+Sweet Potato,Sour Cream
+Sweet Potato,Beef
+Sweet Potato,Lime
+Swordfish,Tuna
+Tangerine,Orange
+Tomato,Bell Pepper
+Tomato,Cucumber
+Tomato,String Bean
+Tomato,Avocado
+Tomato,Potato
+Tomato,Apple
+Tomato,Banana
+Tomato,Asparagus
+Potato,Corn
+Potato,Tomato
+Potato,Sweet Potato
+Potato,Yogurt
+Yogurt,Milk
+Yogurt,Lamb
+Yogurt,Onion
+Yogurt,Cucumber
+Yogurt,Pineapple

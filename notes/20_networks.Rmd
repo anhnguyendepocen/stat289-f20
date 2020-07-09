@@ -1,0 +1,536 @@
+---
+title: "20. Networks"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(cleanNLP)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+page_text <- read_csv(file.path("data", "page_text.csv"))
+```
+
+## Page Links
+
+In this chapter we will start by working with network data taken from Wikipedia.
+Specifically, we took all of the English Wikipedia pages associated with
+each of the food items in the `foods` dataset. Wikipedia pages contain many
+internal links between pages; we collected information about each time one of
+the pages in our dataset provided a link to another page in our collection.
+We will explore how to do produce this dataset using R code in Chapter 18.
+Only links within the main body of the text were used.
+
+The resulting dataset contains one row for each detected link. The two variables
+in the dataset indicate the page the link was found on (`page`) and the name
+of the page that was linked to. Here is the full dataset:
+
+```{r, message=FALSE}
+page_citation <- read_csv(file.path("data", "page_citation.csv"))
+page_citation
+```
+
+Looking at the top of the dataset, which is arranged by the page name, we see that
+the Wikipedia page for "Apple" has a link to "Banana" but no other pages. Asparagus,
+on the other hand, links to five other food items.
+
+We can use grouping and summarizing functions to see how often each page is linked
+to. Arranging these in order gives some understanding of which pages are more
+centrally located in our dataset.
+
+```{r}
+page_citation %>%
+  group_by(link) %>%
+  summarize(sm_count()) %>%
+  arrange(desc(count))
+```
+
+However, counts can only get us so far. These say nothing, for example, about how easily
+we can get hop between two pages by following 2, 3, or 4 links. In order to understand
+the dataset we need a way of visualizing and modelling all of the connections at once.
+This requires treating the dataset as a network (or graph).
+
+A graph consists of a collection of objects (here, pages) and a collection of edges
+between those objects (here, internal links).  An easy way to describe a network is
+with an object that looks exactly like our dataset `page_citation`, called an edge
+list, that describes pairs of objects that are linked together.
+
+The **smodels** package provides an easy way of taking an edge list and returning
+structured data the allows us to understand the dataset as a network. If we apply
+the function `sm_graph_layout` to the edge list, an R object containing two elements
+are returned. Splitting these off requires using the dollar sign notation, as follows,
+and results in two datasets.
+
+```{r}
+graph <- sm_graph_layout(page_citation)
+node <- graph$node
+edge <- graph$edge
+```
+
+The node dataset contains extracted information about each of the objects in our
+collection. We will describe each of these, in turn, throughout the remainder of
+this chapter.
+
+```{r}
+node
+```
+
+The first column gives a label for the row. In the next two columns, named `x` and `y`,
+is a computed way to layout the objects in two-dimensions that maximizes linked pages
+being close to one another while minimizing the amount that all of the nodes are
+bunched together. There is no exact meaning of the individual variables; rather, its
+the relationships that they show that are interesting.
+
+Using the first three variables, we can plot the pages as a scatter plot with labels
+to see what pages appear to be closely related to one another.
+
+```{r}
+node %>%
+  ggplot() +
+    geom_point(aes(x = x, y = y)) +
+    geom_text_repel(aes(x = x, y = y, label = id)) +
+    theme_void()
+```
+
+Taking a look at the plot reveals some patterns that would match our intution. For example,
+the seafood is mostly clustered together the upper-right of the plot and the vegatables are
+together on the left of the plot. The relationships in this plot are learned by taking into
+account which pages are linked to each other. It would be helpful to additionally put these
+links onto the plot as well. This is where the `edge` dataset becomes useful.
+
+The edge dataset contains one row for each edge in the dataset. The dataset has four columns
+These describe the `x` and `y` values of one node in the edge and variables `xend` and `yend`
+to indicate where in the scatterplot the ending point of the edge is.
+
+```{r}
+edge
+```
+
+We can add edges into the plot by adding a geom layer of type `geom_segment`. It takes
+four aesthetics, named exactly the same as in `edge` dataset. The plot gets busy with
+all of these lines, so we will set the opacity of them lower so as to not cluter the
+visual space with the connections.
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_point() +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_text_repel(aes(label = id)) +
+    theme_void()
+```
+
+We now see the underlying data that describes the plot. Notice that here we are not
+taking the direction of the links into account. In one of the subsequent sections
+we will see how to plot the segements as arrows to indicate the direct that the links
+occur in.
+
+## Network Centrality
+
+One of the core questions that arise when working with network data is trying to
+identify the relative centrality of each node in the network. Several of the derived
+measurements in the `nodes` dataset capture various forms of centrality. In this
+section we will color the network diagram with these measurements and discuss what
+properties each of them measures.
+
+A component of a network is a collection of all the nodes that can be reached by
+following along the edges. The `nodes` dataset contains an integer id called
+`component` describing each of the components in the graph. These are ordered by
+reverse size, so component 1 will always be the largest (or at least, tied for
+the largest) component of the graph. Coloring the graph by component reveals
+four part of the graph; we convert the component variable to a factor to force
+ggplot to use a categorical scale.
+
+```{r}
+node %>%
+  mutate(component = factor(component)) %>%
+  ggplot(aes(x, y)) +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_point(aes(color = component), size = 5) +
+    theme_void()
+```
+
+This component number gives a very coarse measurement of how central a node is. We
+can say that, in some way, all of the nodes in component 1 are more central than
+the other 6 orphaned pages. Note that having one large component and several small ones
+is a typical features of many naturally occuring networks.
+
+Another measurement of centrality is a node's degree. The degree of a node
+is the number of neighbors it has; in other words, it counts how many edges
+the node is a part of. The degree of each node has been computed in the `node`
+table. This is similar to the counts that be produced in the
+first section by counting occurances in the raw edge list. Ploting degree on
+our plot shows that the nodes with the highest degree do seem to sit in the
+middle of the plot and correspond to a high number of having a large number
+of edges.
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_point(aes(color = degree), size = 5) +
+    scale_color_binned(type = "viridis", n.breaks = 15) +
+    theme_void()
+```
+
+As mentioned above, the degree of a node does not take into account anything
+other than direct neighbors. A more holistic measurement is given by a quantity
+called the *eigenvalue centrality*, which is provided in the `node` table. This
+centrality value provides a score for each node that is proportional to the sum
+of the scores of its neighbors. Mathematically, it assigns a set of scores $s_j$
+for each node such that:
+
+$$ s_j = \lambda \cdot \sum_{i \in \text{Neighbors{j}}} s_i $$
+
+If you have taken a course in linear algebra and are familiar with the eigenvalues
+of a matrix, know that the score can be efficently calculated by an eigenvalue
+equation. If not, just know that it's a score that takes into account all of the
+nodes at once. The eigenvalue score is, by convention, scales so that the largest
+score is 1. It is only possible to describe the eigenvalue centrality scores for
+a connected set of nodes on a graph, so the computation is done individually for
+each component. Plotting the scores on the plot shows a slightly different pattern
+compared to the degree centrality scores.
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_point(aes(color = eigen), size = 5) +
+    scale_color_binned(type = "viridis", n.breaks = 15) +
+    theme_void()
+```
+
+The biggest difference is that the eigenvalue centrality is more concentrated
+on one set of connections, whereas degree centrality is more spread out.
+
+Another measurement of centrality is given by the *closeness centrality* score.
+For each node in the graph, consider the minimim number of edges that are needed
+to from this node to any other node within its component. Adding the recipricol
+of these scores together gives a measurment of how close a node is to all of the
+other nodes in the graph. This is the *closeness centrality* score for a node
+and is given as the variable `close` in our table. Notice that the scale of the
+closeness centrality score will be very different depending on the size of a
+component, so in our plot we will filter to include only those nodes in the
+largest component.
+
+```{r}
+node %>%
+  filter(component %in% c(1)) %>%
+  ggplot(aes(x, y)) +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_point(aes(color = close), size = 5) +
+    scale_color_viridis_c() +
+    theme_void()
+```
+
+Notice that these scores are slightly different than the eigenvalue centrality
+scores, with the most central node moving from the "Lemon" page to the "Tomato"
+page.
+
+The final measurement of centrality we have in our table, *betweenness centrality*
+also comes from considering minimal paths. For every two nodes in a connected
+component, consider all of the possible ways to go from one to the other along
+edges in the graph. Then, consider all of the paths (there may be only one)
+between the two nodes that require a minimal number of hops. The betweenness
+centrality scores measures how many of these minimal paths go through each node
+(there is some normalization to account for the case when there are many minimal
+paths, so the counts are not exact integers). This score is stored in the variable
+`between`.
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_point(aes(color = between), size = 5) +
+    scale_color_viridis_c() +
+    theme_void()
+```
+
+The betweeness score here, as is often the case, tends to be have a different
+pattern than the other centrality scores. It gives a high score to bridges
+between different parts of the network, rather than giving high weight to
+how central a node is within a particular cluster. In the next section we will
+see that this is a useful property for understanding the structure of a network.
+
+## Centrality Applications
+
+While it is instructive to color the graph plots above with the centrality scores,
+most applications of graph centrality focus on studying the `node` table directly
+to understand the structure created by a set of relationships. For example, we
+could sort the node table by component and eigenvalue scores to get a sense of
+what pages are the most central to the graph. Here, for example, we see that
+the eigenvalue centrality is largest for the citrus fruits ("Lemon", "Lime",
+"Grapefruit", and "Orange"):
+
+```{r}
+node %>%
+  arrange(component, desc(eigen))
+```
+
+Looking at a two-way relationship, we can dig deeper into the way that the graph is structured.
+For example, take a plot of the eigenvalue and betweeness scores for the pages:
+
+```{r}
+node %>%
+  filter(component %in% c(1)) %>%
+  ggplot() +
+    geom_point(aes(x = eigen, y = between)) +
+    geom_text_repel(aes(x = eigen, y = between, label = id))
+```
+
+The pages with a high betweeness score but relatively low eigenvalue score ("Asparagus",
+"Shrimp", "Potato", "Tomato", "Lobster") indicate pages that links different parts of the
+graph together. Tomato is often thought of as sitting inbetween fruits and vegetables,
+for example. The Asparagus happens to mention that it is frequently "stir-fried with
+chicken, shrimp, or beef", causing it to be a gatekeeper between vegetables and the
+meats.
+
+Plotting eigenvalue centrality and closeness reveals additional patterns in the dataset.
+
+```{r}
+node %>%
+  filter(component %in% c(1)) %>%
+  ggplot() +
+    geom_point(aes(x = eigen, y = close)) +
+    geom_text_repel(aes(x = eigen, y = close, label = id))
+```
+
+As seen in the layout plots, this graph shows that the citrus fruits have very high eigenvalue
+scores but only modest closeness. Nodes that have high closeness scores but modest eigenvalue
+scores include "Beef" and "Yogurt", which are central to their only clusters of the meats and
+diary products, respectively.
+
+## Network Clusters
+
+Another algorithm that we can perform on a graph is that of clustering. Here,
+we try to split the nodes into groups such that a large number of the edges are
+between nodes within a group rather than across groups. Here is a visualization
+of the clusters detected on our graph:
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_point(aes(color = cluster), size = 5) +
+    theme_void()
+```
+
+We can paste together the nodes within a cluster to try to further understand the
+internal structure of the relationships.
+
+```{r}
+node %>%
+  filter(component %in% 1) %>%
+  group_by(cluster) %>%
+  summarize(sm_paste(id)) %>%
+  select(id_paste)
+```
+
+Taking our knowledge of the underlying food types, these clusters line up well with
+our understanding of what food types would be related to one another. The fish are
+grouped into two clusters. The shelfish are placed in a different cluster (with only
+Lobster left-out and placed with the fish). All of the citric fruits are put together.
+The third cluster is a bit more esoteric, as it contains some vegetables, some
+meat, and some dairy products.
+
+## Directed Networks
+
+At the start of the chapter, we noted that our graph assumed that edges did not have
+a direction. It is possible to compute graph metrics that take this relationship into
+account by setting the `directed` argument of `sm_graph_layout` to `TRUE`.
+
+```{r}
+graph <- sm_graph_layout(page_citation, directed = TRUE)
+node <- graph$node
+edge <- graph$edge
+```
+
+The `node` table contains a slightly different set of measurements. Closeness
+centrality is no longer available; eigenvalue centrality is still computed,
+but is done so without using the directions of the edges. There are now three
+different degree counts: the out-degree (number of links on the page) the
+in-degree (number of links into a page), and the total of these two.
+
+```{r}
+node
+```
+
+To visualize the directed graph, we add an `arrow` argument to the `geom_segement`
+layer. This shows, for example, that "Peach" and "Plum" both link to each other
+whereas "Salmon" links to "Catfish", but not vice-versa.
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_point(alpha = 0.2) +
+    geom_text_repel(aes(label = id), alpha = 0.5) +
+    geom_segment(
+      aes(xend = xend, yend = yend),
+      data = edge,
+      alpha = 0.7,
+      arrow = arrow(length = unit(0.02, "npc"))
+    ) +
+    theme_void()
+```
+
+An interesting plot with the data from the directed graph is to show the in-degree
+as a function of the out-degree.
+
+```{r}
+node %>%
+  filter(component %in% c(1)) %>%
+  ggplot() +
+    geom_point(aes(x = degree_out, y = degree_in)) +
+    geom_text_repel(aes(x = degree_out, y = degree_in, label = id))
+```
+
+This shows that some pages from our last analysis, such as "Tomato", are primarily
+central because they link to many other pages. In comparison, other central pages
+such as "Lime" and "Apple" are mostly connected by links into the pages.
+
+## Cocitation Network
+
+The graph structure we have been working with is a form of graph called a "citation
+network". Pages are join whenever one links to another. This is a popular method in
+understanding academic articles, friendship networks on social media (i.e., tracking
+mentions on Twitter), or investigating the relative importance of court cases. There
+are some drawbacks of using citation counts, however. They are sensistive to the
+time-order of publication, they are effected by the relative length of each document,
+and they are easily effected by small changes. For example, we above saw the large
+effect that one sentence about stir-fry dishes on the "Asparagus" page had in
+increasing that page's overall centrality score.
+
+A co-citation network is a method of showing links across a citation network while
+avoiding some of the pitfalls that arise when using direct links. A co-citation is
+formed between two pages whenever a third entry cites *both* of them. The idea is
+that if a third source talks about two sources in the same reference, there is
+likely a relationship between the documents.
+
+We created a co-citation dataset from Wikipedia by first downloading all of the
+pages linked to from any food pages in our collection. We then counted how often
+any pair of pages in our dataset were both linked to from the same source. The
+dataset is available here; duplicate rows were not removed, but the `page1` and
+`page2` were sorted so that `page1` always comes alphabetically before `page2`.
+
+```{r, message=FALSE}
+page_cocitation <- read_csv(file.path("data", "page_cocitation.csv"))
+page_cocitation
+```
+
+Counting the number of times each pair occurs can be done by grouping the table
+and using the `sm_count` summary function.
+
+```{r}
+page_cocitation %>%
+  group_by(page1, page2) %>%
+  summarize(sm_count())
+```
+
+When working with co-citations, it is useful to only include links between two
+pages when the count is above some threshold. Here, we use a cut-off of 6 pages.
+Notice that co-citations are fundamentally undirected relationships.
+
+```{r}
+graph <- page_cocitation %>%
+  group_by(page1, page2) %>%
+  summarize(sm_count()) %>%
+  filter(count >= 6) %>%
+  sm_graph_layout()
+
+node <- graph$node
+edge <- graph$edge
+```
+
+Plotting the graph, we see that there is a very different structure compared to
+the citation plot.
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_point() +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_text_repel(aes(label = id)) +
+    theme_void()
+```
+
+In the largest component, there are more links and less clustering
+across types of foods. The exercies include more examples to try to
+become familiar with the structure of these co-citation networks and
+how they tend to differ from citation networks.
+
+## Distance Network
+
+```{r, message=FALSE}
+token <- read_rds("cache/tokens.rds")
+edges <- token %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_angle_distance()  %>%
+  filter(document1 != document2) %>%
+  group_by(document1) %>%
+  arrange(distance) %>%
+  slice_head(n = 3) %>%
+  select(document1, document2)
+```
+
+A final type of network that we will explore here is a distance network. We
+start by computing the angle distance between the term-frequency scores for
+the text contained on each food's Wikipedia page (see chapter 11). We then
+select edges by taking the closest 100 pairs of pages based on the texts.
+
+```{r}
+edges <- token %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_angle_distance()  %>%
+  filter(document1 != document2) %>%
+  arrange(distance) %>%
+  slice_head(n = 100) %>%
+  select(document1, document2)
+```
+
+Using these edges, we can create a graph network. As with co-citations, it would
+not make sense to use a directed network for the distance-based graph.
+
+```{r}
+graph <- sm_graph_layout(edges)
+node <- graph$node
+edge <- graph$edge
+```
+
+Looking at the clusters formed by the distance graph shows a grouping of
+the foods that very closely matches our understanding of the food types:
+
+```{r}
+node %>%
+  group_by(cluster) %>%
+  summarize(sm_paste(id))
+```
+
+Plotting the network shows that the structure is, again, different than the
+citation and co-citation networks. Rather than one large dominant component,
+there are several smaller, but tightly connected, components.
+
+```{r}
+node %>%
+  ggplot(aes(x, y)) +
+    geom_point() +
+    geom_segment(aes(xend = xend, yend = yend), data = edge, alpha = 0.1) +
+    geom_text_repel(aes(label = id)) +
+    theme_void()
+```
+
+After axploring many examples of citation, co-citation, and distance networks,
+the typically patterns of each will become clear. Often the structure of a large
+network becomes apparent only after looking at several different versions of
+possible graphs.

@@ -1,0 +1,2052 @@
+page1,page2
+Broccoli,Kiwi
+Bell Pepper,Kiwi
+Bell Pepper,Broccoli
+Kiwi,Strawberry
+Broccoli,Strawberry
+Bell Pepper,Strawberry
+Lemon,Strawberry
+Kiwi,Lemon
+Broccoli,Lemon
+Bell Pepper,Lemon
+Apple,Banana
+Apple,Grape
+Banana,Grape
+Cucumber,Grape
+Bell Pepper,Grape
+Apple,Lemon
+Banana,Lemon
+Grape,Lemon
+Cucumber,Lemon
+Bell Pepper,Lemon
+Grapefruit,Lemon
+Kiwi,Lemon
+String Bean,Lemon
+Apple,Orange
+Banana,Orange
+Grape,Orange
+Lemon,Orange
+Corn,Orange
+Cucumber,Orange
+Bell Pepper,Orange
+Grapefruit,Orange
+Kiwi,Orange
+String Bean,Orange
+Apple,Strawberry
+Banana,Strawberry
+Grape,Strawberry
+Lemon,Strawberry
+Orange,Strawberry
+Corn,Strawberry
+Cucumber,Strawberry
+Bell Pepper,Strawberry
+Pear,Strawberry
+Pineapple,Strawberry
+Grapefruit,Strawberry
+Kiwi,Strawberry
+Peach,Strawberry
+String Bean,Strawberry
+Apple,Corn
+Banana,Corn
+Grape,Corn
+Lemon,Corn
+Cucumber,Corn
+Bell Pepper,Corn
+Grapefruit,Corn
+Kiwi,Corn
+String Bean,Corn
+Apple,Tomato
+Banana,Tomato
+Grape,Tomato
+Lemon,Tomato
+Orange,Tomato
+Strawberry,Tomato
+Corn,Tomato
+Cucumber,Tomato
+Bell Pepper,Tomato
+Pear,Tomato
+Pineapple,Tomato
+Grapefruit,Tomato
+Kiwi,Tomato
+Peach,Tomato
+String Bean,Tomato
+Apple,Cucumber
+Banana,Cucumber
+Bell Pepper,Cucumber
+Apple,Bell Pepper
+Banana,Bell Pepper
+Apple,Pear
+Banana,Pear
+Grape,Pear
+Lemon,Pear
+Orange,Pear
+Corn,Pear
+Cucumber,Pear
+Bell Pepper,Pear
+Grapefruit,Pear
+Kiwi,Pear
+Peach,Pear
+String Bean,Pear
+Apple,Pineapple
+Banana,Pineapple
+Grape,Pineapple
+Lemon,Pineapple
+Orange,Pineapple
+Corn,Pineapple
+Cucumber,Pineapple
+Bell Pepper,Pineapple
+Pear,Pineapple
+Grapefruit,Pineapple
+Kiwi,Pineapple
+Peach,Pineapple
+String Bean,Pineapple
+Apple,Grapefruit
+Banana,Grapefruit
+Grape,Grapefruit
+Cucumber,Grapefruit
+Bell Pepper,Grapefruit
+Apple,Kiwi
+Banana,Kiwi
+Grape,Kiwi
+Cucumber,Kiwi
+Bell Pepper,Kiwi
+Grapefruit,Kiwi
+String Bean,Kiwi
+Apple,Peach
+Banana,Peach
+Grape,Peach
+Lemon,Peach
+Orange,Peach
+Corn,Peach
+Cucumber,Peach
+Bell Pepper,Peach
+Grapefruit,Peach
+Kiwi,Peach
+String Bean,Peach
+Apple,Yogurt
+Banana,Yogurt
+Grape,Yogurt
+Lemon,Yogurt
+Orange,Yogurt
+Strawberry,Yogurt
+Corn,Yogurt
+Tomato,Yogurt
+Cucumber,Yogurt
+Bell Pepper,Yogurt
+Pear,Yogurt
+Pineapple,Yogurt
+Grapefruit,Yogurt
+Kiwi,Yogurt
+Peach,Yogurt
+String Bean,Yogurt
+Apple,String Bean
+Banana,String Bean
+Grape,String Bean
+Cucumber,String Bean
+Bell Pepper,String Bean
+Grapefruit,String Bean
+Oat,Plum
+Bell Pepper,Carrot
+Carrot,Celery
+Bell Pepper,Celery
+Carrot,Tomato
+Celery,Tomato
+Sweet Potato,Tomato
+Bell Pepper,Tomato
+Corn,Tomato
+Lettuce,Tomato
+Carrot,Sweet Potato
+Celery,Sweet Potato
+Bell Pepper,Sweet Potato
+Corn,Sweet Potato
+Lettuce,Sweet Potato
+Carrot,Corn
+Celery,Corn
+Bell Pepper,Corn
+Lettuce,Corn
+Carrot,Lettuce
+Celery,Lettuce
+Bell Pepper,Lettuce
+Cucumber,Grape
+Banana,Grape
+Grape,Tomato
+Cucumber,Tomato
+Banana,Tomato
+Strawberry,Tomato
+Potato,Tomato
+Orange,Tomato
+Lemon,Tomato
+Peach,Tomato
+Plum,Tomato
+Banana,Cucumber
+Grape,Strawberry
+Cucumber,Strawberry
+Banana,Strawberry
+Potato,Strawberry
+Orange,Strawberry
+Lemon,Strawberry
+Peach,Strawberry
+Plum,Strawberry
+Grape,Potato
+Cucumber,Potato
+Banana,Potato
+Orange,Potato
+Lemon,Potato
+Peach,Potato
+Plum,Potato
+Grape,Orange
+Cucumber,Orange
+Banana,Orange
+Lemon,Orange
+Grape,Lemon
+Cucumber,Lemon
+Banana,Lemon
+Grape,Peach
+Cucumber,Peach
+Banana,Peach
+Orange,Peach
+Lemon,Peach
+Grape,Plum
+Cucumber,Plum
+Banana,Plum
+Orange,Plum
+Lemon,Plum
+Peach,Plum
+Avocado,Tomato
+Sweet Potato,Tomato
+Avocado,Sweet Potato
+Cabbage,Lettuce
+Cauliflower,Lettuce
+Broccoli,Lettuce
+Avocado,Lettuce
+Kiwi,Lettuce
+Grape,Lettuce
+Broccoli,Cabbage
+Avocado,Cabbage
+Cabbage,Cauliflower
+Broccoli,Cauliflower
+Avocado,Cauliflower
+Avocado,Broccoli
+Cabbage,Kiwi
+Cauliflower,Kiwi
+Broccoli,Kiwi
+Avocado,Kiwi
+Grape,Kiwi
+Cabbage,Grape
+Cauliflower,Grape
+Broccoli,Grape
+Avocado,Grape
+Cheese,Yogurt
+Broccoli,Corn
+Cauliflower,Corn
+Chicken,Corn
+Broccoli,Cauliflower
+Broccoli,Chicken
+Cauliflower,Chicken
+Corn,Orange
+Broccoli,Orange
+Cauliflower,Orange
+Chicken,Orange
+Grapefruit,Corn
+Banana,Corn
+Banana,Grapefruit
+Apple,Grape
+Bell Pepper,Grape
+Apple,Orange
+Grape,Orange
+Lemon,Orange
+Kiwi,Orange
+Bell Pepper,Orange
+Corn,Orange
+Apple,Lemon
+Grape,Lemon
+Kiwi,Lemon
+Bell Pepper,Lemon
+Apple,Pear
+Grape,Pear
+Orange,Pear
+Lemon,Pear
+Peach,Pear
+Kiwi,Pear
+Bell Pepper,Pear
+Corn,Pear
+Apple,Peach
+Grape,Peach
+Orange,Peach
+Lemon,Peach
+Kiwi,Peach
+Bell Pepper,Peach
+Corn,Peach
+Apple,Plum
+Grape,Plum
+Orange,Plum
+Lemon,Plum
+Pear,Plum
+Peach,Plum
+Kiwi,Plum
+Bell Pepper,Plum
+Corn,Plum
+Apple,Strawberry
+Grape,Strawberry
+Orange,Strawberry
+Lemon,Strawberry
+Pear,Strawberry
+Peach,Strawberry
+Plum,Strawberry
+Kiwi,Strawberry
+Potato,Strawberry
+Bell Pepper,Strawberry
+Corn,Strawberry
+Apple,Kiwi
+Grape,Kiwi
+Bell Pepper,Kiwi
+Apple,Tomato
+Grape,Tomato
+Orange,Tomato
+Lemon,Tomato
+Pear,Tomato
+Peach,Tomato
+Plum,Tomato
+Strawberry,Tomato
+Kiwi,Tomato
+Potato,Tomato
+Bell Pepper,Tomato
+Corn,Tomato
+Apple,Potato
+Grape,Potato
+Orange,Potato
+Lemon,Potato
+Pear,Potato
+Peach,Potato
+Plum,Potato
+Kiwi,Potato
+Bell Pepper,Potato
+Corn,Potato
+Apple,Bell Pepper
+Apple,Corn
+Grape,Corn
+Lemon,Corn
+Kiwi,Corn
+Bell Pepper,Corn
+Chicken,Lamb
+Duck,Lamb
+Apple,Lamb
+Corn,Lamb
+Apple,Chicken
+Lamb,Turkey
+Chicken,Turkey
+Duck,Turkey
+Apple,Turkey
+Corn,Turkey
+Chicken,Duck
+Apple,Duck
+Chicken,Corn
+Duck,Corn
+Apple,Corn
+Apple,Corn
+Cabbage,Corn
+Lemon,Corn
+Grapefruit,Corn
+Apple,Oat
+Corn,Oat
+Cabbage,Oat
+Lemon,Oat
+Grapefruit,Oat
+Apple,Potato
+Corn,Potato
+Oat,Potato
+Cabbage,Potato
+Orange,Potato
+Lemon,Potato
+Grapefruit,Potato
+Pear,Potato
+Plum,Potato
+Apple,Tomato
+Corn,Tomato
+Oat,Tomato
+Potato,Tomato
+Cabbage,Tomato
+Orange,Tomato
+Lemon,Tomato
+Grapefruit,Tomato
+Pear,Tomato
+Plum,Tomato
+Apple,Cabbage
+Apple,Orange
+Corn,Orange
+Oat,Orange
+Cabbage,Orange
+Lemon,Orange
+Grapefruit,Orange
+Apple,Lemon
+Cabbage,Lemon
+Grapefruit,Lemon
+Apple,Grapefruit
+Cabbage,Grapefruit
+Apple,Pear
+Corn,Pear
+Oat,Pear
+Cabbage,Pear
+Orange,Pear
+Lemon,Pear
+Grapefruit,Pear
+Apple,Plum
+Corn,Plum
+Oat,Plum
+Cabbage,Plum
+Orange,Plum
+Lemon,Plum
+Grapefruit,Plum
+Pear,Plum
+Cucumber,Lamb
+Lamb,Yogurt
+Cucumber,Yogurt
+Chickpea,Oyster
+Corn,Tomato
+Potato,Tomato
+Pineapple,Tomato
+Corn,Potato
+Pineapple,Potato
+Corn,Pineapple
+Broccoli,Tomato
+Peach,Tomato
+Plum,Tomato
+Orange,Tomato
+Bell Pepper,Tomato
+Corn,Tomato
+Avocado,Tomato
+Quinoa,Tomato
+Lettuce,Tomato
+Bell Pepper,Broccoli
+Avocado,Broccoli
+Broccoli,Peach
+Orange,Peach
+Bell Pepper,Peach
+Corn,Peach
+Avocado,Peach
+Lettuce,Peach
+Broccoli,Plum
+Peach,Plum
+Orange,Plum
+Bell Pepper,Plum
+Corn,Plum
+Avocado,Plum
+Lettuce,Plum
+Broccoli,Orange
+Bell Pepper,Orange
+Corn,Orange
+Avocado,Orange
+Lettuce,Orange
+Avocado,Bell Pepper
+Broccoli,Corn
+Bell Pepper,Corn
+Avocado,Corn
+Lettuce,Corn
+Broccoli,Quinoa
+Peach,Quinoa
+Plum,Quinoa
+Orange,Quinoa
+Bell Pepper,Quinoa
+Corn,Quinoa
+Avocado,Quinoa
+Lettuce,Quinoa
+Broccoli,Lettuce
+Bell Pepper,Lettuce
+Avocado,Lettuce
+Banana,Peach
+Asparagus,Peach
+Asparagus,Banana
+Peach,Pear
+Banana,Pear
+Asparagus,Pear
+Peach,Potato
+Banana,Potato
+Asparagus,Potato
+Pear,Potato
+Beef,Orange
+Lime,Orange
+Beef,Lime
+Beef,Pineapple
+Orange,Pineapple
+Lime,Pineapple
+Milk,Yogurt
+Chickpea,Milk
+Cantaloupe,Sweet Potato
+Apple,Pear
+Onion,Pear
+Corn,Pear
+Peach,Pear
+Asparagus,Pear
+Beef,Pear
+Apple,Onion
+Corn,Onion
+Asparagus,Onion
+Beef,Onion
+Apple,Corn
+Asparagus,Corn
+Beef,Corn
+Apple,Peach
+Onion,Peach
+Corn,Peach
+Asparagus,Peach
+Beef,Peach
+Apple,Asparagus
+Apple,Beef
+Asparagus,Beef
+Apple,Yogurt
+Pear,Yogurt
+Onion,Yogurt
+Corn,Yogurt
+Peach,Yogurt
+Asparagus,Yogurt
+Beef,Yogurt
+Lemon,Lime
+Celery,Strawberry
+Strawberry,Tomato
+Celery,Tomato
+Corn,Mushroom
+Asparagus,Onion
+Banana,Onion
+Onion,Tomato
+Asparagus,Tomato
+Banana,Tomato
+Asparagus,Banana
+Onion,Tomato
+Potato,Tomato
+Halibut,Salmon
+Apple,Banana
+Apple,Grapefruit
+Banana,Grapefruit
+Flounder,Tuna
+Potato,Tuna
+Tomato,Tuna
+Corn,Tuna
+Quinoa,Tuna
+Flounder,Potato
+Corn,Potato
+Flounder,Tomato
+Potato,Tomato
+Corn,Tomato
+Quinoa,Tomato
+Flounder,Corn
+Flounder,Quinoa
+Potato,Quinoa
+Corn,Quinoa
+Corn,Oat
+Cauliflower,Oat
+Cauliflower,Corn
+Oat,Potato
+Corn,Potato
+Cauliflower,Potato
+Corn,Peach
+Apple,Peach
+Cucumber,Peach
+Apple,Corn
+Cucumber,Corn
+Apple,Cucumber
+Peach,Strawberry
+Corn,Strawberry
+Apple,Strawberry
+Cucumber,Strawberry
+Peach,Tomato
+Corn,Tomato
+Apple,Tomato
+Cucumber,Tomato
+Strawberry,Tomato
+Banana,Milk
+Avocado,Milk
+Milk,Potato
+Banana,Potato
+Avocado,Potato
+Avocado,Banana
+Cantaloupe,Sweet Potato
+Grape,Pear
+Cheese,Corn
+Chickpea,Corn
+Banana,Corn
+Corn,Potato
+Milk,Potato
+Cheese,Potato
+Chickpea,Potato
+Banana,Potato
+Corn,Sweet Potato
+Potato,Sweet Potato
+Milk,Sweet Potato
+Cheese,Sweet Potato
+Quinoa,Sweet Potato
+Chickpea,Sweet Potato
+Banana,Sweet Potato
+Corn,Milk
+Cheese,Milk
+Chickpea,Milk
+Banana,Milk
+Banana,Cheese
+Corn,Quinoa
+Potato,Quinoa
+Milk,Quinoa
+Cheese,Quinoa
+Chickpea,Quinoa
+Banana,Quinoa
+Cheese,Chickpea
+Banana,Chickpea
+Corn,Potato
+Onion,Potato
+Asparagus,Potato
+Banana,Potato
+Oat,Potato
+Chickpea,Potato
+Asparagus,Corn
+Banana,Corn
+Chickpea,Corn
+Corn,Onion
+Asparagus,Onion
+Banana,Onion
+Oat,Onion
+Chickpea,Onion
+Asparagus,Banana
+Corn,Oat
+Asparagus,Oat
+Banana,Oat
+Chickpea,Oat
+Potato,Sweet Potato
+Corn,Sweet Potato
+Onion,Sweet Potato
+Asparagus,Sweet Potato
+Banana,Sweet Potato
+Oat,Sweet Potato
+Chickpea,Sweet Potato
+Asparagus,Chickpea
+Banana,Chickpea
+Corn,Milk
+Milk,Lamb
+Potato,Lamb
+Corn,Lamb
+Pineapple,Lamb
+Orange,Lamb
+Milk,Potato
+Corn,Potato
+Pineapple,Potato
+Orange,Potato
+Milk,Tomato
+Lamb,Tomato
+Potato,Tomato
+Corn,Tomato
+Pineapple,Tomato
+Strawberry,Tomato
+Orange,Tomato
+Sweet Potato,Tomato
+Milk,Pineapple
+Corn,Pineapple
+Orange,Pineapple
+Milk,Strawberry
+Lamb,Strawberry
+Potato,Strawberry
+Corn,Strawberry
+Pineapple,Strawberry
+Orange,Strawberry
+Milk,Orange
+Corn,Orange
+Milk,Sweet Potato
+Lamb,Sweet Potato
+Potato,Sweet Potato
+Corn,Sweet Potato
+Pineapple,Sweet Potato
+Strawberry,Sweet Potato
+Orange,Sweet Potato
+Mushroom,Potato
+Cheese,Yogurt
+Salmon,Yogurt
+Cheese,Salmon
+Carrot,Corn
+Lobster,Corn
+Grape,Corn
+Carrot,Tomato
+Corn,Tomato
+Sweet Potato,Tomato
+Salmon,Tomato
+Lobster,Tomato
+Grape,Tomato
+Carrot,Sweet Potato
+Corn,Sweet Potato
+Salmon,Sweet Potato
+Lobster,Sweet Potato
+Grape,Sweet Potato
+Carrot,Salmon
+Corn,Salmon
+Lobster,Salmon
+Grape,Salmon
+Carrot,Lobster
+Grape,Lobster
+Carrot,Grape
+Grapefruit,Lemon
+Duck,Lemon
+Duck,Grapefruit
+Lemon,Orange
+Grapefruit,Orange
+Lime,Orange
+Duck,Orange
+Lemon,Tangerine
+Grapefruit,Tangerine
+Orange,Tangerine
+Lime,Tangerine
+Duck,Tangerine
+Lemon,Lime
+Grapefruit,Lime
+Duck,Lime
+Bell Pepper,Lemon
+Avocado,Lemon
+Apple,Lemon
+Chickpea,Lemon
+String Bean,Lemon
+Carrot,Lemon
+Broccoli,Lemon
+Lemon,Potato
+Corn,Potato
+Bell Pepper,Potato
+Avocado,Potato
+Pineapple,Potato
+Oat,Potato
+Apple,Potato
+Pear,Potato
+Chickpea,Potato
+String Bean,Potato
+Carrot,Potato
+Broccoli,Potato
+Lemon,Tomato
+Potato,Tomato
+Corn,Tomato
+Bell Pepper,Tomato
+Avocado,Tomato
+Pineapple,Tomato
+Lamb,Tomato
+Oat,Tomato
+Apple,Tomato
+Pear,Tomato
+Chickpea,Tomato
+String Bean,Tomato
+Carrot,Tomato
+Broccoli,Tomato
+Lemon,Corn
+Bell Pepper,Corn
+Avocado,Corn
+Apple,Corn
+Chickpea,Corn
+String Bean,Corn
+Carrot,Corn
+Broccoli,Corn
+Avocado,Bell Pepper
+Apple,Bell Pepper
+Apple,Avocado
+Lemon,Pineapple
+Corn,Pineapple
+Bell Pepper,Pineapple
+Avocado,Pineapple
+Oat,Pineapple
+Apple,Pineapple
+Pear,Pineapple
+Chickpea,Pineapple
+String Bean,Pineapple
+Carrot,Pineapple
+Broccoli,Pineapple
+Lemon,Lamb
+Potato,Lamb
+Corn,Lamb
+Bell Pepper,Lamb
+Avocado,Lamb
+Pineapple,Lamb
+Oat,Lamb
+Apple,Lamb
+Pear,Lamb
+Chickpea,Lamb
+String Bean,Lamb
+Carrot,Lamb
+Broccoli,Lamb
+Lemon,Oat
+Corn,Oat
+Bell Pepper,Oat
+Avocado,Oat
+Apple,Oat
+Chickpea,Oat
+String Bean,Oat
+Carrot,Oat
+Broccoli,Oat
+Lemon,Pear
+Corn,Pear
+Bell Pepper,Pear
+Avocado,Pear
+Oat,Pear
+Apple,Pear
+Chickpea,Pear
+String Bean,Pear
+Carrot,Pear
+Broccoli,Pear
+Bell Pepper,Chickpea
+Avocado,Chickpea
+Apple,Chickpea
+Carrot,Chickpea
+Broccoli,Chickpea
+Bell Pepper,String Bean
+Avocado,String Bean
+Apple,String Bean
+Chickpea,String Bean
+Carrot,String Bean
+Broccoli,String Bean
+Bell Pepper,Carrot
+Avocado,Carrot
+Apple,Carrot
+Broccoli,Carrot
+Bell Pepper,Broccoli
+Avocado,Broccoli
+Apple,Broccoli
+Corn,Pork
+Corn,Tangerine
+Avocado,Corn
+Bell Pepper,Corn
+Corn,Potato
+Avocado,Potato
+Pineapple,Potato
+Bell Pepper,Potato
+Corn,Tomato
+Potato,Tomato
+Avocado,Tomato
+Pineapple,Tomato
+Bell Pepper,Tomato
+Corn,Pineapple
+Avocado,Pineapple
+Bell Pepper,Pineapple
+Avocado,Bell Pepper
+Plum,Strawberry
+Lime,Strawberry
+Apple,Strawberry
+Cucumber,Strawberry
+Lime,Plum
+Apple,Plum
+Cucumber,Plum
+Apple,Lime
+Cucumber,Lime
+Apple,Cucumber
+Strawberry,Sweet Potato
+Plum,Sweet Potato
+Lime,Sweet Potato
+Apple,Sweet Potato
+Cucumber,Sweet Potato
+Chickpea,String Bean
+Grapefruit,Lime
+Apple,Lime
+Banana,Lime
+Avocado,Lime
+Apple,Grapefruit
+Banana,Grapefruit
+Avocado,Grapefruit
+Lime,Orange
+Grapefruit,Orange
+Apple,Orange
+Banana,Orange
+Avocado,Orange
+Apple,Banana
+Avocado,Banana
+Apple,Avocado
+Grapefruit,Lemon
+Lemon,Orange
+Grapefruit,Orange
+Grape,Orange
+Grape,Tangerine
+Orange,Tangerine
+Swordfish,Tangerine
+Grape,Swordfish
+Orange,Swordfish
+Apple,Orange
+Salmon,Tuna
+Corn,Tuna
+Corn,Salmon
+Chicken,Salmon
+Salmon,Tuna
+Chicken,Tuna
+Cabbage,Carrot
+Carrot,Corn
+Cabbage,Corn
+Pear,Potato
+Carrot,Cucumber
+Cauliflower,Cucumber
+Cabbage,Cucumber
+Celery,Cucumber
+Cabbage,Carrot
+Carrot,Cauliflower
+Cabbage,Cauliflower
+Cucumber,Mushroom
+Carrot,Mushroom
+Cauliflower,Mushroom
+Cabbage,Mushroom
+Celery,Mushroom
+Carrot,Celery
+Cauliflower,Celery
+Cabbage,Celery
+Cucumber,Pork
+Carrot,Pork
+Cauliflower,Pork
+Cabbage,Pork
+Mushroom,Pork
+Celery,Pork
+Plum,Pork
+Cucumber,Plum
+Carrot,Plum
+Cauliflower,Plum
+Cabbage,Plum
+Mushroom,Plum
+Celery,Plum
+Cucumber,Tomato
+Carrot,Tomato
+Cauliflower,Tomato
+Cabbage,Tomato
+Mushroom,Tomato
+Celery,Tomato
+Pork,Tomato
+Plum,Tomato
+Salmon,Tomato
+Cucumber,Salmon
+Carrot,Salmon
+Cauliflower,Salmon
+Cabbage,Salmon
+Mushroom,Salmon
+Celery,Salmon
+Pork,Salmon
+Plum,Salmon
+Asparagus,Potato
+Corn,Tomato
+Sweet Potato,Tomato
+Corn,Sweet Potato
+Corn,Yogurt
+Tomato,Yogurt
+Sweet Potato,Yogurt
+Brown Rice,Corn
+Cucumber,Lettuce
+Bell Pepper,Lettuce
+Carrot,Lettuce
+Celery,Lettuce
+Avocado,Lettuce
+String Bean,Lettuce
+Cheese,Lettuce
+Bell Pepper,Cucumber
+Carrot,Cucumber
+Celery,Cucumber
+Avocado,Cucumber
+Cheese,Cucumber
+Avocado,Bell Pepper
+Lettuce,Tomato
+Cucumber,Tomato
+Bell Pepper,Tomato
+Onion,Tomato
+Carrot,Tomato
+Celery,Tomato
+Avocado,Tomato
+String Bean,Tomato
+Shrimp,Tomato
+Cheese,Tomato
+Lettuce,Onion
+Cucumber,Onion
+Bell Pepper,Onion
+Carrot,Onion
+Celery,Onion
+Avocado,Onion
+String Bean,Onion
+Cheese,Onion
+Bell Pepper,Carrot
+Avocado,Carrot
+Bell Pepper,Celery
+Carrot,Celery
+Avocado,Celery
+Cucumber,String Bean
+Bell Pepper,String Bean
+Carrot,String Bean
+Celery,String Bean
+Avocado,String Bean
+Cheese,String Bean
+Lettuce,Shrimp
+Cucumber,Shrimp
+Bell Pepper,Shrimp
+Onion,Shrimp
+Carrot,Shrimp
+Celery,Shrimp
+Avocado,Shrimp
+String Bean,Shrimp
+Cheese,Shrimp
+Bell Pepper,Cheese
+Carrot,Cheese
+Celery,Cheese
+Avocado,Cheese
+Bell Pepper,Broccoli
+Bell Pepper,Kiwi
+Broccoli,Kiwi
+Cabbage,Kiwi
+Bell Pepper,Lemon
+Broccoli,Lemon
+Kiwi,Lemon
+Cabbage,Lemon
+Bell Pepper,Lime
+Broccoli,Lime
+Kiwi,Lime
+Lemon,Lime
+Cabbage,Lime
+Bell Pepper,Orange
+Broccoli,Orange
+Kiwi,Orange
+Lemon,Orange
+Lime,Orange
+Cabbage,Orange
+Bell Pepper,Strawberry
+Broccoli,Strawberry
+Kiwi,Strawberry
+Lemon,Strawberry
+Lime,Strawberry
+Orange,Strawberry
+Cabbage,Strawberry
+Potato,Strawberry
+Oyster,Strawberry
+Bell Pepper,Cabbage
+Broccoli,Cabbage
+Bell Pepper,Potato
+Broccoli,Potato
+Kiwi,Potato
+Lemon,Potato
+Lime,Potato
+Orange,Potato
+Cabbage,Potato
+Oyster,Potato
+Bell Pepper,Oyster
+Broccoli,Oyster
+Kiwi,Oyster
+Lemon,Oyster
+Lime,Oyster
+Orange,Oyster
+Cabbage,Oyster
+Cod,Corn
+Beef,Pork
+Beef,Carrot
+Carrot,Potato
+Onion,Potato
+Beef,Potato
+Carrot,Onion
+Beef,Onion
+Carrot,Tomato
+Potato,Tomato
+Onion,Tomato
+Beef,Tomato
+Avocado,Brown Rice
+Asparagus,Brown Rice
+Brown Rice,Salmon
+String Bean,Salmon
+Carrot,Salmon
+Cucumber,Salmon
+Clam,Salmon
+Oyster,Salmon
+Avocado,Salmon
+Asparagus,Salmon
+Brown Rice,Tuna
+Salmon,Tuna
+String Bean,Tuna
+Carrot,Tuna
+Cucumber,Tuna
+Scallop,Tuna
+Clam,Tuna
+Oyster,Tuna
+Avocado,Tuna
+Asparagus,Tuna
+Brown Rice,String Bean
+Carrot,String Bean
+Cucumber,String Bean
+Clam,String Bean
+Avocado,String Bean
+Asparagus,String Bean
+Brown Rice,Carrot
+Avocado,Carrot
+Asparagus,Carrot
+Brown Rice,Cucumber
+Carrot,Cucumber
+Clam,Cucumber
+Avocado,Cucumber
+Asparagus,Cucumber
+Brown Rice,Scallop
+Salmon,Scallop
+String Bean,Scallop
+Carrot,Scallop
+Cucumber,Scallop
+Clam,Scallop
+Oyster,Scallop
+Avocado,Scallop
+Asparagus,Scallop
+Brown Rice,Clam
+Carrot,Clam
+Avocado,Clam
+Asparagus,Clam
+Brown Rice,Oyster
+String Bean,Oyster
+Carrot,Oyster
+Cucumber,Oyster
+Clam,Oyster
+Avocado,Oyster
+Asparagus,Oyster
+Asparagus,Avocado
+Grape,Kiwi
+Corn,Oat
+Beef,Lobster
+Duck,Lobster
+Beef,Shrimp
+Lobster,Shrimp
+Duck,Shrimp
+Beef,Duck
+Clam,Oyster
+Clam,Scallop
+Oyster,Scallop
+Cucumber,Tomato
+Onion,Tomato
+Lime,Tomato
+Cucumber,Onion
+Lime,Onion
+Cucumber,Lime
+Apple,Banana
+Apple,Tomato
+Banana,Tomato
+Grape,Tomato
+Strawberry,Tomato
+Apple,Grape
+Banana,Grape
+Apple,Strawberry
+Banana,Strawberry
+Grape,Strawberry
+Cheese,Milk
+Milk,Yogurt
+Cheese,Yogurt
+Cod,Flounder
+Flounder,Halibut
+Cod,Halibut
+Haddock,Halibut
+Flounder,Haddock
+Cod,Haddock
+Cucumber,Salmon
+Cabbage,Salmon
+Cabbage,Cucumber
+Cheese,Yogurt
+Potato,Yogurt
+Cheese,Potato
+Clam,Duck
+Cod,Duck
+Clam,Cod
+Clam,Flounder
+Duck,Flounder
+Cod,Flounder
+Clam,Scallop
+Duck,Scallop
+Cod,Scallop
+Flounder,Scallop
+Oyster,Scallop
+Clam,Oyster
+Duck,Oyster
+Cod,Oyster
+Flounder,Oyster
+Flounder,Halibut
+Potato,Salmon
+Celery,Salmon
+Lemon,Salmon
+Celery,Potato
+Lemon,Potato
+Celery,Lemon
+Corn,Mushroom
+Mushroom,Lamb
+Corn,Lamb
+Potato,Lamb
+Mushroom,Sweet Potato
+Lamb,Sweet Potato
+Corn,Sweet Potato
+Potato,Sweet Potato
+Mushroom,Potato
+Corn,Potato
+Cucumber,Potato
+Potato,Tomato
+Cucumber,Tomato
+Beef,Pork
+Avocado,Milk
+Lime,Milk
+Avocado,Lime
+Potato,Salmon
+Cabbage,Salmon
+Oyster,Salmon
+Cabbage,Potato
+Oyster,Potato
+Cabbage,Oyster
+Cauliflower,Milk
+Cheese,Milk
+Cauliflower,Cheese
+Cheese,Milk
+Milk,Yogurt
+Cheese,Yogurt
+Lamb,Yogurt
+Milk,Lamb
+Cheese,Lamb
+Lemon,Lettuce
+Lettuce,Pork
+Lemon,Pork
+Potato,Quinoa
+Orange,Tangerine
+Catfish,Corn
+Haddock,Corn
+Catfish,Haddock
+Corn,Tomato
+Grape,Onion
+Apple,Onion
+Apple,Grape
+Sour Cream,Yogurt
+Avocado,Tomato
+Avocado,Corn
+Corn,Turkey
+Tomato,Turkey
+Avocado,Turkey
+Corn,Tomato
+Avocado,Tomato
+Grapefruit,Lemon
+Grapefruit,Lime
+Lemon,Lime
+Lobster,Onion
+Cabbage,Potato
+Apple,Potato
+Apple,Cabbage
+Grapefruit,Orange
+Grape,Milk
+Apple,Milk
+Cucumber,Milk
+Apple,Grape
+Cucumber,Grape
+Milk,Pear
+Grape,Pear
+Apple,Pear
+Cucumber,Pear
+Apple,Cucumber
+Milk,Strawberry
+Grape,Strawberry
+Apple,Strawberry
+Pear,Strawberry
+Cucumber,Strawberry
+Chicken,Corn
+Avocado,Corn
+Corn,Sweet Potato
+Chicken,Sweet Potato
+Potato,Sweet Potato
+Pineapple,Sweet Potato
+Quinoa,Sweet Potato
+Onion,Sweet Potato
+Strawberry,Sweet Potato
+Avocado,Sweet Potato
+Avocado,Chicken
+Corn,Potato
+Chicken,Potato
+Pineapple,Potato
+Onion,Potato
+Avocado,Potato
+Corn,Tomato
+Sweet Potato,Tomato
+Chicken,Tomato
+Potato,Tomato
+Pineapple,Tomato
+Quinoa,Tomato
+Onion,Tomato
+Strawberry,Tomato
+Avocado,Tomato
+Corn,Pineapple
+Chicken,Pineapple
+Onion,Pineapple
+Avocado,Pineapple
+Corn,Quinoa
+Chicken,Quinoa
+Potato,Quinoa
+Pineapple,Quinoa
+Onion,Quinoa
+Avocado,Quinoa
+Corn,Onion
+Chicken,Onion
+Avocado,Onion
+Corn,Strawberry
+Chicken,Strawberry
+Potato,Strawberry
+Pineapple,Strawberry
+Quinoa,Strawberry
+Onion,Strawberry
+Avocado,Strawberry
+Cheese,Yogurt
+Corn,Potato
+Peach,Potato
+Apple,Potato
+Plum,Potato
+Apple,Corn
+Corn,Peach
+Apple,Peach
+Corn,Plum
+Peach,Plum
+Apple,Plum
+Grape,Lemon
+Cheese,Lemon
+Banana,Lemon
+Cheese,Grape
+Banana,Grape
+Lemon,Orange
+Grape,Orange
+Cheese,Orange
+Banana,Orange
+Lemon,Yogurt
+Grape,Yogurt
+Orange,Yogurt
+Cheese,Yogurt
+Banana,Yogurt
+Banana,Cheese
+Beef,Milk
+Banana,Milk
+Corn,Milk
+Cheese,Milk
+Banana,Corn
+Cheese,Corn
+Milk,Oat
+Banana,Oat
+Corn,Oat
+Cheese,Oat
+Milk,Pineapple
+Banana,Pineapple
+Corn,Pineapple
+Oat,Pineapple
+Cheese,Pineapple
+Banana,Cheese
+Grapefruit,Lemon
+Lemon,Orange
+Lime,Orange
+Grapefruit,Orange
+Lemon,Lime
+Grapefruit,Lime
+Beef,Milk
+Catfish,Tuna
+Corn,Potato
+Onion,Potato
+Carrot,Potato
+Carrot,Corn
+Corn,Onion
+Carrot,Onion
+Catfish,Oyster
+Clam,Oyster
+Oyster,Salmon
+Catfish,Salmon
+Clam,Salmon
+Oyster,Shrimp
+Salmon,Shrimp
+Catfish,Shrimp
+Clam,Shrimp
+Scallop,Shrimp
+Catfish,Clam
+Oyster,Scallop
+Salmon,Scallop
+Catfish,Scallop
+Clam,Scallop
+Cabbage,Chickpea
+Milk,Pork
+Cabbage,Onion
+Carrot,Onion
+Cabbage,Carrot
+Celery,Lettuce
+Lettuce,Onion
+Celery,Onion
+Corn,Pineapple
+Broccoli,Cabbage
+Cabbage,Cauliflower
+Broccoli,Cauliflower
+Halibut,Salmon
+Cheese,Pork
+Carrot,Corn
+Lobster,Corn
+Grape,Corn
+Carrot,Tomato
+Corn,Tomato
+Sweet Potato,Tomato
+Salmon,Tomato
+Lobster,Tomato
+Grape,Tomato
+Carrot,Sweet Potato
+Corn,Sweet Potato
+Salmon,Sweet Potato
+Lobster,Sweet Potato
+Grape,Sweet Potato
+Carrot,Salmon
+Corn,Salmon
+Lobster,Salmon
+Grape,Salmon
+Carrot,Lobster
+Grape,Lobster
+Carrot,Grape
+Cheese,Milk
+Clam,Sweet Potato
+Oyster,Sweet Potato
+Halibut,Sweet Potato
+Shrimp,Sweet Potato
+Lime,Sweet Potato
+Avocado,Sweet Potato
+Celery,Sweet Potato
+Bell Pepper,Sweet Potato
+Onion,Sweet Potato
+Avocado,Clam
+Celery,Clam
+Bell Pepper,Clam
+Clam,Oyster
+Halibut,Oyster
+Lime,Oyster
+Avocado,Oyster
+Celery,Oyster
+Bell Pepper,Oyster
+Onion,Oyster
+Clam,Halibut
+Avocado,Halibut
+Celery,Halibut
+Bell Pepper,Halibut
+Clam,Shrimp
+Oyster,Shrimp
+Halibut,Shrimp
+Lime,Shrimp
+Avocado,Shrimp
+Celery,Shrimp
+Bell Pepper,Shrimp
+Onion,Shrimp
+Sweet Potato,Tuna
+Clam,Tuna
+Oyster,Tuna
+Halibut,Tuna
+Shrimp,Tuna
+Lime,Tuna
+Avocado,Tuna
+Celery,Tuna
+Bell Pepper,Tuna
+Swordfish,Tuna
+Onion,Tuna
+Clam,Lime
+Halibut,Lime
+Avocado,Lime
+Celery,Lime
+Bell Pepper,Lime
+Avocado,Celery
+Bell Pepper,Celery
+Avocado,Bell Pepper
+Sweet Potato,Swordfish
+Clam,Swordfish
+Oyster,Swordfish
+Halibut,Swordfish
+Shrimp,Swordfish
+Lime,Swordfish
+Avocado,Swordfish
+Celery,Swordfish
+Bell Pepper,Swordfish
+Onion,Swordfish
+Clam,Onion
+Halibut,Onion
+Lime,Onion
+Avocado,Onion
+Celery,Onion
+Bell Pepper,Onion
+Broccoli,Mushroom
+Milk,Onion
+Onion,Potato
+Milk,Potato
+Lobster,Shrimp
+Lobster,Shrimp
+Apple,Plum
+Pork,Swordfish
+Catfish,Haddock
+Avocado,Peach
+Peach,Plum
+Avocado,Plum
+Potato,Tomato
+Cucumber,Tomato
+Onion,Tomato
+Penne,Tomato
+Cucumber,Potato
+Onion,Potato
+Penne,Potato
+Cucumber,Onion
+Tomato,Yogurt
+Potato,Yogurt
+Cucumber,Yogurt
+Onion,Yogurt
+Penne,Yogurt
+Cucumber,Penne
+Onion,Penne
+Banana,Cabbage
+Apple,Cabbage
+Apple,Banana
+Cabbage,Lemon
+Banana,Lemon
+Apple,Lemon
+Grape,Lemon
+Cabbage,Plum
+Banana,Plum
+Lemon,Plum
+Apple,Plum
+Grape,Plum
+Cabbage,Grape
+Banana,Grape
+Apple,Grape
+Apple,Pear
+Banana,Pear
+Apple,Banana
+Apple,Pineapple
+Pear,Pineapple
+Banana,Pineapple
+Apple,Strawberry
+Pear,Strawberry
+Banana,Strawberry
+Pineapple,Strawberry
+Swordfish,Tuna
+Salmon,Tuna
+Catfish,Tuna
+Cod,Tuna
+Flounder,Tuna
+Salmon,Swordfish
+Catfish,Swordfish
+Cod,Swordfish
+Flounder,Swordfish
+Catfish,Salmon
+Cod,Salmon
+Flounder,Salmon
+Catfish,Cod
+Catfish,Flounder
+Cod,Flounder
+Catfish,Cod
+Catfish,Haddock
+Cod,Haddock
+Flounder,Haddock
+Catfish,Halibut
+Cod,Halibut
+Haddock,Halibut
+Flounder,Halibut
+Catfish,Flounder
+Cod,Flounder
+Corn,Quinoa
+Cheese,Corn
+Lemon,Corn
+Apple,Corn
+Carrot,Corn
+Lettuce,Corn
+Asparagus,Corn
+Broccoli,Corn
+Cabbage,Corn
+Cauliflower,Corn
+Chicken,Corn
+Lime,Corn
+Beef,Corn
+Corn,Mushroom
+Cheese,Mushroom
+Lemon,Mushroom
+Apple,Mushroom
+Carrot,Mushroom
+Lettuce,Mushroom
+Asparagus,Mushroom
+Broccoli,Mushroom
+Cabbage,Mushroom
+Cauliflower,Mushroom
+Milk,Mushroom
+Chicken,Mushroom
+Lime,Mushroom
+Beef,Mushroom
+Apple,Cheese
+Carrot,Cheese
+Asparagus,Cheese
+Broccoli,Cheese
+Cabbage,Cheese
+Cauliflower,Cheese
+Beef,Cheese
+Corn,Yogurt
+Mushroom,Yogurt
+Cheese,Yogurt
+Lemon,Yogurt
+Apple,Yogurt
+Tomato,Yogurt
+Potato,Yogurt
+Carrot,Yogurt
+Onion,Yogurt
+Lettuce,Yogurt
+Asparagus,Yogurt
+Broccoli,Yogurt
+Cabbage,Yogurt
+Cauliflower,Yogurt
+Milk,Yogurt
+Chicken,Yogurt
+Lime,Yogurt
+Orange,Yogurt
+Salmon,Yogurt
+Beef,Yogurt
+Pork,Yogurt
+Cheese,Lemon
+Apple,Lemon
+Carrot,Lemon
+Asparagus,Lemon
+Broccoli,Lemon
+Cabbage,Lemon
+Cauliflower,Lemon
+Chicken,Lemon
+Beef,Lemon
+Corn,Tomato
+Mushroom,Tomato
+Cheese,Tomato
+Lemon,Tomato
+Apple,Tomato
+Potato,Tomato
+Carrot,Tomato
+Onion,Tomato
+Lettuce,Tomato
+Asparagus,Tomato
+Broccoli,Tomato
+Cabbage,Tomato
+Cauliflower,Tomato
+Milk,Tomato
+Chicken,Tomato
+Lime,Tomato
+Orange,Tomato
+Salmon,Tomato
+Beef,Tomato
+Pork,Tomato
+Corn,Potato
+Mushroom,Potato
+Cheese,Potato
+Lemon,Potato
+Apple,Potato
+Carrot,Potato
+Onion,Potato
+Lettuce,Potato
+Asparagus,Potato
+Broccoli,Potato
+Cabbage,Potato
+Cauliflower,Potato
+Milk,Potato
+Chicken,Potato
+Lime,Potato
+Orange,Potato
+Beef,Potato
+Pork,Potato
+Apple,Carrot
+Asparagus,Carrot
+Broccoli,Carrot
+Cabbage,Carrot
+Beef,Carrot
+Corn,Onion
+Mushroom,Onion
+Cheese,Onion
+Lemon,Onion
+Apple,Onion
+Carrot,Onion
+Lettuce,Onion
+Asparagus,Onion
+Broccoli,Onion
+Cabbage,Onion
+Cauliflower,Onion
+Milk,Onion
+Chicken,Onion
+Lime,Onion
+Beef,Onion
+Cheese,Lettuce
+Lemon,Lettuce
+Apple,Lettuce
+Carrot,Lettuce
+Asparagus,Lettuce
+Broccoli,Lettuce
+Cabbage,Lettuce
+Cauliflower,Lettuce
+Chicken,Lettuce
+Beef,Lettuce
+Apple,Asparagus
+Apple,Broccoli
+Asparagus,Broccoli
+Beef,Broccoli
+Apple,Cabbage
+Asparagus,Cabbage
+Broccoli,Cabbage
+Beef,Cabbage
+Apple,Cauliflower
+Carrot,Cauliflower
+Asparagus,Cauliflower
+Broccoli,Cauliflower
+Cabbage,Cauliflower
+Beef,Cauliflower
+Corn,Milk
+Cheese,Milk
+Lemon,Milk
+Apple,Milk
+Carrot,Milk
+Lettuce,Milk
+Asparagus,Milk
+Broccoli,Milk
+Cabbage,Milk
+Cauliflower,Milk
+Chicken,Milk
+Lime,Milk
+Beef,Milk
+Cheese,Chicken
+Apple,Chicken
+Carrot,Chicken
+Asparagus,Chicken
+Broccoli,Chicken
+Cabbage,Chicken
+Cauliflower,Chicken
+Beef,Chicken
+Cheese,Lime
+Lemon,Lime
+Apple,Lime
+Carrot,Lime
+Lettuce,Lime
+Asparagus,Lime
+Broccoli,Lime
+Cabbage,Lime
+Cauliflower,Lime
+Chicken,Lime
+Beef,Lime
+Corn,Orange
+Mushroom,Orange
+Cheese,Orange
+Lemon,Orange
+Apple,Orange
+Carrot,Orange
+Onion,Orange
+Lettuce,Orange
+Asparagus,Orange
+Broccoli,Orange
+Cabbage,Orange
+Cauliflower,Orange
+Milk,Orange
+Chicken,Orange
+Lime,Orange
+Beef,Orange
+Corn,Salmon
+Mushroom,Salmon
+Cheese,Salmon
+Lemon,Salmon
+Apple,Salmon
+Potato,Salmon
+Carrot,Salmon
+Onion,Salmon
+Lettuce,Salmon
+Asparagus,Salmon
+Broccoli,Salmon
+Cabbage,Salmon
+Cauliflower,Salmon
+Milk,Salmon
+Chicken,Salmon
+Lime,Salmon
+Orange,Salmon
+Beef,Salmon
+Pork,Salmon
+Apple,Beef
+Asparagus,Beef
+Corn,Pork
+Mushroom,Pork
+Cheese,Pork
+Lemon,Pork
+Apple,Pork
+Carrot,Pork
+Onion,Pork
+Lettuce,Pork
+Asparagus,Pork
+Broccoli,Pork
+Cabbage,Pork
+Cauliflower,Pork
+Milk,Pork
+Chicken,Pork
+Lime,Pork
+Orange,Pork
+Beef,Pork
+Oyster,Scallop
+Peach,Scallop
+Apple,Scallop
+Pear,Scallop
+Plum,Scallop
+Grape,Scallop
+Grapefruit,Scallop
+Beef,Scallop
+Pork,Scallop
+Apple,Oyster
+Grape,Oyster
+Grapefruit,Oyster
+Beef,Oyster
+Scallop,Tangerine
+Oyster,Tangerine
+Peach,Tangerine
+Apple,Tangerine
+Pear,Tangerine
+Plum,Tangerine
+Strawberry,Tangerine
+Grape,Tangerine
+Grapefruit,Tangerine
+Beef,Tangerine
+Pork,Tangerine
+Oyster,Peach
+Apple,Peach
+Grape,Peach
+Grapefruit,Peach
+Beef,Peach
+Oyster,Pear
+Peach,Pear
+Apple,Pear
+Grape,Pear
+Grapefruit,Pear
+Beef,Pear
+Oyster,Plum
+Peach,Plum
+Apple,Plum
+Pear,Plum
+Grape,Plum
+Grapefruit,Plum
+Beef,Plum
+Scallop,Strawberry
+Oyster,Strawberry
+Peach,Strawberry
+Apple,Strawberry
+Pear,Strawberry
+Plum,Strawberry
+Grape,Strawberry
+Grapefruit,Strawberry
+Beef,Strawberry
+Pork,Strawberry
+Apple,Grape
+Beef,Grape
+Apple,Grapefruit
+Grape,Grapefruit
+Beef,Grapefruit
+Apple,Beef
+Oyster,Pork
+Peach,Pork
+Apple,Pork
+Pear,Pork
+Plum,Pork
+Grape,Pork
+Grapefruit,Pork
+Beef,Pork
+Scallop,Tuna
+Oyster,Tuna
+Tangerine,Tuna
+Peach,Tuna
+Apple,Tuna
+Pear,Tuna
+Plum,Tuna
+Strawberry,Tuna
+Grape,Tuna
+Grapefruit,Tuna
+Beef,Tuna
+Pork,Tuna
+Plum,Strawberry
+Lime,Strawberry
+Apple,Strawberry
+Cucumber,Strawberry
+Lime,Plum
+Apple,Plum
+Cucumber,Plum
+Apple,Lime
+Cucumber,Lime
+Apple,Cucumber
+Strawberry,Sweet Potato
+Plum,Sweet Potato
+Lime,Sweet Potato
+Apple,Sweet Potato
+Cucumber,Sweet Potato
+Cod,Haddock
+Milk,Lamb
+Cheese,Lamb
+Cheese,Milk
+Lamb,Yogurt
+Milk,Yogurt
+Cheese,Yogurt
+Grape,Orange
+Lime,Orange
+Lemon,Orange
+Grape,Lime
+Lemon,Lime
+Grape,Lemon
+Banana,Corn
+Corn,Sweet Potato
+Banana,Sweet Potato
+Chicken,Milk
+Milk,Lamb
+Chicken,Lamb
+Cod,Haddock
+Cod,Salmon
+Haddock,Salmon
+Halibut,Salmon
+Cod,Halibut
+Haddock,Halibut
+Broccoli,Cabbage
+Corn,Sweet Potato
+Beef,Pork
+Clam,Pork
+Oyster,Pork
+Beef,Clam
+Beef,Oyster
+Clam,Oyster
+Beef,Lamb
+Pork,Lamb
+Clam,Lamb
+Oyster,Lamb
+Lobster,Shrimp
+Salmon,Shrimp
+Lobster,Salmon
+Milk,Yogurt
+Milk,Lamb
+Shrimp,Tuna
+Corn,Salmon
+Oyster,Shrimp
+Peach,Turkey
+Lettuce,Turkey
+Lettuce,Peach
+Cabbage,Grape
+Flounder,Grape
+Grape,Plum
+Cabbage,Plum
+Peach,Plum
+Flounder,Plum
+Grape,Peach
+Cabbage,Peach
+Flounder,Peach
+Cabbage,Flounder
+Bell Pepper,Potato
+Bell Pepper,Tomato
+Potato,Tomato
+Clam,Cod
+Cod,Haddock
+Clam,Haddock
+Cod,Lobster
+Haddock,Lobster
+Clam,Lobster
+Cod,Oyster
+Haddock,Oyster
+Lobster,Oyster
+Clam,Oyster
+Cod,Salmon
+Haddock,Salmon
+Lobster,Salmon
+Oyster,Salmon
+Clam,Salmon
+Halibut,Salmon
+Cod,Salmon
+Cod,Halibut
+Potato,Lamb
+Chicken,Lamb
+Pork,Lamb
+Chicken,Potato
+Pork,Potato
+Chicken,Pork
+Catfish,Chicken
+Carrot,Cheese
+Carrot,Celery
+Catfish,Tuna
+Cucumber,Lamb
+Lamb,Yogurt
+Cucumber,Yogurt
+Corn,Lamb
+Corn,Potato
+Corn,Milk
+Milk,Oat
+Corn,Oat
+Milk,Mushroom
+Cheese,Mushroom
+Cheese,Milk
+Asparagus,Beef
+Beef,Pork
+Cauliflower,Pork
+Asparagus,Pork
+Beef,Cauliflower
+Asparagus,Cauliflower
+Scallop,Shrimp
+Salmon,Shrimp
+Flounder,Shrimp
+Cod,Shrimp
+Potato,Shrimp
+Salmon,Scallop
+Flounder,Scallop
+Cod,Scallop
+Potato,Scallop
+Flounder,Salmon
+Cod,Salmon
+Potato,Salmon
+Cod,Flounder
+Shrimp,Tuna
+Scallop,Tuna
+Salmon,Tuna
+Flounder,Tuna
+Swordfish,Tuna
+Cod,Tuna
+Potato,Tuna
+Shrimp,Swordfish
+Scallop,Swordfish
+Salmon,Swordfish
+Flounder,Swordfish
+Cod,Swordfish
+Potato,Swordfish
+Flounder,Potato
+Cod,Potato
+Apple,Pear
+Peach,Pear
+Apple,Plum
+Pear,Plum
+Peach,Plum
+Apple,Peach
+Apple,Strawberry
+Pear,Strawberry
+Plum,Strawberry
+Peach,Strawberry
+Potato,Tomato
+Salmon,Tuna
+Milk,Yogurt
+Crab,Clam
+Clam,Oyster
+Lobster,Oyster
+Crab,Oyster
+Clam,Scallop
+Oyster,Scallop
+Lobster,Scallop
+Crab,Scallop
+Clam,Shrimp
+Oyster,Shrimp
+Scallop,Shrimp
+Lobster,Shrimp
+Crab,Shrimp
+Clam,Lobster
+Crab,Lobster
+Swordfish,Tuna
+Grape,Tuna
+Swordfish,Tuna
+Grape,Swordfish
+Duck,Lettuce
+Apple,Plum
+Cheese,Plum
+Beef,Plum
+Apple,Cheese
+Beef,Cheese
+Apple,Beef
+Apple,Scallop
+Plum,Scallop
+Cheese,Scallop
+Beef,Scallop
+Bell Pepper,Potato
+Bell Pepper,Tomato
+Potato,Tomato
+Corn,Sweet Potato
+Pear,Pineapple
+Corn,Pineapple
+Corn,Pear
+Banana,Salmon
+Quinoa,Salmon
+Banana,Quinoa
+Onion,Potato
+Carrot,Onion
+Beef,Milk
+Cucumber,Kiwi
+Carrot,Salmon
+Onion,Salmon
+Carrot,Onion
+Cheese,Milk
+Cucumber,Milk
+Milk,Lamb
+Onion,Lamb
+Cucumber,Lamb
+Pineapple,Lamb
+Milk,Onion
+Cucumber,Onion
+Milk,Pineapple
+Onion,Pineapple
+Cucumber,Pineapple

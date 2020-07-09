@@ -1,0 +1,97 @@
+---
+title: "19. Spatial Data"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+fish_city <- read_csv(file.path("data", "spatial_fish_city.csv"))
+fish_state <- read_csv(file.path("data", "spatial_fish_state.csv"))
+```
+
+# Spatial
+
+
+```{r}
+fish_city$most_popular <- names(fish_city)[2:6][apply(fish_city[,2:6], 1, which.max)]
+```
+
+```{r}
+fish_city %>%
+  ggplot() +
+    geom_text(aes(x = lon, y = lat, label = city)) +
+    theme_void()
+```
+
+```{r, eval=FALSE}
+library(ggmaptile)
+
+fish_city %>%
+  filter(!(city %in% c("Anchorage", "Honolulu"))) %>%
+  ggplot() +
+    stat_maptiles(aes(x = lon, y = lat), alpha = 0.2) +
+    geom_point(aes(x = lon, y = lat, color = most_popular)) +
+    theme_void()
+```
+
+```{r}
+library(rnaturalearth)
+
+state <- ne_states(iso_a2 = "us", returnclass = "sf")
+state
+```
+
+```{r, eval=FALSE}
+library(sf)
+state %>%
+  left_join(fish_state, by = c("gn_name" = "state"))
+
+
+dplyr::nest_join(state, fish_state, by = c("gn_name" = "state"))
+
+st_join(tibble(state = "a"), state[1:10,1:20], by = c("gn_name" = "state"))
+
+
+st_join(state, fish_state)
+
+st_point(
+
+)
+
+z <-
+class(z)
+
+z <- st_multipoint(cbind(fish_city$lon, fish_city$lat))
+
+class(st_sfc(z))
+```
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(data = state, fill = "grey85", alpha = 0.2) +
+  coord_sf(xlim = c(-130, -65), ylim = c(20, 50), expand = FALSE) +
+  geom_point(aes(lon, lat, color = most_popular), data = fish_city) +
+  theme_sm()
+```
+
+```{r, eval=FALSE}
+ggplot() +
+  geom_sf(aes(fill = name_len), data = state, alpha = 1) +
+  coord_sf(xlim = c(-130, -65), ylim = c(20, 50), expand = FALSE) +
+  theme_sm() +
+  scale_fill_viridis_c()
+```

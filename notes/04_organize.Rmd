@@ -1,0 +1,266 @@
+---
+title: "04. Organizing Data"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+```
+
+## Verbs
+
+In this chapter we are going to cover a set of functions that take
+a data frame as an input and return a new version of the data frame. These
+functions are called *verbs* and come from the **dplyr** package. If you are
+familiar with running database queries, note that all of these verbs
+map onto SQL commands. In fact, R can be set up so that
+**dplyr** is called over a database rather than a local
+data frame in memory.
+
+There are over 40 verbs in the **dplyr** package, though most are
+a minor variant or specific application of another verb. In this chapter
+we will see only four of them, all of which are related to selecting and
+arranging rows and columns:
+
+- select a subset of rows from the original dataset (`filter` and `slice`)
+- select a subset of columns from the original dataset (`select`)
+- sort the rows of a dataset (`arrange`)
+
+In all verb functions, the first argument is the original data frame and the
+output is a new data frame. Here, we will also see the functions `between` and
+`%in%` to assist with the filtering command and `desc` to assist with arranging
+the rows of a dataset.
+
+Note that **verbs do not modify the original data**; they operate on a copy of
+the original data. We have to make an explicit name for the new dataset if we
+want to save it for use elsewhere.
+
+## Choosing rows
+
+It is often useful to take a subset of the rows of an existing dataset, for
+example if you want to build a model on a certain subpopulation or highlight a
+particular part of the data in a plot. Perhaps the most straightforward way to
+take a subset of rows is to indicate the specific row numbers that we want to
+extract. In order to select rows by row numbers, we use the verb `slice`, followed
+by the numbers of the rows we want seperated by commas. Here is an example taking
+the second, fifth, and seventh rows of the data:
+
+```{r}
+food %>%
+  slice(2, 5, 7)
+```
+
+As mentioned above, the code here does not change the dataset `food` itself. It
+still has all 61 rows of food contained in it. If we want to create a new dataset
+with just these three food item, we need to explicitely name and assign it. For
+example, here is how we would create a dataset of the first five food items
+named `food_first_five`:
+
+```{r}
+food_first_five <- food %>%
+  slice(1, 2, 3, 4, 5)
+```
+
+There a convenient a shorthand for selecting a range of row numbers, for example
+every row from the tenth to the twentieth, by indicating the starting and ending row
+number by a colon. Here, for example, is another way to select the first five rows of
+the dataset:
+
+```{r}
+food %>%
+  slice(1:5)
+```
+
+Another way to take a subset of our data is to select rows based on conditions
+about the variables in the dataset. To do this we use the `filter` function,
+which accepts a statement about variable in the dataset. Only rows where the
+statements are true will be returned. For example, here is how we use the
+`filter` command to select the foods that have more than 150 calories grams of
+sugar in each serving:
+
+```{r}
+food %>%
+  filter(calories > 150)
+```
+
+The output dataset has only 20 rows, compared to the 62 in the original data.
+Other comparisons can be done with `<`, `>=` and `<=`. There is also a special
+function called `between` that is often useful. For example, here are the rows
+that have between 2 and 3 grams of total fat:
+
+```{r}
+food %>%
+  filter(between(total_fat, 2, 3))
+```
+
+If you want to filter on a categorical variable, you can use the `%in%`
+operator to select specific categories. Here is the code to filter only the
+fish and vegetable variables:
+
+```{r}
+food %>%
+  filter(food_group %in% c("fish", "vegetable"))
+```
+
+As with the other verbs, we can chain together multiple calls to produce more
+complex logic. For example, this code selects fruits that have more than 150
+calories per serving:
+
+```{r}
+food %>%
+  filter(calories > 150) %>%
+  filter(food_group %in% c("fruit"))
+```
+
+Which results in a reduced dataset with only 1 row (avocados).
+
+## Data and Layers
+
+Now that we know how to create a subset of our data, let's use this new knowledge to
+build some interesting data visualizations. To start, create a dataset that just
+consists of the food types that are in the meat food group:
+
+```{r}
+food_meat <- filter(food, food_group %in% c("meat"))
+food_meat
+```
+
+You should know from the previous chapter how to create a scatterplot of `calories` and `total_fat`
+with just the meat data. Here is the code:
+
+```{r}
+food_meat %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = total_fat))
+```
+
+One of the core ideas behind the Grammar of Graphics is that complex visualizations can be
+constructed by layering relatively simply elements on top of one another. What if we wanted to
+put together two layers where one layer uses the `food` dataset and the other uses `food_meat`?
+To do this, we can *override* the default dataset in a layer with the option `data =`. This will
+use a different dataset within a particular layer. For example, here is how we can layer the
+meat dataset on top of the rest of the food items.
+
+```{r}
+food %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = total_fat)) +
+    geom_point(aes(x = calories, y = total_fat), data = food_meat)
+```
+
+This plot, however, does not look any different than it would if we were just to plot all of the
+food together. The second layer of points just sits unassumingly on top of the rest of the data.
+To rectify this, we can color each layer a different color in order to distinguish them from one
+another. Let's try to highlight the meat food group in a navy blue, while making the rest of the
+points a light grey:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = total_fat), color = "grey85") +
+    geom_point(aes(x = calories, y = total_fat), color = "navy", data = food_meat)
+```
+
+We now have a plot that shows exactly where the meats are relative to the other food items. We can
+further build up the plot by showing the names of just these rows of the dataset as well:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = total_fat), color = "grey85") +
+    geom_point(aes(x = calories, y = total_fat), color = "navy", data = food_meat) +
+    geom_text_repel(
+      aes(x = calories, y = total_fat, label = item),
+      color = "navy",
+      data = food_meat
+    )
+```
+
+Notice how a relatively small set of commands can be put together in different ways to build
+a variety of plots. Already, we are making further progress towards building informative and
+beautiful graphics in R!
+
+## Selecting Columns
+
+It is also possible to take a subset of the columns in a dataset. To do this, we make use of
+the verb `select`. We pass it the names of the variables we want to keep in the output dataset,
+in the (possibly new) order that we want the columns to be arranged in. Here, for example, is
+a new version of the foods dataset containing only the food item name followed by the amount
+of Vitamin A and Vitamin C:
+
+```{r}
+food %>%
+  select(item, vitamin_a, vitamin_c)
+```
+
+We will not need to use the `select` verb as often as `filter` because for the most part
+having extra variables around does not effect data visualizations or data models. However,
+it can be useful to displaying results. As we saw above, the Vitamin A and Vitmain C columns
+were cut-off in the original output but are not visable in the selected dataset version.
+Removing and reordering unneeded columns will also be useful in some of the advanced
+applications that are discussed in the following chapters.
+
+## Arranging Rows
+
+The verbs `slice` and `filter` determine a subset of rows to keep from the original dataset.
+The `arrange` verb, in contrast, keeps all of the original data but re-orders its rows.
+Specifically, we give it one or more variable names and it sorts the data by the first variable
+from smallest to largest (or alphabetically for character variables). In the case of ties,
+the second variable is used if given. More variables can be given to further break additional
+ties. Here is an example where we order the dataset first by `food_group` and then by `calories`:
+
+```{r}
+food %>%
+  arrange(food_group, calories)
+```
+
+In the new dataset all of the dairy products come up first followed by the fish products.
+Within each group, the items are sorted from the lowest to highest number of calories.
+
+The ordering can be reversed (i.e., from the highest to the lowest value) be wrapping a
+variable in the function `desc()`, such as this ordering from the most saturated fat to
+the least:
+
+```{r}
+food %>%
+  arrange(desc(sat_fat))
+```
+
+In the result here, "Cheese" has been placed at the top of the dataset, followed
+by "Sour Cream" and "Lamb".
+
+One particularly useful application of `arrange` is to pair it with the verb `slice`.
+Here, for example, is the code to select the six foods in our dataset that have the
+highest amount of Vitamin A:
+
+```{r}
+food %>%
+  arrange(desc(vitamin_a)) %>%
+  slice(1:6)
+```
+
+By saving this dataset, we could highlight these specific foods on top of a plot
+comparing them to the remainer of the data.
+
+## Exercises and References
+
+There is are two exercise notebook for this chapter:
+
+- **exercies04A.Rmd**: practice applying the four data verbs presented here
+- **exercies04B.Rmd**: open-ended questions to explore with a new dataset
+
+It is strongly recommended to complete at least the first notebook prior to
+continuing on to the next chapter.

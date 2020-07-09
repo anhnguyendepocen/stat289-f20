@@ -1,0 +1,117 @@
+---
+title: "Notebook 08A"
+output: html_document
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+```
+
+## Instructions
+
+This notebook includes several tasks to practice and extend your knowledge of
+the material covered within the chapter. For the most part, every notebook with
+a name ended in "A" will work with a collection of data about cities and their
+population. The questions tend to be relatively contained; the focus is
+primarily on writing code to perform a specific task. For this purpose there
+will usually be an empty code block for you to put your code. There are also
+questions requiring a short response, prompted by the phrase "**Answer:**".
+Your answers to these can be write directly in this notebook. Occasionally
+new functions or concepts will be shown within each notebook.
+
+Notebooks ending in letters other than "A" more often include new datasets and
+open-ended prompts for using the data skills covered in the chapters to address
+a wide range of questions. It is suggested to start with the "A" notebook for
+each chapter and then trying to work through at least one additional data
+project notebook.
+
+When you are done with your code, hitting the *knit* button in the toolbar will
+produce an HTML webpage with all of your results. Note that the first time you
+run the knit function may require installing some packages. Knitting your code
+is a good way to help check that you have written all of the code correctly and
+have not accidentally modified anything as you worked through the notebook.
+
+Two important pieces of advice when working through the notebooks:
+
+- It is a best practice to close RStudio everytime that you finish with a
+notebook and before you start working on another dataset. This starts each
+notebook from scratch and does not risk accidentally using variables created in
+one notebook within the scope of another.
+
+- Notice that the notebook file does not automatically word-wrap the way you
+may be used to in a word processor. Generally, you should manually hit enter to
+start typing on a new line. I try to make sure that both my text and my code are
+not very wide. Make sure to do the same with your code and responses. Also, make
+sure that your notebook window is wide enough so that my text does not forceable
+try to wrap. This is very hard to read and makes it much easier to work through
+the notebook.
+
+## Movies data
+
+In this notebook you will create two small datasets, read them into R, and
+produce a plot using the skills covered in the first 8 chapters.
+
+For the first task, create a dataset of (at least) ten movies. These can be your
+favorite movies, your least favorite movies, or just a random collection that
+come to mind. At a minimum, record the following items for each movie:
+
+- title
+- date of release (year, month, and day)
+- budget
+- box-office numbers
+- genre
+- personal rating of the film, from 1-5 stars
+
+Once you are finished, save the dataset as either a csv file or an excel
+worksheet and read it into R in the following block of code:
+
+```{r, message=FALSE}
+
+```
+
+Then, produce a scatterplot below with the budget on the x-axis, box-office
+numbers on the y-axis, points colored by the year of release, and the size of
+the points corresponding to your personal rating. Use a text repel layer to
+label the movies by their title. Include axis labels and titles, along with
+units of measurement.
+
+```{r}
+
+```
+
+If you think it is needed, also include logarithmic scales for the x- and
+y-axes.
+
+## Friends data
+
+For the second dataset, you are going to collect information about ten of your
+friends. At a minimum, record the following variables:
+
+- their name
+- where you met them
+- the date you met them (year, month, day; approximate if not sure)
+- where they grew up (can use city, country, state; use whatever makes sense for
+  your data)
+- personal rating of the friend, from 1-5 stars
+
+Once you are finished, save the dataset as either a csv file or an excel
+worksheet and read it into R in the following block of code:
+
+```{r, message=FALSE}
+
+```
+
+Then, produce a scatter plot below using any two variables that you find
+interesting as the x- and y-axes. Include a highlight layer showing a subset
+of your friends. These could be friends you met at a certain time in your life,
+highlighting your best friend(s) or something else that is interesting to you.
+Include axis labels and titles, along with units of measurement.
+
+```{r}
+
+```

@@ -1,0 +1,173 @@
+---
+title: "02. Data Visualization"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+```
+
+## Grammar of Graphics
+
+Data visualization is an incredibly important skill and a task that R is particularly well-designed for.
+We are going to learn and use the **ggplot2** package for building beautiful and informative graphics.
+The package makes it easy to build fairly complex graphics in a way that is guided by a general theory
+of data visualization. The only downside is that, because it is built around a theoretical model rather
+than many one-off solutions for different tasks, it has a steep initial learning curve. These notes will,
+hopefully, make this as painless as possible.
+
+The core idea of the grammar of graphics is that visualizations are composed of independent *layers*.
+To describe a specific layer, we need to specify several elements:
+
+- *data*: the dataset from which data will be taken to construct the plot
+- *aes*: a mapping from elements of the plot to columns in our dataset (i.e., the position on the
+x-axis or the color of our points); it stands for aesthetics
+- *geom*: a description of what kinds of objects to plot (i.e., points, labels, or boxes)  
+
+You can describe virtually any type of visualization by putting together these elements.
+
+To show how to use the grammar of graphics, we will start by using the food dataset
+introduced in the previous chapter, with each row describing a particular item of food
+along with various nutritional information. The first plot we will make is a scatterplot that
+investigates the relationship between calories and the total fat (in grams) that are in a
+100g portion of each food item. In the language of the grammar of graphics we can describe
+this with the following elements:
+
+- *data*: our dataset is called `food`
+- *aes*: the x-axis will be associated with `calories` and the y-axis with `total_fat`
+- *geom*: we will build a plot with a points geometry; each row of data is represented by a point
+
+The easiest way to understand how we good these elements within **ggplot** is by seeing an
+example. Here is the code to specify the data, aes, and geom, along with the output plot:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = total_fat))
+```
+
+In the first line we specify the dataset (`food`), which is then piped (`%>%`) into the function
+`ggplot`, which instructs R to start a new plot. Next, we add (`+`) a layer to the plot. This layer
+uses a points geom (`geom_point`) and describes two aes values, `x = calories` and `y = total_fat`.
+
+In order to make a similar plot with different variables, or a different dataset, you can copy
+this code and change the associated variable names (`food`, `calories`, and `total_fat`). In
+the following sections we will further see how to modify and build on this basic structure to
+create more complex graphics.
+
+## Text Geometry
+
+Let's go through several other choices of geometries that we could have in the plot. There are many
+of these, but in general you can create most plots with only a small number of geometry types. To
+start, we will use the geometry `geom_text`, which puts a small label in place of the points
+in our previous example.
+
+The text geometry needs an additional aes called `label` to describe what variable in the dataset
+should be used as the label. Here, we use the variable called `item` to label each point with the
+name of the specific food item in question (the column is called `item`):
+
+```{r}
+food %>%
+  ggplot() +
+    geom_text(aes(x = calories, y = total_fat, label = item))
+```
+
+Can you now identify what food has the highest amount of fat? Or the highest calorie count?
+Hopefully! You likely cannot, however, figure out what foods have the lowest amount of fat because
+the labels become too clumped together. In order to try to address this issue, we can use a slightly
+different geometry called `geom_text_repel`. It also places labels on the plot, but has logic that
+avoids intersecting labels. Instead, labels are moved away from the data points and connected (when
+needed) by a line segment:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_text_repel(aes(x = calories, y = total_fat, label = item))
+```
+
+This is still a bit busy in the lower left-hand corner, but should be slightly easier to read in the
+middle of the plot.
+
+## Layering Geometries
+
+Remember that our theory of the grammar of graphics building plots as *layers*. In our two examples
+so far we have used only a single layer. We can put them together by simply adding geoms together.
+For example, we can add both the text (repel) layer and the points themselves:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = total_fat)) +
+    geom_text_repel(aes(x = calories, y = total_fat, label = item))
+```
+
+You should now see that we have both the labels and the points. Notice that the `geom_text_repel`
+also makes sure that the labels do not intersect the points themselves.
+
+## Line Geometry
+
+The final geometry that we will use this chapter is particular to the visualization of data that
+changes over time. To correctly illustrate this method, we will use the time-based dataset giving
+the prices of 13 different food categories (given as a price index where 100 is the price in 1900):
+
+Starting with the code above, let's modify the dataset and aes values to show the relationship
+between the year and the price of tea:
+
+```{r}
+food_prices %>%
+  ggplot() +
+    geom_point(aes(x = year, y = tea))
+```
+
+This is already a great start. However, as we are showing the change of one variables over time,
+it may be reasonable to use a continuous line over time rather than using the point geometry. To
+make this kind of plot, we replace the point geom with `geom_line`. Here is what the plot looks
+like with the points connect as dots:
+
+```{r}
+food_prices %>%
+  ggplot() +
+    geom_line(aes(x = year, y = tea))
+```
+
+Do you think that its easier to see the trend over time with the line geom?
+
+## Formatting graphics code
+
+In Section \@ref(style-guide) we stressed the importance of following a few style
+guidelines about your code. Here are three additional formatting rules that
+apply specifically to building graphics in R:
+
+- indent the `ggplot` command by two spaces
+- indent every line below `ggplot` by four spaces
+- always add each layer of a plot as a new line
+
+As with our original set of style guideliens, you will make your life a lot
+easier if you get used to these rules right from the start.
+
+## Exercises and References
+
+There is are exercise notebook for this chapter:
+
+- **exercies02A.Rmd**: practice producing graphics for a new dataset
+- **exercies02B.Rmd**: open-ended questions to explore with data
+
+It is strongly recommended to complete at least the first notebook prior to
+continuing on to the next chapter.
+
+We will continue to look at the various components of the Grammar of Graphics
+in the following chapter, at which point several other references are provided
+for further study.

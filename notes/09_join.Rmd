@@ -1,0 +1,172 @@
+---
+title: "09. Joining Data"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+
+food_sml <- food %>%
+  select(item, food_group, calories)
+```
+
+## Relational data
+
+A *primary key* consists of one or more variables that uniquely identify a row of
+data. In our food dataset, the variable `item` is a primary key. Each row has a
+unique value for this variable. Likewise, a *foreign key* is the appearance of a
+primary key within a different dataset. The food group variable, for example, could
+be a foreign key if we had another table with one row describing information about
+each food group.
+
+A primary key and the corresponding foreign key in another table form a *relation*.
+Typically a relation maps a single row in one dataset to many rows in another.
+
+A table join is a way of combining two tables based on relations. The goal is to
+up a foreign key in one table with the primary key in another table, to add new variables
+from one dataset into another dataset. Several examples will make this notion more clear.
+
+## Joining data by key
+
+As an example of performing table joins, we will start with a paired down version
+of our foods data:
+
+```{r, message=FALSE}
+food_sml
+```
+
+Now, consider the following new dataset the corresponding dietary restrictions associated
+with different food groups:
+
+```{r, message=FALSE}
+diet <- read_csv(file.path("data", "food_diet_restrictions.csv"))
+diet
+```
+
+In the `diet` table, the food group variable is a primary key. Within the `food` table, it
+is a foreign key. What we would like to do is to combine these datasets by
+matching up rows that have the same values in the corresponding columns.
+
+For example, it could be helpful to include the columns `vegan`, `vegitarian`, and `pescatarian`
+in the foods dataset. In order to do this, we want to put the columns in the diet dataset into
+the food dataset in a way that is similar to the `bind_cols` function. However, rather than
+"lining up" the rows, we can to associate a row in the food dataset with the row in the diet
+dataset that contains the same value of the variable `food_group`. The function to achieve
+this is `left_join`; we pipe in the larger dataset that we want to join columns to, provide
+the name of the table to grab columns from, and indicate what column will be used to combine
+the two datasets.
+
+```{r}
+food_sml %>%
+  left_join(diet, by = c("food_group"))
+```
+
+And that is it! We now have the dietary restrictions added into the food dataset. We can now
+compule models, summaries, and construct visualizations based on the new metadata associated
+with each food group.
+
+Now, let's consider a third dataset containing information about food recipes, one for a Pot
+Roast and another for Guacamole:
+
+```{r, message=FALSE}
+recipes <- read_csv(file.path("data", "food_recipes.csv"))
+recipes
+```
+
+In this dataset, ingredient is a foreign key corresponding to the primary key "item"
+in the foods dataset. For the recipes data, the primary key requires two columns:
+both recipe and ingredient are needed to describe each row uniquely.
+
+We can now try adding the calories information from the `food` dataset into the recipes dataset.
+The complication here is that the column we want to join on has a different name in each dataset
+("ingredient" versus "item"). To specify this, specify the two different names within the
+`by =` argument of the join function:
+
+```{r}
+recipes %>%
+  left_join(food_sml, by = c("ingredient" = "item"))
+```
+
+Now, we have a dataset that has added the food group and calories information to our recipe
+dataset. Notice that the ingredient "Bay Leaf" is not in our food dataset. Because of this,
+the food group and calories information for this ingredient are filled in with missing values.
+This is similar to the behavior that we observed with `bind_rows` with variables that were
+missing between the combined datasets.
+
+Notice that rows of data about food items in the dataset `food` that  are not in any recipe
+are not included in the output. This is where the term "left" comes from: all rows from the
+"left" (e.g., first) table are returned, but non-matching rows in the second (e.g., "right")
+table are dropped.
+
+## Inner and outer joins
+
+There are four mutating joins available in **dplyr**. These have the
+same syntax. If the join key is a primary key in one table and there
+are no missing matches, they all function exactly the same. If the
+join key is a primary key in one table and not all foreign keys in
+the other table match an entry in the other, the following happens:
+
+- `left_join` only non-matching rows in the first dataset are kept
+- `right_join` only non-matching rows in the second dataset are kept
+- `full_join` non-matching rows are included from either table
+- `inner_join` only matching rows from both tables are included
+
+For example, by replacing `left_join` with the function `inner_join`
+we can modify the join from the last section to drop the missing term
+(Bay Leaf) that is not contained in our food dataset:
+
+```{r}
+recipes %>%
+  inner_join(food_sml, by = c("ingredient" = "item"))
+```
+
+Here, now, the "Bay Leaf" row has been removed. Several other variations on join types
+controlling for various kinds of dropping and keeping partial matches are provided by
+the **dplyr** package. Details are linked to at the end of the chapter.
+
+All of this can become quite complicated. I follow one simple rule
+that make this much easier:
+
+- make sure that the key used for the join is a primary key for
+the *second* dataset; that is, it unique defines each row of the
+second dataset (usually this dataset contains metadata about the
+first dataset)
+
+If you follow this rule, you only ever need `left_join` (if you are
+okay with missing values in the metadata) and `inner_join`
+(if you want to remove rows that did not have associated metadata).
+
+## Exercises and References
+
+There is are exercise notebook for this chapter:
+
+- **exercies09A.Rmd**: practice applying table joins to a new dataset
+- **exercies09B.Rmd**: practice and notes for applying table joins to a more complex dataset of airline codes
+
+It is strongly recommended to complete at least the first notebook prior to
+continuing on to the next chapter.
+
+Here are several good resources if you want to learn more about relational data
+in R:
+
+- [R for Data Science: Chapter 13, Relational Data](https://r4ds.had.co.nz/relational-data.html)
+- [dplyr cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)
+- [dplyr homepage](https://dplyr.tidyverse.org/)
+
+If you search online for help with R graphics, make sure to add the term "dplyr"
+to your query as otherwise you may find advice for using other functions that
+are not easily compatible with the approach described here.

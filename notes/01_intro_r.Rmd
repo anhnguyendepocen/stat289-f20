@@ -1,0 +1,259 @@
+---
+title: "01. Introduction"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+```
+
+## Running RMarkdown in RStudio
+
+The previous chapter gives instructions for installing R and RStudio
+and obtaining the notebook practice questions associated with these
+notes. All of the code that we will work through in these chapters
+will be stored as RMarkdown files, which have a `.Rmd` extension. These
+files are great because they allow us mix code and descriptions within
+the same file.
+
+When you open an RMarkdown file in RStudio, you should see a window
+similar to this (it will be slightly different on Windows and depending
+on your screen size):
+
+![](images/rstudio_intro1.png)
+
+On the left is the actual file itself. Some output and other helpful
+bits of information are shown on the right. There is also a Console
+window, which we generally will not need. I have minimized it in
+the graphic.
+
+Notice that the file has parts that are on a white background and other
+parts that are on a grey background. The white parts correspond to
+text and the grey parts to code. In order to run the code, and to see
+the output, click on the green play button on the right of each block.
+
+When you run code to read or create a new dataset, the data will
+be listed in the Environment tab in the upper right hand side of
+RStudio:
+
+![](images/rstudio_intro2.png)
+
+Clicking on the data will open a spreadsheet version of the data that
+you can view to understand the structure of your data and to see all
+of the columns that are available for analysis:
+
+![](images/rstudio_intro3.png)
+
+Going back to the RMarkdown file by clicking on the tab on the upper
+row, we can see how graphics work in R. We have written some code to
+produce a scatter plot. When the code is run, the plot displays inside
+of the markdown file:
+
+![](images/rstudio_intro4.png)
+
+Make sure to save the notebook frequently. However, notice that only
+the text and code itself is saved. The results (plots, tables, and
+other output) are not automatically stored. This is actually helpful
+because the code is much smaller than the results and it helps to
+keep the file sizes small. If you would like to save the results in
+a way that can be shared with others, you need to *knit* the file
+by clicking on the Knit button (it has a ball of yarn icon) at the
+top of the notebook. After running all the code from scratch, it will
+produce an HTML version of our script that you can open in a web
+browser:
+
+![](images/rstudio_intro5.png)
+
+In fact, the notes that you are currently reading were created with
+RMarkdown files that are knitted to HTML.
+
+## Running R Code
+
+We now want to give a very brief overview of how to run R code. We
+will now only show snippets of R code and the output rather than a
+screen shot of the entire RStudio session. Though, know that you
+should think of each of the snippets as occuring inside of one of
+the grey boxes in an RMarkdown file.
+
+In one of its most basic forms, R can be used as a fancy calculator.
+For example, we can divide 12 by 4:
+
+```{r}
+12 / 4
+```
+
+We can also store values by creating new *objects* within R. To do
+this, use the `<-` (arrow) symbol. For example, we can create a new
+object called `mynum` with a value of `8` by:
+
+```{r}
+mynum <- 3 + 5
+```
+
+We can now use our new object `mynum` exactly the same way that we we
+would use the number 8. For example, adding it to 1 to get the number nine:
+
+```{r}
+mynum + 1
+```
+
+Object names must start with a letter, but can also use underscores and
+periods. In my R code, I generally restrict myself to using only
+lowercase letters and underscores. That makes it easier to read my code
+later on without needing to remember if and where I used capital letters.
+
+## Running functions
+
+A function in R is something that takes a number of input values and
+returns an output value. Generally, a function will look something like
+this:
+
+```{r, eval=FALSE}
+function_name(arg1 = input1, arg2 = input2)
+```
+
+Where `arg1` and `arg2` are the names of the inputs to the function (they
+are fixed) and `input1` and `input2` are the values that we will assign
+to them. The number of arguments is not always two, however. There may be any
+number of arguments, including zero. Also, there may be additional optional
+arguments that have default values that can be modified.
+
+Let us look at an example function: `seq`. This function returns a sequence
+of numbers. We will can give the function two input arguments: the starting
+point `from` and the ending point `to`.
+
+```{r}
+seq(from = 1, to = 7)
+```
+
+The function returns a sequence of numbers starting from 1 and ending at
+7 in increments of 1. Note that you can also pass arguments *by position*, in
+which case we use the default ordering of the arguments. Here is the same code
+but without the names:
+
+```{r}
+seq(1, 7)
+```
+
+There is also an optional argument `by` that controls the spacing between
+each of the numbers. By default it is equal to 1, but we can change
+it to spread the point out by half spaces.
+
+```{r}
+seq(from = 1, to = 7, by = 0.5)
+```
+
+We will learn how to use numerous functions in the coming chapters.
+
+## Loading data
+
+In this book we will be working with data that is stored in a tabular
+format. Here is an example of a tabular dataset of food types, which
+has nine rows and five columns. Each row tells us the nutritional
+properties contained in 100 grams of a particular type of food.
+
+<img src="images/tidy-0.png" style="padding-left: 15%; padding-right: 15%; padding-top: 5%">
+
+Every row of the dataset represents a particular object in our dataset,
+each of which we call an *observation*. In our food type example, each
+individual food corresponds to a specific observation:
+
+<img src="images/tidy-2.png" style="padding-left: 15%; padding-right: 15%; padding-top: 5%">
+
+The columns in a tabular dataset represent the measurements that we
+record for each observation. These measurements are called *variables*.
+In our example dataset, we have five variables which record the name
+of the food type, the food group that the food falls into, the number
+of calories in a 100g serving, the amount of sodium (mg) in a 100g
+serving, and the amount of vitamin A (as a percentage of daily recommended
+value) in a 100g serving.
+
+<img src="images/tidy-1.png" style="padding-left: 15%; padding-right: 15%; padding-top: 5%">
+
+A larger version of this dataset, with more food types and nutritional
+facts, is included in the course materials. We will make extensive use
+of this dataset in the following chapters as a common example for creating
+visualizations, performing data manipulation, and building models. In
+order to read in the dataset we use a function called `read_csv` and
+pass it a description of where the file is located relative to where
+this script is stored. The data is called `foods.csv` and is stored in
+the folder `data`. The following code will load the foods dataset into
+R, save it as an object called `food`, and prints out the first several
+rows:
+
+```{r, message=FALSE}
+food <- read_csv(file.path("data", "food.csv"))
+food
+```
+
+Notice that the display shows that there are a total of 62 rows and
+14 variables. The first 6 rows and 8 columns are shown. At the bottom,
+the names of the additional variable names are given. As described
+above, if you run this RStudio, you can view a full tabular version
+of the dataset by clicking on the dataset name in the Environment tab.
+The abbreviations `<chr>` and `<dbl>` tell us which variables are characters
+(`item` and `food_type`) and numbers (all the others).
+
+Many of the examples in the following chapters will make use of this foods
+dataset to demonstrate new concepts. Another related dataset that will be also
+be useful for illustrating several concepts contains the prices of various
+food items for over 140 years. We can read it into R using similar block of
+code, namely:
+
+```{r, message=FALSE}
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+food_prices
+```
+
+Here, each observation is a year. Variables correspond to specific types of
+food. Notice that this is different than the `foods` dataset, in which the
+food items were observations.
+
+ <!-- Jacks, D.S. (2019), "From Boom to Bust: A Typology of Real Commodity
+ Prices in the Long Run." Cliometrica 13(2), 202-220. -->
+
+## Formatting {#style-guide}
+
+It is very important to properly format your code in a consistent way.
+Even though the code may run without errors and produce the desired results,
+it is extremely important to make sure that your code is well-formatted to make
+it easier to read and debug. We will follow the following guidelines:
+
+- always put one space before and after an equals sign or assignment arrow
+- always put one space after a comma, but no space before a comma
+- always put one space around mathematical operations (such as `+` and `*`)
+
+When running practice notebooks from this book, you should see a warning in the
+margin of your R notebook whenever these rules are violated. It will make your
+life a lot easier if you get used to these rules right from the start.
+
+## Exercises and References
+
+There is one exercise notebook for this chapter (the code file is found in the
+course materials download zip file)
+
+- **notebook01a.Rmd**: practice running code in RStudio, reading data, and loading packages
+
+It is strongly recommended to complete this notebook prior to continuing on to
+the next chapter.
+
+Other useful references for more information include:
+
+- [Getting Help with R](https://www.r-project.org/help.html)
+- [RStudio IDE Cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf)
+- [R Markdown Cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf)
+- [Data Import Cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-import.pdf)
+
+For those looking for a low-level, programatic introduction to the core
+R language, I recommend W. N. Venables' classic, and freely available, notes
+titled [An Introduction to R](https://cran.r-project.org/doc/manuals/r-release/R-intro.pdf).

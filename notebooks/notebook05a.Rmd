@@ -1,0 +1,246 @@
+---
+title: "Notebook 05A"
+output: html_document
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+```
+
+## Instructions
+
+This notebook includes several tasks to practice and extend your knowledge of
+the material covered within the chapter. For the most part, every notebook with
+a name ended in "A" will work with a collection of data about cities and their
+population. The questions tend to be relatively contained; the focus is
+primarily on writing code to perform a specific task. For this purpose there
+will usually be an empty code block for you to put your code. There are also
+questions requiring a short response, prompted by the phrase "**Answer:**".
+Your answers to these can be write directly in this notebook. Occasionally
+new functions or concepts will be shown within each notebook.
+
+Notebooks ending in letters other than "A" more often include new datasets and
+open-ended prompts for using the data skills covered in the chapters to address
+a wide range of questions. It is suggested to start with the "A" notebook for
+each chapter and then trying to work through at least one additional data
+project notebook.
+
+When you are done with your code, hitting the *knit* button in the toolbar will
+produce an HTML webpage with all of your results. Note that the first time you
+run the knit function may require installing some packages. Knitting your code
+is a good way to help check that you have written all of the code correctly and
+have not accidentally modified anything as you worked through the notebook.
+
+Two important pieces of advice when working through the notebooks:
+
+- It is a best practice to close RStudio everytime that you finish with a
+notebook and before you start working on another dataset. This starts each
+notebook from scratch and does not risk accidentally using variables created in
+one notebook within the scope of another.
+
+- Notice that the notebook file does not automatically word-wrap the way you
+may be used to in a word processor. Generally, you should manually hit enter to
+start typing on a new line. I try to make sure that both my text and my code are
+not very wide. Make sure to do the same with your code and responses. Also, make
+sure that your notebook window is wide enough so that my text does not forceable
+try to wrap. This is very hard to read and makes it much easier to work through
+the notebook.
+
+## Load Datasets
+
+We will work with the largest cities datasets:
+
+```{r, message=FALSE}
+cities <- read_csv(file.path("..", "data", "largest_cities.csv"))
+```
+
+We will also work with the entire U.S. cities dataset:
+
+```{r, message=FALSE}
+us <- read_csv(file.path("..", "data", "us_city_population.csv")) 
+```
+
+Please refer to notebook02a for more information about these datasets and how
+these datasets are organized.
+
+## Summary Statistics
+
+In the code block below, using the `summarize` function to compute the mean
+city population in the `cities` dataset.
+
+```{r}
+
+```
+
+Now, compute the number of missing values for the city population variable
+using the function `sm_na_count`.
+
+```{r}
+
+```
+
+Notice that these missing values were ignored in the calculation of the average
+value in the previous calculation.
+
+Now, compute the quartiles of the city area variable:
+
+```{r}
+
+```
+
+What is the 25th percentail of city sizes in the dataset? **Answer**:
+
+Let's compute multiple summaries in one command. Below, using the summarize
+function to calculate the average value of each of the four population
+variables.
+
+```{r}
+
+```
+
+Which of the population counts is on average the smallest? Which is on
+average the largest? **Answer**: 
+
+The correlation between two variables indicates the "strength and direction
+of a linear relationship" between them. We will investiage correlations more
+in future chapters. Here, use the summarize function to compute the correlation
+between the city population and city area:
+
+```{r}
+
+```
+
+## Grouped Summaries
+
+Let's now try to use grouped summarize functions. There is a variable in the `cities`
+dataset called "city definition". It describes the kind of administrative structure
+given to each city. Using a grouped summary, in the code below tabulate how many times
+each city definition is used in the dataset. Arrange the data in decreasing order from
+the most common to least common definition.
+
+```{r}
+
+```
+
+What city type is the most common in the dataset? **Answer**:
+
+Now, in the code below group by continent and paste together the
+city names.
+
+```{r}
+
+```
+
+You will probably have to scroll over to see the results. 
+
+Finally, in the code below group by continent, count the number of large
+cities in each continent, and pass this to a plot with a `geom_col` layer
+to visualize the number of cities on each continent.
+
+```{r}
+
+```
+
+## Summarize Trends in U.S. Cities Data 
+
+We will now turn to the U.S. cities dataset to perform some more involved uses
+of the summary function. To start, group by the year variable and summarize the
+dataset by taking the sum of the population in each city for each year. Draw a
+plot with `geom_line` and `geom_point` to show the population trend in these
+300 U.S. cities over time.
+
+```{r}
+
+```
+
+The population variable in this dataset is given in thousands of people. In 2000 there were
+approximately 300 million people living in the Unite States. Roughly what fraction of 
+people in the year 2000 appear to have lived in one of the largest 300 cities according to
+this plot? **Answer**: 
+
+Now, in the code below group by the year variable and produce a confidence interval
+for the average population of a city in our dataset.
+
+```{r}
+
+```
+
+Now, take the code from the previous question and produce a point range plot 
+in the code below.
+
+```{r}
+
+```
+
+What do you notice about the size of the point ranges over time? **Answer**: 
+
+## Grouped Arrange and Slice
+
+In the notes we used the `group_by` function to manipulate the summarize function.
+However, the functions `arrange`, `slice`, and `filter` also respect the grouping
+of a dataset. This can be quite useful. For example, consider groupoing the us
+cities dataset by year, arrange in descending order by population, and then using
+`slice` to take the first five rows. This would result in a dataset that gives 
+the five largest cities for each year in our dataset. Write the code to do this
+below and visually verify that it seems to pick out five cities for each year:
+
+```{r}
+
+```
+
+Starting with the code in the previous block, summarize the dataset
+by pasting together the city names.
+
+```{r}
+
+```
+
+In the code below, write the code to select one row for each city corresponding
+to the year that the city had its largest population. (Note: think about this 
+carefully before you start writing the code). 
+
+```{r}
+
+```
+
+It would be helpful to sort the dataset you created in the previous code block 
+by the year variable. That would let us see the cities that peaked earliest at
+the top of the dataset. However, if we added an arrange function at the end of
+the code you wrote nothing would happen because dataset still grouped by city.
+We need to first ungroup the dataset with the `ungroup()` function. In the code
+below, starting with what you wrote in the block above, ungroup the dataset and
+arrange by year:
+
+```{r}
+
+```
+
+You should see that four of the earliest cities to peak in population are in Massachusettes.
+Each of these four cities are known for being industrial towns will large mills. What are
+the names of these cities? **Answer**:
+
+Taking the code to create the dataset that you produced in the previous question, produce
+a bar plot showing the number of cities with a peak population in each decade.
+
+```{r}
+
+```
+
+Try to identify the three different clusters of peak city sizes.
+
+To finish, in the code below take the dataset you plotted in the previous question,
+filter to include only longitude greater than -125, and produce a scatterplot with
+longitude on the x-axis and latitude on the y-axis. Color the points according to
+the year that the city attained its largest population and include a color-blind friendly
+color scale.
+
+```{r}
+
+```
+
+Try to match up the clusters of years with locations on the map.

@@ -1,0 +1,258 @@
+---
+title: "07. Presenting Results"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+```
+
+## Labels and themes
+
+We have seen a number of ways to create and modify data
+visualizations. One thing that we did not cover was how to label our axes. While many
+data visualization guides like to stress the importance of labelling axes, while in the
+exploratory phase of analysis it is often best to simply use the default labels provided
+by R. These are useful for a number of reasons. First, they require minimal effort and
+make it easy to tweak axes, variables, and other settings without spending time tweaking
+with the labels. Secondly, the default labels use the variable names in our
+dataset. When writing code this is *exactly* what we need to know about a variable to
+use it in additional plots, models, and data manipulation tasks. Of course, once we want
+to present our results to others, it is essential to provide more detailed descriptions
+of the axes and legends in our plot. Fortunately, this is relatively easy using the
+grammar of graphics.
+
+In order to change the labels in a plot, we can use the `labs` function as an extra
+part of our plot. Inside the function, we assign
+labels to the names of aes values that you want to describe. Leaving a value unspecified
+will keep the default value in place. Labels for the x-axis and y-axis will be go on the
+sides of the plot. Labels for other aesthetics such as size and color will be placed in
+the legend. Here is an example of a scatterplot with labels for the three aesthetics:
+
+```{r, message=FALSE}
+food %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = sat_fat, color = food_group)) +
+    labs(
+      x = "Calories per 100g",
+      y = "Saturated Fat (grams per 100g)",
+      color = "Food Group"
+    )
+```
+
+Notice that the descriptions inside of the `labs` function is fairly long. The
+code here breaks it up by putting each argument on its own line (indendent a
+further two spaces). This is good practice when using functions with a lot of
+arguments, something we will see throughout this chapter.
+
+We can also had a title (and optional subtitle and caption) to the plot by adding
+these as named arguments to the `labs` function.
+
+```{r}
+food %>%
+  ggplot() +
+    geom_point(aes(x = calories, y = sat_fat, color = food_group)) +
+    labs(
+      title = "Main title",
+      subtitle = "A little more detail",
+      caption = "Perhaps the source of the data?"
+    )
+```
+
+Another way to prepare our graphics for publication is to modify the *theme* of
+a plot. Themes effect the way that the plot elements such as the axis labels, ticks,
+and background look. By default through this book, we have set the default plot to
+`theme_minimal`. I think that this is a great choice for exploration of a dataset. As
+the name implies, it removes most of the clutter of other choices while keeping grid
+lines and other visual cues to help interpret a dataset. When presenting information
+for external publication, I prefer to use the theme called `theme_sm` based on the
+work of Edward Tufte. To set the theme, just call the following line of code sometime
+before making your plot:
+
+```{r}
+theme_set(theme_sm())
+```
+
+Now, when we construct a plot it will use the newly assigned theme:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_point(aes(x = sugar, y = total_fat))
+```
+
+The Tufte theme is designed to use as little "ink" as possible, thus focusing the
+reader on the data. It can be a bit too minimal when first exploring the dataset,
+but is a great tool for presenting your results.
+
+
+## Focusing attention
+
+Often the goal of using a data visualization is to highlight a particular subset of your
+data in relationship to everything else. One powerful way to do this is to focus the
+attention of your audience by making a specific layer of your data of interest with a bold
+color. The rest of the data can be displayed with a muted color, such as a light gray.
+As an illustration of how this works across different types of plots, let's see here how
+to highlight a specific region of each of our main plot types. I will use the color magenta
+here; consider picking your own color in your work. In order to simplify the plotting calls,
+I will use aesthetic inheritance for specifying
+the x and y aes values in the intial `ggplot` function. I will also directly insert `filter`
+commands within the `ggplot` call, something that also makes the code significantly shorter.
+
+As our first plot, let show where the meat food items fall in relationship to the the other
+food groups on a plot of calories and total fat.
+
+```{r}
+food %>%
+  ggplot(aes(calories, total_fat)) +
+    geom_point(color = "grey85") +
+    geom_point(
+      color = "maroon",
+      data = filter(food, food_group %in% c("meat"))
+    ) +
+    geom_text_repel(
+      aes(label = item),
+      color = "maroon",
+      data = filter(food, food_group %in% c("meat"))
+    )
+```
+
+The same approach works for showing a region of a line plot. Here, we highlight the time
+between the end of World War I and the onset of World War II.
+
+```{r}
+food_prices %>%
+  ggplot(aes(year, wheat)) +
+    geom_line(color = "grey85") +
+    geom_line(
+      color = "maroon",
+      data = filter(food_prices, between(year, 1919, 1939))
+    )
+```
+
+If we want to highlight a subset of a plot that required summarization, it is easiest to
+first create a temporary dataset with the entire summary. Then we can plot the entire
+dataset in one layer, and subset our call-out in another layer. Here, we will show the
+average number of calories in various food groups, calling attention to the fruit and
+vegetable categories.
+
+```{r, message=FALSE}
+dt <- food %>%
+  group_by(food_group) %>%
+  summarize(sm_mean_cl_normal(calories)) %>%
+  arrange(calories_mean) %>%
+  mutate(food_group = fct_inorder(food_group))
+
+dt %>%
+  ggplot(aes(food_group, calories_mean, ymin = calories_ci_min, ymax = calories_ci_max)) +
+    geom_pointrange(color = "grey85") +
+    geom_pointrange(
+      color = "maroon",
+      data = filter(dt, food_group %in% c("fruit", "vegetable"))
+    ) +
+    coord_flip()
+```
+
+Similarly, we can highlight particular bars within a bar plot by first creating a temporary
+dataset and then creating two layers from it. Here we highlight the large number of fruits
+and vegetables present in the dataset relative to the other food groups.
+
+```{r}
+dt <- food %>%
+  group_by(food_group) %>%
+  summarize(sm_count()) %>%
+  arrange(count) %>%
+  mutate(food_group = fct_inorder(food_group))
+
+dt %>%
+  ggplot(aes(food_group, count)) +
+    geom_col(fill = "grey85") +
+    geom_col(
+      fill = "maroon",
+      data = filter(dt, food_group %in% c("fruit", "vegetable"))
+    ) +
+    coord_flip()
+```
+
+Sometimes highlighting with color is used to focus attention on a model in relationship to data,
+rather than between two subsets of data. Here, we highlight the linear regression line showing
+the relationship between saturated fat and total fat. We turn off the standard error (`se = FALSE`)
+bars to avoid cluttering the plot.
+
+```{r}
+food %>%
+  ggplot(aes(sat_fat, total_fat)) +
+    geom_point(color = "grey85") +
+    geom_smooth(color = "maroon", method = "lm", se = FALSE)
+```
+
+It is possible to include multiple colors to show different subsets of the data, but in
+generally including too many subsets in one plot defeats the purpose of focusing your
+audience's attention on one particular part of the plot. I recommend using at most two
+highlight colors, and only then when they are visually seperated within the plot. An
+example is shown in the next section.
+
+## Example
+
+Let's put together all of the elements in this chapter to produce a plot of wheat prices
+that highlights the differences in prices following WWI and following WWII. We will add
+a complete set of titles and captions. I selected the second color by picking the
+complementary color of the maroon used for the first time period.
+
+```{r}
+food_prices %>%
+  ggplot(aes(year, wheat)) +
+    geom_line(color = "grey85") +
+    geom_line(
+      color = "maroon",
+      data = filter(food_prices, between(year, 1919, 1939))
+    ) +
+    geom_line(
+      color = "#30b080",
+      data = filter(food_prices, between(year, 1945, 2015))
+    ) +
+    labs(
+      title = "Wheat Price Index, 1850 to 2015",
+      subtitle = "Commodity prices are given as a price index relative to real prices in 1900",
+      caption = "Jacks, D.S. (2019), \"A Typology of Real Commodity Prices in the Long Run.\" Cliometrica 13(2), 202-220.",
+      x = "Year",
+      y = "Price Index of Wheat (1900 = 100)"
+    )
+```
+
+To finish the plot off, and make it look particularly professional, it would be nice to add
+annotations explaining the main points that you want your audience to take-away from the plot.
+It is possible to do this directly in R with **ggplot2** annotations, but I find these somewhat
+awkward and time consuming. A better solution is to open the figure in another program such as
+Microsoft PowerPoint or the macOS Finder. Here is a plot I made by adding text labels and an
+arrow to the plot using the macOS Finder application:
+
+![](images/wheat_price.png)
+
+Notice that the plot both shows all of the data for the viewer, but guides them to the specific
+points of interest that we are interested. The subpoint explaining the peak int he 1970s is shown
+in a smaller font size, and in a dark grey, because it is secondary to the points I wanted to make
+about the overall trends in the two post-war periods.
+
+## Exercises and References
+
+There is are two exercise notebooks for this chapter:
+
+- **exercies07A.Rmd**: prompts for producing presentation-ready plots from various datasets
+- **exercies07B.Rmd**: open-ended questions to explore with data
+
+It is strongly recommended to complete at least the first notebook prior to
+continuing on to the next chapter.

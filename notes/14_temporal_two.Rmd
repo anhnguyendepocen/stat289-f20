@@ -1,0 +1,463 @@
+---
+title: "14. Temporal Data II"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(lubridate)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+page_views <- read_csv(file.path("data", "page_views.csv"))
+page_revisions <- read_csv(file.path("data", "page_revisions.csv"))
+```
+
+
+## Temporal ordering
+
+In showing the application of line graphs, we have shown several of datasets that have a temporal aspect.
+So far, however, all of these have been organized relatively simply. There has been one row for each year
+within a fixed range, and we have been able to treat the year variable has any other continuous measurement,
+with the only caveat that it makes sense to connect dots with a line when building a visualization. In the
+next few sections we will look at another dataset related to our collection of food items. For each item
+in the food dataset, we have grabbed page view statistics for a 90-day period from Wikipedia. That is, we
+have a record of how many people looked at a particular page each day, for each item. The data are arranged
+with one row for each combination of item and day:
+
+```{r}
+page_views
+```
+
+The time variables are given the way we recommended in Chapter 3, with individual columns for year, month,
+and day. Here, our dataset is already ordered (within each item type) from the earliest records to the
+dateset. If this were not the case, because all of our variables are stored as numbers, we could use
+the `arrange` function to sort by year, followed by month, followed by year, to get the same ordering.
+
+How could we show the change in page views over time for a particular variable? One approach is to use the
+`row_number` function to add a numeric column running down the dataset. Here is an example of a line plot
+using the row number approach:
+
+```{r}
+page_views %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(rn = row_number()) %>%
+  ggplot() +
+    geom_line(aes(x = rn, y = views), color = "red3")
+```
+
+In this case, the plot is not too bad. The x-axis corresponds to the day number, and in many applications
+that may be exactly what we need. Notice, though, that we cannot tell anything from the plot about exactly
+what days of the year are being represented. Also, note that this only works because the data are uniformaly
+sampled (one observation each day) and there is no missing data.
+
+Another way to work with dates is to convert the data to a fractional year format. Here, the months and days
+are added to form a fractional day. A quick way to do this is to compute:
+
+$$ year\_frac = year + \frac{month - 1}{12} + \frac{day - 1}{12 \cdot 31}$$
+
+We are subtracting one from the month and day so, for example, on a date such as 1 July 2020 (halfway through
+the year) we have the fractional year equal to `2020.5`. We could make this even more exact by accounting for
+the fact that some months have fewer than 31 days, but even with February in our range of data the results
+work well:
+
+```{r}
+page_views %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(year_frac = year + (month - 1) / 12 + (day - 1) / (12 * 31)) %>%
+  ggplot() +
+    geom_line(aes(x = year_frac, y = views), color = "red3")
+```
+
+This revised visualization improves on several aspects of the original plot. For one thing, we can
+roughly see exactly what dates correspond to each data point. Also, the code will work fine regardless
+of whether the data are sorted, evenly distributed, or contain any missing values. As a down-side,
+the axis labels take some explaining. We can extend the same approach to working with time data. For
+example, if we also had the (24-hour) time of our data points the formula would become:
+
+$$ year\_frac = year + \frac{month - 1}{12} + \frac{day - 1}{12 \cdot 31} + + \frac{hour - 1}{24 \cdot 12 \cdot 31}$$
+
+If we are only interested in the time since a specific event, say the start of an experiment, we can
+use the same approach but take the difference relative to a specific fractional year.
+
+Fractional times have a number of important applications. Fractional times are convenient because they
+can represent an arbitrarily precise date or date-time with an ordinary number. This means that they
+can be used in other models and applications without any special treatment. They may require different
+model *assumptions*, but at least the code should work with minimal effort. However, particularly when
+we want to create nice publishable visualizations, it can be useful to work with specific functions for
+manipulating dates and times.
+
+## Date objects
+
+Most of the variables that we have worked with so far are either characters (`chr`) or numbers (`dbl`).
+Dates are in some ways like numbers: the have a natural ordering, we can talk about the difference
+between two numbers, and it makes sense to color and plot them on a continuous scale. However, they
+do have some unique properties, particularly when we want to extract information such as the day of the
+week from a date, that require a unique data type. To create a date object in R, we can use the function
+`make_date`, passing in a variable for the year, month, and day.
+
+```{r}
+page_views %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(date = make_date(year, month, day))
+```
+
+Notice that the new column has a special data type: `date`. If we build a visualization using a date object, `ggplot`
+is able to make smart choices about how to label the axis:
+
+```{r}
+page_views %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(date = make_date(year, month, day)) %>%
+  ggplot() +
+    geom_line(aes(date, views))
+```
+
+Here, the algorithm decided to label each half-month. We can manually change the frequency of the
+labels using the `scale_x_date` and setting the `date_breaks` option. Tt is possible to
+describe the frequency of labels using a string. For example, here we show a label for each week:
+
+```{r}
+page_views %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(date = make_date(year, month, day)) %>%
+  ggplot() +
+    geom_line(aes(date, views)) +
+    scale_x_date(date_breaks = "1 week")
+```
+
+Once we have a date object, we can also extract useful information from it. For example,
+the `wday` function extracts the weekday of the date. Here, we will compute the weekday
+using labels (`label = TRUE`, otherwise we have a numeric description of the weekday) and
+compute the average number of page views for each day of the week:
+
+```{r}
+page_views %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(date = make_date(year, month, day)) %>%
+  mutate(weekday = wday(date, label = TRUE)) %>%
+  group_by(weekday) %>%
+  summarize(sm_mean_cl_boot(views)) %>%
+  ggplot() +
+    geom_pointrange(
+      aes(x = weekday, y = views_mean, ymin = views_ci_min, ymax = views_ci_max)
+    )
+```
+
+Here we see that the number of page views is the lowest on Saturday and the number of views is
+highest on Tuesday. We can also use the `make_date` function to filter the dataset. For example,
+we can filter the dataset to only include those dates after 15 January 2020:
+
+```{r}
+page_views %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(date = make_date(year, month, day)) %>%
+  filter(date > make_date(2020, 1, 15))
+```
+
+Note that you can leave some of the values in the `make_date` function empty. For example, passing only
+the year and month. This defaults to the first day of the month. This shorthand is useful in both creating
+the original date object as well as when filtering the data.
+
+## Date times
+
+A similar approach to dates can also apply the objects that include time data. As an example, we will look
+at another related dataset from Wikipedia. Here, for each of the same pages as considered in the previous
+set, we have a record of the last 500 edits made to each page. For every edit, we have the exact second that
+an edit was made:
+
+```{r}
+page_revisions
+```
+
+Similar to the approach in the previous section, we can use the function `make_datetime` to create a date-time object. Here
+we will fill it in with the year, month, day, hour, minute, and second. As mentioned above, however, you can supply on the
+subset of precision matching your data.
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  select(item, time, year, month, day, hour, minute, second)
+```
+
+One piece of information that we know about each edit is the size of the page, in bytes. Looking at this
+over time shows when large additions and deletions were made to each record.
+
+```{r}
+page_revisions %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  ggplot() +
+    geom_line(aes(x = time, y = page_size))
+```
+
+We can see that there are a few very large edits (both deletions and additions), likely consisting
+of large sections added and substracted from the page. If we want to visualize when these large
+changes occur, it would be useful to include a more grainular set of labels on the x-axis. To do
+this, we use the layer `scale_x_datetime` and supply a string to describe the frequency of the
+labels. Here, we use a period of three months. The labels will start to get crowded here, so we
+will also add a `theme` layer to rotate the axis labels by 90 degrees.
+
+```{r}
+page_revisions %>%
+  filter(item %in% c("Apple")) %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  ggplot() +
+    geom_line(aes(x = time, y = page_size)) +
+    scale_x_datetime(date_breaks = "3 months") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+We can also filter our dataset by a particular range of dates or times. This is useful to zoom into
+a specific region of our data to investigate patterns that may be otherwise lost. For example, if we
+wanted to see all of the page sizes for three food times from 2018 onwards, we can apply a filter
+function to take any data point that occurs after `make_datetime(2018)`.
+
+```{r}
+page_revisions %>%
+  filter(item %in% c("Apple", "Banana", "Beef")) %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  filter(time > make_datetime(2018)) %>%
+  ggplot() +
+    geom_line(aes(x = time, y = page_size, color = item))
+```
+
+Notice that the plot includes data from 2018, even though we use a strictly greater than,
+`>`, condition. The reason for this is that `make_datetime(2018)` is the exact time
+corresponding to 1 January 2018 at 00:00. Any record that comes at any other time during
+the year of 2018 will be included in the filter.
+
+## Language and Timezones
+
+In the previous examples investigating days of the week, notice that the days of the week are
+printed using English names. The same thing occurs when printing the names of months. Depending
+on your audience, it may be desirable to show plots using the names of weekdays and months in
+another language. This can be controlled by specifying the `locale` property when calling the
+functions `wday` and `month` when `label = TRUE`. Here, for example, are the days of the weeks
+provided in six different languages:
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  mutate(
+    wday_en = wday(time, label = TRUE, abbr = FALSE, locale = "en_US.UTF-8"),
+    wday_fr = wday(time, label = TRUE, abbr = FALSE, locale = "fr_FR.UTF-8"),
+    wday_de = wday(time, label = TRUE, abbr = FALSE, locale = "de_DE.UTF-8"),
+    wday_zh = wday(time, label = TRUE, abbr = FALSE, locale = "zh_CN.UTF-8"),
+    wday_ru = wday(time, label = TRUE, abbr = FALSE, locale = "ru_RU.UTF-8"),
+    wday_ja = wday(time, label = TRUE, abbr = FALSE, locale = "ja_JP.UTF-8"),
+  ) %>%
+  select(time, wday_en, wday_fr, wday_de, wday_zh, wday_ru, wday_ja)
+```
+
+You can change the default language display by using the function `Sys.setlocale` before
+calling the date functions. For example, this function changes the default in R to use
+American English names for dates and times:
+
+```{r}
+Sys.setlocale("LC_TIME", "en_US.UTF-8")
+```
+
+You have probably noticed that I use a similar line of code at the top of each lab and project
+template. The reason for this is to better assist students in my classes who have computers set
+as a default to a different language. While I am generally in favor of using whatever language
+you are most comfortable with, it can be much more difficult for me (and I assume other instructors)
+to help students who have error messages in a language I do not understand. Also, the majority
+of websites offering technical advice operate in English. In general, you will have a much better
+chance of finding help by searching an English error message compared to another language.
+
+Another regional issue that arises when working with dates and times are timezones. While
+seemingly not too difficult a concept, getting timezones to work correctly with complex datasets
+can be incredibly complicated. A wide range of programming bugs have been attributed to all sorts
+of edge-cases surrounding the processing of timezones.
+
+All times stored in R are recorded using a fixed timezone called Coordinated Universal Time (UTC),
+which is roughly the time in London, England, but without adjustments for daylight savings time. The
+functions provided in **ggplot2** also default to showing data in UTC time, as do functions for
+writing datetimes as strings. Therefore, if you are only working with data from a single timezone,
+you can ignore this detail. While *technically* R thinks all of your times are relative to a specific
+timezone, this should have no practical significance. If, however, we have date recorded in different
+timezones, this detail is important.
+
+All of the times recorded in the dataset `page_revisions` is given in UTC. This is not surprising;
+most technical sources with a global focus will use this convention. We do not know where each of
+the users who made page revisions lives, so there is no way to associate each edit with their local
+time. However, it may make sense to display information about time of day using the local time of a
+different location. For example, for an Audience in New York, displaying the hours in the local timezone
+could be helpful to reason about where and when edits are being made.
+
+There are two functions for converting between timezones. The function `with_tz` gives a tag to a datetime
+variable that indicates how it should be displayed to the user and what local time should be used when
+extracting quantities such as days and hours. In order to use the function we need to understand how to
+describe a timezone. R uses a format that describes a timezone using the the format "continent/city";
+we can see all of the available options using the function `OlsonNames`. Why this format? Continents
+are used in place of countries because the location of a city on a continent is relatively fixed,
+unlike the specific geopolitical borders that define a city. It also avoid many sensitive topics;
+everyone can agree that Taipei is in Asia. Cities are used because they change names very less frequently
+than countries and they (generally) have an agreed upon name in English. Local names for time zones are
+not great because they are not standardized. For example, there is an Eastern Standard Time in both the
+United States and in Australia. Here are the first 40 options:
+
+```{r}
+head(OlsonNames(), 40)
+```
+
+Let's create a new column in our dataset corresponding to the edit time but with the indication that
+times should be given relative to New York City. We will also extract the hours from the original time
+as well as the time relative to New York City and provide the difference between these two times.
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  select(time) %>%
+  mutate(time_nyc = with_tz(time, tzone = "America/New_York")) %>%
+  mutate(hour_utc = hour(time), hour_nyc = hour(time_nyc)) %>%
+  mutate(time_diff = time - time_nyc)
+```
+
+Notice that R shows a different version of the time string for New York (here, five hours behind
+UTC) and also provides a different hour value of the hour variable. However, if we compute the time
+difference between the `time` and `time_nyc` variable R indicates that there are 0 seconds between
+these two times. Here, R thinks of the times as being the same, but with a different marker for how
+to print and extract other information (such as the hour) from the data. In this way it is similar
+to the `group_by` function, which also has no direct influence on the data but serves, rather, as
+an indicator to how other functions behave.
+
+We can use the timezone variable, as mentioned above, to display information in a useful way to a
+local audience. For example, this code displays the frequency of updates as a function of the hour
+of the day in New York City.
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  select(item, time, page_size) %>%
+  mutate(time_eastern = with_tz(time, tzone = "America/New_York")) %>%
+  mutate(dt_hour = hour(time_eastern)) %>%
+  group_by(dt_hour) %>%
+  summarize(sm_count()) %>%
+  ggplot() +
+    geom_col(aes(dt_hour, count))
+```
+
+While certainly many editors are living in other English-speaking cities (London, Los Angeles, or Mumbai),
+it is generally easier for people to do the mental math for what times correspond with relative to their
+own timezone than relative to UTC.
+
+The second function for manipulating timezoes in `force_tz`. Whereas `with_tz` assumes that datetimes
+were recorded correctly in UTC, the function `force_tz` indicates that a time was incorrectly recorded
+with a wrong timezone. With this function we are telling R that the time given is the time of the record
+in a different timezone. What if we replace the function `with_tz` above with `force_tz`?
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  select(time) %>%
+  mutate(time_nyc = force_tz(time, tzone = "America/New_York")) %>%
+  mutate(hour_utc = hour(time), hour_nyc = hour(time_nyc)) %>%
+  mutate(time_diff = time - time_nyc)
+```
+
+Now, the times given in `time` and `time_nyc`, as well as the extracted hours, **look** the same, but R
+thinks that there is a difference of 5 hours between these two times.
+
+## Window functions
+
+At the start of this chapter, we considered time series to be a sequence of events without too much focus
+on the specific dates and times. This viewpoint can be a useful construct when we want to look at changes
+over time. For example, we have the overall size of each Wikipedia page after an edit. A measurement that
+would be useful is the *difference* in page size made by an edit. To add a variable to our dataset, we
+usually use the `mutate` function, and that will again work here. However, in this case we need to reference
+values that come before or after a certain value. This requires the use of window functions.
+
+A window function transforms a variable in our dataset into a new variable with the same length, but unlike
+many other transformations takes into account the entire ordering of the data. Two examples of window functions
+that are useful when working with time series data are `lag` and `lead`, which give access to rows preceeding
+or following a row, respectively. Let's apply this to our page revision dataset to get the previous and next
+values of the page size variable. The data are, as given, arranged in reverse chronological order. Before
+applying the window functions, we will reverse the ordering to more easily talk about the relationship between
+rows.
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  arrange(item, time) %>%
+  mutate(
+    page_size_last = lag(page_size),
+    page_size_next = lead(page_size)
+  ) %>%
+  select(item, time, page_size, page_size_last, page_size_next)
+```
+
+Notice that the first value of `page_size_last` is missing because there is no *last* value for the first item in
+our data. Similarly, the variable `page_size_next` will have a missing value at the end of the dataset. As written
+above, the code incorrectly crosses the time points at the boundary of each page. That is, for the first row of the
+second page (Asparagus) it thinks that the size of the last page is the size of the final page of the Apple record.
+To fix this, we can group the dataset by item prior to applying the window functions. Window functions respect the
+grouping of the data.
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  arrange(item, time) %>%
+  group_by(item) %>%
+  mutate(
+    page_size_last = lag(page_size),
+    page_size_next = lead(page_size)
+  ) %>%
+  ungroup() %>%
+  select(item, time, page_size, page_size_last, page_size_next) %>%
+  slice(495:504)
+```
+
+Notice that now, correctly, the dataset has a missing `page_size_next` for the final Apple record and a missing
+`page_size_last` for the first Asparagus record. Now, let's use this to compute the change in the page sizes
+for each of the revisions:
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  arrange(item, time) %>%
+  group_by(item) %>%
+  mutate(
+    page_size_diff = page_size - lag(page_size)
+  ) %>%
+  ungroup() %>%
+  select(item, time, page_size, page_size_diff)
+```
+
+In the above output, notice that one revision appears to completely revert another revision, by
+deleting the exact same number of bytes that were previously added. If we wanted to find these
+reversion in the dataset, we could apply the `lag` function several times. As an alternative, we
+can also give a parameter to `lag` (as well as `lead`) to indicate that we want to go back (or
+forward) more than one row. Let's put this together to indicate which commits seem to be a
+reversion (the page size exactly matches the page size from two commits prior) as well as the
+overall size of the reversion.
+
+```{r}
+page_revisions %>%
+  mutate(time = make_datetime(year, month, day, hour, minute, second)) %>%
+  arrange(item, time) %>%
+  group_by(item) %>%
+  mutate(
+    page_size_diff = page_size - lag(page_size),
+    revision = (page_size == lag(page_size, 2))
+  ) %>%
+  ungroup() %>%
+  select(item, time, page_size_diff, revision) %>%
+  filter(revision)
+```
+
+We can study these reversions to see the nature of the Wikipedia editing processing. For example,
+how long do these reversions tend to take? Are certain pages more likely to undergo reversions?
+Do these take place during a certain time of the day?

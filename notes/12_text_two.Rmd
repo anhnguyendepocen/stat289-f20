@@ -1,0 +1,480 @@
+---
+title: "12. Textual Data II"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+library(Matrix)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+page_text <- read_csv(file.path("data", "page_text.csv"))
+```
+
+## Processing NLP Pipeline
+
+In this chapter a number of methods are introduced for working with textual data. The idea
+is that we have a collection of texts and we want to use R to investigate the structure and
+connections between the various documents. As an example dataset, we will use our standard
+set of 61 food items. However, instead of the typical metadata, we will use a new dataset
+consisting of the text from each item's Wikipedia page. Later chapters will show how to
+construct this dataset within R; for now we will work with it as-is.
+
+```{r, message=FALSE}
+page_text
+```
+
+Notice that none of the additional metadata about the texts ae given in this table. As needed,
+we can join into the `foods` table to access them.
+
+Currently our dataset is organized with one row for each document. A standard first-step in text
+processing is to convert to a token-level dataset, with one row for each token (e.g., word or
+punctuation mark) in each document. The best and easiest way to conver a document-level dataset
+into a tokens-level dataset is to use a purpose-built algorithm called an
+*NLP (Natural Language Processing) Pipeline*. To do this, will use the **cleanNLP** package.
+It provides a consistant method for accessing several state-of-the-art NLP. To start, we can
+load the package and initialize the **udpipe** method, which is reasonably fast and powerful
+but requires no additional setup. We will specify that we want to load models for parsing
+English text:
+
+```{r, message=FALSE}
+library(cleanNLP)
+
+cnlp_init_udpipe("english")
+```
+
+Once loaded, we can use the function `cnlp_annotate` to produce a token-level dataset from our
+`page_text` input. To use the function here, we need to specify the name of the column containing
+our text and the column that provides a unique key for each document. If no key is given, one will
+be produced by the function. The output of the annotation can actually be several tables; we
+need to add the call `$token` to access the new data frame of interest.
+
+```{r, eval=FALSE, message=FALSE}
+tokens <- cnlp_annotate(page_text, text_name = "page_text", doc_name = "item")$token
+tokens
+```
+```{r, echo=FALSE}
+# write_rds(tokens, "cache/tokens.rds")
+tokens <- read_rds("cache/tokens.rds")
+tokens
+```
+
+There is a lot of information that has been automatically added to this table, the collective
+results of decades of research in computational linguistics and natural language processing.
+Each row corresponds to a word or a punctuation mark, along with metadata describing the token.
+Notice that reading down the column `token` reproduces the original text. The columns available
+are:
+
+- **doc_id**: A key that allows us to group tokens into documents and to link back into the
+original input table.
+- **sid**: Numeric identifier of the sentence number.
+- **tid**: Numeric identifier of the token within a sentence. The first three columns form a
+primary key for the table.
+- **token**: A character variable containing the detected token, which is either a word or a
+punctuation mark.
+- **token_with_ws**: The token with whitespace (i.e., spaces and new-line characters) added.
+This is useful if we wanted to re-create the original text from the token table.
+- **lemma**: A normalized version of the token. For example, it removes start-of-sentence
+captialization, turns all nouns into their singular form, and converts verbs into their
+infinitive form.
+- **upos**: The universal part of speech code, which are parts of speech that can be defined
+in (most) spoken languages. These tend to correspond to the parts of speech taught in primary
+schools, such as "NOUN", "ADJ" (Adjective), and "ADV" (Adverb). The full set of codes and
+their meaning can be found here: [Universal POS tags](https://universaldependencies.org/u/pos/).
+- **xpos**: A fine-grained part of speech code that depends on the specific language (here,
+English) and models being used.
+- **feats**: A string describing additional features of the token, such as the tense of a
+verb or the number (singular or plural) of a noun.
+- **tid_source** The token id of the word in the sentence that this token is grammatically
+related to. For example, in the above table, the 5th and 7th tokens ("sweet" and "edible")
+are both linked to the 8th word ("fruit") because they are adjective that describe the
+noun. Relations always occur within a sentence, so there is no need for a seperate indication
+of the source **sid**.
+- **relation**: The name of the relation implied by the **tid_source** variable. Allowed
+relations differ slightly across models and languages, but the core set are relatively
+stable. The codes in this table are
+[Universal Dependencies](https://universaldependencies.org/en/dep/index.html).
+
+There are many analyses that can be performed on the extracted features in this table.
+Fortunately, many of these can be performed by directly using the core functions covered
+in the first ten chapters of this text, without the need for any new text-specific functions.
+For example, we can find the most common nouns in the dataset by filtering on the universal
+part of speech and grouping by lemma:
+
+```{r}
+tokens %>%
+  filter(upos == "NOUN") %>%
+  group_by(lemma) %>%
+  summarize(sm_count()) %>%
+  arrange(desc(count))
+```
+
+Or, grouping by document id and lemma, we can summarize the top 8 adjectives
+used in each Wikipedia page:
+
+```{r}
+tokens %>%
+  filter(upos == "ADJ") %>%
+  group_by(doc_id, lemma) %>%
+  summarize(sm_count()) %>%
+  arrange(desc(count)) %>%
+  slice(1:8) %>%
+  summarize(sm_paste(lemma))
+```
+
+More complex queries involve joining the `tokens` table with itself using the
+`tid_souce` column. For example, here we filter the rows that correspond to
+tokens with the same name as `doc_id` that have the "amod" relationship. This
+means that the page name serves as an adjective for another noun, such as the
+phrases "apple tree", "cabbage patch", or "beef bourguignon". Here, we can find
+the nouns that are modified by the page name as an adjective:
+
+```{r}
+tokens %>%
+  filter(stri_trans_tolower(doc_id) == lemma) %>%
+  filter(relation == "amod") %>%
+  select(doc_id, sid, tid_source) %>%
+  left_join(
+    tokens,
+    by = c("doc_id" = "doc_id", "sid" = "sid", "tid_source" = "tid")
+  ) %>%
+  group_by(doc_id, lemma) %>%
+  summarize(sm_count()) %>%
+  arrange(desc(count)) %>%
+  slice(1:8) %>%
+  summarize(sm_paste(lemma))
+```
+
+Looking at the output, we see that these match common noun phrases such as "corn flake"
+and "grape juice". Notice that there are no rows from the documents "Green Pepper" or
+"Brown Rice", because no token will even match these page names. Any occurance of the
+name will be split into two rows. Catching these requires either pre-processing of the
+text prior to running `cnlp_annotate`, or including a more complex search query. These
+details, and many more, are addressed in the chapter exercices.
+
+## TF-IDF
+
+The process of counting the number of times as token (or its lemma-form) occurs in each
+document is a very common task in text processing. So much so, that we have a special
+function for counting these values for us called `sm_text_tfidf`. We can indicate the
+column that we want to count up with the input argument `token_var`, as well as a
+filter on the minimum and maximum proportion of documents that a token must be in to
+be included in the output dataset. Here is the function with these arguments set to
+their default values:
+
+```{r}
+tokens %>%
+  sm_text_tfidf(token_var = "lemma", min_df = 0, max_df = 1)
+```
+
+Note that regardless of what variable is used as `token_var`, the column containing the thing
+being counted will be called `token`. The count variable is stored in a column called `tf`,
+which stands for "term frequency". There is another term called `tfidf` (TF-IDF), the term
+frequency-inverse document frequency score. It takes a (scaled version) of the term frequency
+and divides by (a scaled) proportion of documents that use the term. Mathematically, if
+`tf` are the number of times a term is used in a document and `df` are the proportion of
+documents that use the term at least once, the TF-IDF score can be computed as:
+
+$$ \text{tfidf} = \frac{(1 + log_2(\text{tf}))}{log_2(\text{df})} $$
+
+The score gives a measurement of how important a term is in describing a document in the context
+of the other documents. Note that this is a popular choice for the scaling functions, but they
+are not universal and other software way use different choices.
+
+We can use TF-IDF to try to measure the most important words in each document. Here, we filter
+out particularly rare terms that occur in less than 10% of the documents, and then find the
+8 nouns that have the highest value of `tfidf` for each document:
+
+```{r}
+tokens %>%
+  filter(upos == "NOUN") %>%
+  sm_text_tfidf(min_df = 0.1) %>%
+  arrange(desc(tfidf)) %>%
+  group_by(doc_id) %>%
+  slice(1:8) %>%
+  summarize(sm_paste(token))
+```
+
+Do these capture words that best describe each page? How would you expect the top terms
+to change if we applied it to a larger collection of Wikipedia pages that included many
+non-food related articles?
+
+## Documents as Vectors: Illustration
+
+This section illustrates a concept that will be very useful in the final two sections of
+this chapter. We can show the idea behind the concept using R functions that we have
+already introduced, and so have choosen to include the code here. Note, however, that
+there is generally no need to include this in your own analysis of textual data.
+
+The TF-IDF dataset is an example of a long-format dataset. Conceptually, we can think
+about the idea of converting this into a wide-format. Here, each row would correspond
+to a document; variables would exist for each unique token, giving counts corresponding
+to each document. This object can get quite large, but writing the code is relatively
+straightforward using the techniques from Chapter 10. Here, we will filter to include
+only two lemmas, "animal" and "food", and pivot the TF-IDF dataset into a wide format.
+
+```{r}
+tokens %>%
+  sm_text_tfidf() %>%
+  filter(token %in% c("animal", "food")) %>%
+  select(doc_id, token, tf) %>%
+  pivot_wider(
+    names_from = "token",
+    values_from = "tf",
+    names_prefix = "lemma_",
+    values_fill = list("tf" = 0)
+  )
+```
+
+Using just these two columns, we can plot a set of pages with `lemma_food` on the x-axis
+and `lemma_animal`. It will be useful to think of these are vectors starting at the origin,
+rather than points floating in space.
+
+```{r}
+tokens %>%
+  sm_text_tfidf() %>%
+  filter(token %in% c("animal", "food")) %>%
+  select(doc_id, token, tf) %>%
+  pivot_wider(
+    names_from = "token",
+    values_from = "tf",
+    names_prefix = "lemma_",
+    values_fill = list("tf" = 0)
+  )  %>% filter(
+    doc_id %in% c("Apple", "Beef", "Chicken", "Potato", "Milk", "Lamb", "Cheese")
+  ) %>%
+  ggplot() +
+    geom_text(
+      aes(x = lemma_food, y = lemma_animal, label = doc_id),
+      nudge_x = 0.8,
+      nudge_y = 0.8
+    ) +
+    geom_segment(
+      aes(x = 0, y = 0, xend = lemma_food, yend = lemma_animal),
+      arrow = arrow(length = unit(0.3,"cm"))
+    )
+```
+
+What you should notice from this diagram is that these two words do a good job of
+distinguishing the various pages. Beef and Lamb refer to animal food products, and
+therefore have the highest usae of the lemma "animal". Potato and Apple are not
+related to animals are all, and only use the lemma "food". Milk and Cheese are
+food derived from animal products and sit in the middle of the plot. Chicken is
+an animal, but its page focuses heavily on its culinary usage, and therefore it
+sits closer to the dairy products.
+
+The take-away from this illustration is that a wider-format of the term frequency
+values provides an interesting way of grouping and exploring the relationships
+between documents. Generally, we do not want to actually use the `pivot_wider`
+function because it is too slow and clunky to work with a dataset that may have
+thousands of columns. Instead, we will use a different approach with allows us
+to think of documents as living in a high dimensional space without having to
+work with these large dimensional spaces directly.
+
+## Dimension Reduction
+
+Consider extending the illustration in the previous section to include a larger set
+of lemmas. While we do not have an easy way of plotting the concept, we can try to
+imagine each document as a an arrow from the origin to a point in a very high
+dimensional space (one dimension for each unique token in the term frequency dataset).
+In this section we will see a way of trying to work with this high-dimensional
+space.
+
+It was mentioned above that the `pivot_wider` function is not a good choice for
+making a wider version of a term frequency dataset. A better choice is the function
+`cnlp_utils_tf`, provided by **cleanNLP**. It produces a special kind of object
+that efficently stores a wide version of the dataset in an object called a "dgCMatrix".
+
+```{r}
+tokens %>%
+  cnlp_utils_tf(token_var = "lemma") %>%
+  class()
+```
+
+We will not work with this object directly, but will instead see several ways of
+converting it back into a reasonably-sized dataset. Note that the dataset constructed
+here will use term frequencies. The sister function `cnlp_utils_tfidf` produces a
+"dgCMatrix" or TF-IDF values.
+
+Principal component analysis is a common method for taking a high-dimensional dataset
+and converting it into a smaller set of dimensions that capture many of the most
+interesting aspects of the higher dimensional space. The first principal components
+is defined as a direction in the high-dimensional space that captures the most variation
+in the inputs. The second component is a dimension perpendicular to the first that
+captures the highest amount of residual variance. Additional components are defined
+similarly. We can compute principal components from the "dgCMatrix" using the helper
+function `sm_tidy_pca`:
+
+```{r}
+tokens %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_pca(n = 2)
+```
+
+The specific mathematics behind the principal components is less important than how we
+interpret the output. Generally, went we plot the first 2 or 3 components together, we
+do not worry about the specific dimensions. Rather, we want to use the principal components
+to show relationships between documents based on clusters and other proximal information.
+Here is a plot of our dataset on the first two principal components, colored by food group:
+
+```{r}
+tokens %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_pca() %>%
+  left_join(food, by = c("document" = "item")) %>%
+  ggplot() +
+    geom_text_repel(
+      aes(x = v1, y = v2, label = document, color = food_group),
+      show.legend = FALSE
+    ) +
+    theme_void()
+```
+
+Notice that the seafood and fruits cluster along different parts of the plot. The
+other food groups roughly cluster in the upper-left hand side of the plot, with
+vegetables closer to the fruits. The Duck page, an aquatic bird, is sits inbetween
+the seafood and other meats. All of these capture general relationships we might
+expect given our knowledge of the pages and what they represent.
+
+Another method for reducing the dimension of our dataset is called UMAP (Uniform
+Manifold Approximation and Projection). It has a much more complex algorithm that
+is able to better spread the dataset uniformly over the plot region. We can run
+this algorithm using the function `sm_tidy_umap`:
+
+```{r, warning=FALSE}
+tokens %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_umap() %>%
+  left_join(food, by = c("document" = "item")) %>%
+  ggplot() +
+    geom_text_repel(
+      aes(x = v1, y = v2, label = document, color = food_group),
+      show.legend = FALSE
+    ) +
+    theme_void()
+```
+
+As with the principal components, the exact dimensions are unimportant here, its the
+relationship between the documents that counts. Notice that the pages are less clumped
+together here, but also that the structures from the principal component analysis are
+not as clearly defined. The benefits of UMAP become more apparent with larger datasets,
+which will be shown in the exercice notebooks.
+
+## Document Distance
+
+In the previous two sections we treated documents as being points in a high-dimensional
+space, and commented that our primary objective is understanding the relationships
+between the documents in this space. We can approach this question more directly by
+computing the distances between documents in the high-dimensional space. This can be
+done by using the `sm_tidy_distance` function applied to the "dgCMatrix" object:
+
+```{r}
+tokens %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_distance()
+```
+
+The outpu gives the distance between every pair of documents. Self-pairs (the
+distance between Apple and Apple) are included to assist with other kinds of
+analysis. Using this output, we can join each page to its closest neighbor:
+
+```{r}
+tokens %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_distance() %>%
+  filter(document1 != document2) %>%
+  group_by(document1) %>%
+  arrange(distance) %>%
+  slice_head(n = 1) %>%
+  ungroup() %>%
+  arrange(distance)
+```
+
+Unfortunately, these links are largely not very instinctive. Penne and Flounder, for
+example, do not have very much in common. The issue here is that the length of each
+document has a strong influence on the distance between points. Returning to our
+illustrative example with just two lemmas, notice that Potato is actually closer to
+Milk than it is to Apple. As an alternative, we can compute the *angle* between two
+vectors using the function `sm_tidy_angle_distance`.
+
+```{r}
+tokens %>%
+  cnlp_utils_tfidf(token_var = "lemma") %>%
+  sm_tidy_angle_distance() %>%
+  filter(document1 < document2) %>%
+  group_by(document1) %>%
+  arrange(distance) %>%
+  slice_head(n = 1) %>%
+  ungroup() %>%
+  arrange(distance)
+```
+
+These relationships seem much more as expected, linking for example Milk and Yogurt,
+Potato and Sweet Potato, Broccoli and Cauliflower. We will do more with these
+distances as a form of network analysis in Chapter 13.
+
+## Word Relationships
+
+In all of the preceedhing analyses, we have focused on the analysis of the document
+their usage of words. We learned in Chapter 10 that there are often multiple ways of
+widening a dataset, each leading to different kinds of analysis. The term frequency
+dataset is no different. We could widen the dataset by treating each row as a term
+and each column as a document. It is possible to apply dimensionality reduction and
+distance metrics on this format as well in order to understand the relationships
+between words.
+
+The easiest way to produce a "dgCMatrix" of the word relationships is by first
+using `cnlp_utils_tfidf` as before and then calling the function `t()` (transpose)
+to exchange the rows and columns. We will control the maximum number of features by
+setting `max_features` to 100 and only considering nouns. Here is the principal
+component analysis plot:
+
+```{r, warning=FALSE}
+tokens %>%
+  filter(upos == "NOUN") %>%
+  cnlp_utils_tfidf(
+    min_df = 0, max_df = 1, max_features = 100
+  ) %>%
+  t() %>%
+  sm_tidy_pca(item_name = "word") %>%
+  ggplot() +
+    geom_text_repel(
+      aes(x = v1, y = v2, label = word),
+      show.legend = FALSE
+    ) +
+    theme_void()
+```
+
+As well as the closest pairs of words (here we increase the number of words
+to 400):
+
+```{r, warning=FALSE}
+tokens %>%
+  filter(upos == "NOUN") %>%
+  cnlp_utils_tfidf(
+    min_df = 0, max_df = 1, max_features = 400
+  ) %>%
+  t() %>%
+  sm_tidy_angle_distance(item_name = "word") %>%
+  filter(word1 < word2) %>%
+  group_by(word1) %>%
+  arrange(distance) %>%
+  slice_head(n = 1) %>%
+  ungroup() %>%
+  arrange(distance)
+```
+
+Do these relationships seem reasonable to you? Do they tell you anything about the
+data or the usage of language within the data that you find surprising?

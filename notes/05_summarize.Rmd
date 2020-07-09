@@ -1,0 +1,281 @@
+---
+title: "05. Summarizing Data"
+author: ""
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+```
+
+## The summarize verb
+
+In the previous chapter we introduced the concept of data *verbs*. Four useful
+examples were shown: `slice` and `filter` for taking a subset of rows,
+`select` for taking a subset of columns, and `arrange` for reordering a dataset's
+rows. In this chapter we discuss another important verb, `summarize`, that
+collapses a data frame by using summary functions. Using this verb is slightly more
+involved because we have to explain exactly how the data should be summarized.
+We will introduce several helper functions to make this process slightly easier.
+
+Before describing the syntax for the summarize function, let's start with an example.
+Here, we summarize our food dataset by indicating the mean (average) value of the
+sugar variable across the entire dataset:
+
+```{r}
+food %>%
+  summarize(sm_mean(sugar))
+```
+
+Here we used the function `sm_mean` inside of the function `summarize` to produce
+the output. We specified which variable to compute the mean of by giving its name
+inside of the `sm_mean` function. The results shows us that the average amount of
+sugar in a 100g portion of all of the foods is 3.49g.
+
+In order to compute multiple summaries at once, we can pass multiple functions
+together are once. For example, here we compute the mean value of three nutritional
+measurments:
+
+```{r}
+food %>%
+  summarize(sm_mean(sugar), sm_mean(calories), sm_mean(vitamin_a))
+```
+
+Notice that R creates a new dataset and intelligently chooses the variable names.
+There are a number of other useful summary functions that work similarly, such as
+`sm_min`, `sm_max`, `sm_sum`, and `sm_sd` (standard deviation).
+
+## Multiple output values
+
+Some summary functions return multiple columns for a given variable. For example,
+`sm_quartiles` gives the *five-number summary* of a variable: its minimum value,
+the first quartile (25th percentile), the median (50th percentile), the third quartile
+(75th percentile), and the maximum value. As with the other summary functions, smart
+variable names are automatically created in R:
+
+```{r, message=FALSE}
+food %>%
+  summarize(sm_quartiles(calories))
+```
+
+Functions such as `sm_deciles` and `sm_percentiles` give a similar output, but with
+additional cutoff values. These can be useful in trying to describe the distribution
+of numeric variables in large datasets.
+
+The final group of summary functions that we will use provide *confidence intervals*.
+These provide the mean of a variable as well as an upper and lower bound for the mean
+using properties from statistical inference. Here, for example, is how we use the
+`sm_mean_cl_normal` to produce a confidence interval for the mean of the calories variable:
+
+```{r, message=FALSE}
+food %>%
+  summarize(sm_mean_cl_normal(calories), sm_count())
+```
+
+A more detailed discussion the specifics of the assumptions and models underlying
+confidence intervals is given in Chapter 20.
+
+## Grouped summaries
+
+Summarizing the dataset to a single row can be useful for understanding the general
+trends in a dataset or highlighting outliers. However, the real power of the summary
+function comes when we pair it with grouped manipulations. This will allow us to produce
+summaries *within* one or more grouping variables in our dataset.
+
+When we use the `group_by` function, subsequent uses of the `summarize` function will
+produce a summary that describes the properties of variables within the variable used
+for grouping. The variable name(s) placed inside of the `group_by` function indicate
+which variable(s) should be used for the groups. For example, here we compute the mean
+number of calories of each food group:
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_mean(calories))
+```
+
+Notice that the output dataset contains a column for the grouping variable (`food_group`)
+and the summarized variable (`calories_mean`). The summarized variable name is exactly the
+same as the non-grouped version and the final line of code looks exactly the same as before.
+However, the output dataset now contains six rows, one for each food group.
+
+Any summarization function that can be used for an ungrouped dataset can also be
+used for a grouped dataset. Also, as before, we can put multiple summary
+functions together to obtain different measurements of each group.
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_mean(calories), sm_mean(total_fat))
+```
+
+Notice that the automatically produced variable names should make it clear
+which column corresponds to each summary function.
+
+## More summary functions
+
+There are several additional summary functions that will be useful for
+analyzing data. The function `sm_count` takes no arguments and returns a
+variable called `count` that counts the total number of rows in the dataset:
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_count())
+```
+
+This tells us how many times each type of food group occurs in the dataset.
+Similarly, the function `sm_na_count` tells us how many values of a variable
+are missing:
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_count(), sm_na_count(calories))
+```
+
+In this case there are no missing values for the `calories` variable.
+
+The summary function `sm_paste` collapses all of the values in a character
+variable. For example, applying this summary it to the `item` category after
+grouping by color, we can see all of the foods in the dataset associated with
+a specific color:
+
+```{r}
+food %>%
+  group_by(color) %>%
+  summarize(sm_paste(item))
+```
+
+Do the foods correspond to the colors that you would expect?
+
+## Geometries for summaries
+
+We can use summarized datasets to produce new data visualizations. For
+example, consider summarizing the average number of calories, average total fat,
+and number of items in each food groups. We can take this data and construct a
+scatter plot that shows the average fat and calories of each food group, along
+with informative labels. Here's the code to make this visualization:
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_mean(calories), sm_mean(total_fat), sm_count()) %>%
+  ggplot() +
+    geom_point(aes(x = calories_mean, y = total_fat_mean, size = count), color = "grey85") +
+    geom_text_repel(aes(x = calories_mean, y = total_fat_mean, label = food_group))
+```
+
+If this seems complex, don't worry! We are just putting together elements that we have
+already covered, but it takes some practice before it becomes natural.
+
+Scatterplots are often useful for displaying summarized information. There are two additional
+`geom` types that often are useful specifically for the case of summarized datasets.
+
+If we want to create a bar plot, where the heights of the bars as given by a column in the dataset,
+we can use the `geom_col` layer type. For this, assign a categorical variable to the `x`-aesthetic
+and the count variable to the `y`-aesthetic. For example, here is a bar plot showing the number of
+items in each food group:
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_count()) %>%
+  ggplot() +
+    geom_col(aes(x = food_group, y = count))
+```
+
+There are two specific things to keep in mind with the `geom_col` layer. First, there are two
+color-related `aes` categories: the border of the bars (`color`) and the color used to shade
+the inside of the bars (`fill`). We can change these exactly as we did with the single color
+value used with scatter plots. Also, if we want to produce a bar plot with horizontal bars,
+this can be done by adding the special layer `coord_flip()` at the end of the plotting command.
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_count()) %>%
+  ggplot() +
+    geom_col(aes(x = food_group, y = count), color = "black", fill = "white") +
+    coord_flip()
+```
+
+I find that using a white fill color and a black border is often a good-looking starting point.
+Also, you will notice that making the bars horizontal will make it easier to read the category
+names when there are a larger number of categories.
+
+There is also a specific geometry that is useful when visualizing confidence intervals called
+`geom_pointrange`. It requires a categorical `x`-aesthetic, a numeric `y`-aesthetic, and two
+additional numeric aesthetics: `ymin` and `ymax`. This produced a visual confidence interval
+from the minimum value to the maximum value, with the middle value shown by a solid point:
+
+```{r}
+food %>%
+  group_by(food_group) %>%
+  summarize(sm_mean_cl_normal(total_fat)) %>%
+  ggplot() +
+    geom_pointrange(aes(
+      x = food_group,
+      y = total_fat_mean,
+      ymin = total_fat_ci_min,
+      ymax = total_fat_ci_max
+    ))
+```
+
+Here, we see that vegetables have a low amount of total fat, meats have a
+relatively large amount of fat, and the confidence interval for dairy products
+is very large (in this case, it is because there are not many dairy products in
+the dataset). As with the barplot, we can draw the confidence intervals
+horizontally by adding a `coord_flip()` layer to the plot.
+
+## Multiple groups
+
+As mentioned above, it is possible to group a dataset by multiple variables.
+To do this, we can provide additional variables to the `group_by` function
+separated by commas. For example, we could group the food dataset into food
+group and color, and summarize each combination of the two:
+
+```{r}
+food %>%
+  group_by(food_group, color) %>%
+  summarize(sm_count(), sm_mean(calories))
+```
+
+Notice that now there is one row for each combination of the two groups.
+However, there is no row for combinations that do not exist. So, there is no
+row for pink dairy products nor for white fruit. Examples of several common
+uses for multiple groups are given in the exercises.
+
+## Exercises and References
+
+There is are exercise notebook for this chapter:
+
+- **exercies05A.Rmd**: practice applying summary functions to a new dataset
+- **exercies05B.Rmd**: open-ended questions to explore with data
+
+It is strongly recommended to complete at least the first notebook prior to
+continuing on to the next chapter.
+
+Here are several good resources if you want to learn more about
+the Grammar of Graphics in R:
+
+- [R for Data Science: Chapter 5](https://r4ds.had.co.nz/transform.html)
+- [dplyr cheatsheet](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)
+- [dplyr homepage](https://dplyr.tidyverse.org/)
+
+If you search online for help with R graphics, make sure to add the term "dplyr"
+to your query as otherwise you may find advice for using other functions that
+are not easily compatible with the approach described here.
