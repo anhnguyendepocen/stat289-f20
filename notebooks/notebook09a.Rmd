@@ -88,17 +88,17 @@ Something, however, has happened to the first variable in the combined
 dataset. What is the (new) name of the first variable in the combined
 output? **Answer**:
 
-It turns out that both the `cities` dataset and the `koppen` dataset both 
+It turns out that both the `cities` dataset and the `koppen` dataset both
 contain a variable named "name". In R, a dataset cannot contain two columns
 with the same names. By default, `left_join` adds a suffix to distinguish
-variables that came from the first dataset and those that came from the 
+variables that came from the first dataset and those that came from the
 second dataset. I generally find, the default suffix values to not be
 ideal because they change both the names in the left table (the one that
 contains the observations of interest) as well as the the new metadata
 columns. Let's see how to change these suffix values.
 
 The `left_join` function has an optional argument called `suffix`. You
-can supply two string values to it to describe what suffix values are 
+can supply two string values to it to describe what suffix values are
 placed on the first and second tables in the join. The default value is
 `c(".x", ".y")`. I typically find something with the first entry empty
 to be more pratical. So, for example: `c("", "_koppen")`. In the code
@@ -136,7 +136,7 @@ equals signs and the values contained within the function `c()`. For example,
 here is a dataset with a column giving the names of the five continents in
 our dataset next to the names of the continents in French:
 
-```{r} 
+```{r}
 continent_names <- tibble(
   continent = c("Asia", "South America", "North America", "Africa", "Europe"),
   continent_fr = c("l'Asie", "l'Amérique du Sud", "l'Amérique du Nord", "l'Afrique", "l'Europe")
@@ -164,11 +164,11 @@ plot with the new labels.
 
 ```
 
-## (Optional) Manualy colors with a legend
+## Manual colors with a legend
 
 There is one problem with the plot that we created to color the
 cities by their Köppen codes. There's no legend for the plot. A
-way to rectify this problem is to color the points using the 
+way to rectify this problem is to color the points using the
 variable `name_koppen` and use the colors in the `koppen` metadata
 table to describe a manual scale with `scale_color_manual`.
 Specifically, we need:
@@ -183,5 +183,3 @@ Below, redo your plot with this color value and scale.
 
 The plot should like nice, but does requires a wide screen to see all of the defaults
 given the long descriptions in the legend.
-
-
