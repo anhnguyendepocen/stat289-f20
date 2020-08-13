@@ -30,7 +30,7 @@ rewarding an experience as it usually is.
 Today we are going to go through these notes, which give a long-form version of the
 posted syllabus.
 
-If at any point today, or anytime during the semester, you have a question. Please either
+You should feel free to ask questions at any point during the semester. Please either
 (i) use the Zoom raise hand feature, (ii) post your question or just a question mark in the
 chat window, or (iii) wait for a pause and shout out directly.
 
@@ -144,86 +144,134 @@ some or all students need to return home before the normal end of the semester.
 
 # Course Format
 
-Most class meetings will be organised as follows:
-
-- announcements and general questions,
-- present answers to previous homework assignment (called a *lab*),
-- walk through new material,
-- begin working on the next homework assignment.
-
-Sometimes the new material will involve an interactive activity, but usually it will consist
-of a short lecture with interspersed questions.
-
----
-
-# Homework Labs
-
-Most classes have a homework assignment called a *lab* associated with it. These take the
-form of a partially completed R markdown file (more on this next time) that must be filled
-in with code and short responses.
+Most class meetings will consist of working through a set of course notes and questions in
+the form of an *Rmarkdown* file (more on this later). This file will introduce new concepts
+and then ask us to apply these concepts to various datasets. Everyone in the class will
+have their own version of the file, and you are expected to follow along with the pace of
+the course.
 
 --
 
-You are expected to make an attempt at completing assigned labs prior to the following
-class meeting. These assignments, however, are neither handed in nor given a particular
-grade. Instead, you must fill out the **Lab Form** for each lab, which
-is linked to from the course website.
+We may not finish all of the questions during class. In this case, it is recommended to
+finish the material as homework. However, there will be no formal handing in of these
+assignments.
 
 --
 
-We will start working on these in-class (format for this semester still to be determined),
-and many students often finish the assignment before the end of the course time.
+During the course I will call on students to share their work. There is no expectation for
+you to share your video, but you should be prepared to share your screen at any time with
+the class.
 
----
+--
 
-# Projects
-
-There will be several (3-5) class projects assigned throughout the semester. Projects will
-be distributed with a rubric and graded with a corresponding letter grade. Note that the
-projects are concentrated at the end of the semester, because we need to have enough
-of the core course material before it makes sense to start applying it to specific
-applications.
-
----
-
-# Attendance Policies
-
-In order to be as flexible as possible given the many uncertainties presented by the
-semester ahead, we will have the following attendance policies:
-
-- all course materials (notes, labs, solutions, announcements, ect.) will be posted on the
-course website
-- class attendance is not required, but is strongly recommended
-- synchronous classes will not be recorded
-- you may attend the synchronous class meeting for either section (13h30 or 15h00)
-- if you do attend the course session, I expect you to arrive at the start of the class
-and participate in all of that day's activities
-
-Additional office hours, given as open Zoom sessions, will be listed on the course website.
-These are not a replacement for attending class.
+Students are not allowed to record the text or video of the class without prior permission.
+When permission is granted, recordings must not be shared and shall be destroyed at the
+end of the semester.
 
 ---
 
 # Grades
 
-In order to get a satisfactory grade for the course, students are generally expected to:
+There will be several class projects assigned throughout the semester. Each project will be
+distributed with a rubric and assigned a total number of overall points. Projects will be
+submitted through Box. At the end of the semester, the overall project grade will be
+determined by adding together the total number or earned points and dividing by the total
+number of available points.
 
-- keep up with the course material throughout the semester, either through synchronous
-attendance or asynchronously following the course notes,
-- submit Lab Forms before the next class meeting, for most class meetings (rule of thumb:
-miss at most two),
-- submit passing versions of all of the assigned projects by their due dates.
+The final grade will be computed by the following formula:
 
-Assuming all of the above expectations are met, final grades will be determined by taking
-an unweighted average of all your project grades.
+- **Projects** 70%
+- **Participation** 30%
+
+---
+
+# Alternative Grading
+
+Some students may be unable to travel to campus due to the ongoing COVID-19 pandemic. It is
+the University's policy that all enrolled students should be prepared to attend courses
+remotely from wherever they are; in reality this may be difficult due to shifted
+time-zones and situations at home.
+
+As an alternative, students will be given the option to follow the course material
+asychronously and receive a final grade based entirely on their project scores. In the
+interest of equity, this option is open to all students, but must be chosen during the
+first week of the semester.
+
+You will have a chance to select this option at the end of today's class.
+
+---
+
+# Attendance Policies
+
+For students electing the standard grading scheme, satisfactory participation includes:
+
+- missing a maximum of two course meetings
+- arriving on time for class
+- actively following along with the day's materials
+- raising questions (in the Zoom chat or verbally) when stuck
+- being prepared to share your screen when called on
+
+Students will be called on in a random order to share their progress through the day's
+assignment.
+
+Participation grades are entirely focused on your *attempt* to engage with and follow the
+material; this not an intended to penalise anyone during the learning process. A full
+grading rubric for attendance will be posted during the second week of the semester.
+
+---
+
+# Office Hours
+
+I will hold open office hours during the semester via Zoom. This will likely be held in
+the evening to accommodate students from alternative timezones and to avoid class conflicts.
+Office hours are, of course, entirely optional. If you choose to attend, please
+arrive at the start of the listed session so that there is enough time for everyone to get
+their questions answered. You may leave the session at any time.
+
+Office hour times will be announced after the results of the student poll that will be given
+at the end of today's class.
+
+If you have questions of a personal nature (that is, not about the course material), please
+reach out via email with your question or a request to meet.
 
 ---
 
 # Special Circumstances
 
 I completely understand that extenuating circumstances may arise throughout the semester
-that effect your ability to follow along with the pace of the course. Please contact me as
-soon as possible so that we can find the best path forward.
+that effect your ability to attend class or follow along with the pace of the course.
+Please contact me as soon as possible so that we can find the best path forward.
+
+---
+
+# Pace of the Course
+
+Students in this course have a wide variety of background in statistics, mathematics, and
+computer science. With this in mind, it is important to consider a few things about the
+pace of the course.
+
+First of all, my notes assume that you have no background in statistical programming.
+Therefore:
+
+- If this material is new to you, take advantage of the first few weeks to catch up. Ask
+questions, attend office hours, review the notes in-between course sections.
+- If the material seems mostly like review, do not incorrectly assume the entire semester
+will be equally as easy for you. Be prepared for the pace to speed up as we reach material
+that is new to you.
+
+---
+
+# Pace of the Course, cont.
+
+Secondly, if you are already familiar with programming in R, it is likely that I will be
+teaching you different ways to do things than you have previously learned.
+
+- I expect everyone to learn the specific methods presented in this course.
+- Pay close attention to the packages and functions I am using. They are designed to work
+together in a very particular way.
+- It is likely that alternative methods will appear to be fine the first time we encounter
+something (making a scatterplot, filtering data, ect.), but will break down in more advanced
+applications.
 
 ---
 
@@ -232,9 +280,8 @@ soon as possible so that we can find the best path forward.
 - **Is there a textbook for the course?** No, we will be using my own notes and references
 to other freely available resources.
 - **Is there a final exam?** No.
-- **When are the projects due?** The last project will be due on the last day of class.
-Dates and instructions for other projects depend on the pace of the course, but will always
-be posted at least three weeks prior to their due date.
+- **When are the projects due?** The last project will be due during the last week of class.
+Dates and instructions for other projects depend on the pace of the course.
 - **What software will we be using?** We will be writing code using the R programming
 language using a new platform called RStudio Cloud. More on this next time. Classes will
 be held using Zoom and projects will be submitted using Box.
