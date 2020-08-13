@@ -1,3 +1,5 @@
 notebook01.Rmd
 notebook02.Rmd
-data/koppen_metadata.csvdata/largest_cities.csvdata/us_city_population.csv
+data/koppen_metadata.csv
+data/largest_cities.csv
+data/us_city_population.csv
