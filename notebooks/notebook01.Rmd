@@ -1,7 +1,20 @@
 ---
-title: "Notebook 01"
-output: html_document
+title: "Notebook 01 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
 ---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+```
 
 ## R Notebooks
 
@@ -65,14 +78,14 @@ Here's our first question. In the code block below, divide the number 57
 by 3:
 
 ```{r}
-
+57 / 3
 ```
 
 Some questions will also be in the form of a short text response, usually
 followed with the word Answer, where you should put your response, like
 below.
 
-Is 57 a prime number? **Answer**:
+Is 57 a prime number? **Answer**: No, because it is evenly divisible by 3.
 
 ## Running functions
 
@@ -132,8 +145,8 @@ notebook.)
 library(tidyverse)
 ```
 
-Next, the following code uses the function `read_csv` to load this dataset into
-R, save it as an object called `food`, and prints out the first several rows.
+Next, the following code uses the function `read_csv` to load this dataset into R,
+save it as an object called `food`, and prints out the first several rows.
 
 ```{r, message=FALSE}
 food <- read_csv(file.path("data", "food.csv"))
@@ -150,8 +163,8 @@ throughout the first few weeks of the class.
 It is very important to properly format your code in a consistent way.
 Even though the code may run without errors and produce the desired results,
 you will make your life easier by writing well-formatted code from the start.
-This makes it easier to read and debug in the future. We will follow the
-following guidelines:
+This makes it easier to read and debug in the future. We will follow the following
+guidelines:
 
 - always put one space before and after an equals sign or assignment arrow
 - always put one space after a comma, but no space before a comma
@@ -163,8 +176,8 @@ in the dataset. We will learn more about these functions code over the
 next few weeks. For now, just reformat the code.
 
 ```{r}
-veggie<-filter(food,food_group=="vegetable")
-ggplot(veggie,aes(x=calories,y=total_fat))+geom_point()
+veggie <- filter(food, food_group == "vegetable")
+ggplot(veggie, aes(x = calories, y = total_fat)) + geom_point()
 ```
 
 Try running the code to see how easily RStudio makes it to embed
@@ -181,14 +194,14 @@ equal to your favorite number. (Note, the quotes are not part of the
 variable name).
 
 ```{r}
-
+fav_number <- 8
 ```
 
 In the code below, apply the function `log10` to your favorite
 number. (Again, the quotes are not part of the function name).
 
 ```{r}
-
+log10(fav_number)
 ```
 
 Note that the only point of the exercises here are to familiarize
@@ -200,32 +213,31 @@ We will get to more interesting tasks soon!
 R contains several functions for producing (pseudo)-random variables. These are
 useful, for example, when using R to run simulation models. For example the
 function `runif` selects (by default) a set of random numbers between 0 and 1.
-It takes one required arugment named `n`, which indicates how many random numbers
+It takes one required argument named `n`, which indicates how many random numbers
 should be generated. In the code below, use the `runif` function to produce 100
 random numbers. Verify that each time you run the code a different set of
 numbers is produced:
 
 ```{r}
-
+runif(n = 100)
 ```
 
-The `runif` function also has two optional parameters. These are named `min`
-and `max`; they determine the lower and upper bounds from which random numbers
-should be generated. By default these are set to 0 and 1. In the code below,
-generate 100 random numbers between 50 and 100. Here, select the number of
-random numbers *by position* (that is, without the code `n = 100`).
+The `runif` function also has two optional parameters. These are named `min` and
+`max`; they determine the lower and upper bounds from which random numbers should
+be generated. By default these are set to 0 and 1. In the code below, generate 100
+random numbers between 50 and 100. Here, select the number of random numbers
+*by position* (that is, without the code `n = 100`).
 
 ```{r}
-
+runif(100, min = 50, max = 100)
 ```
 
-A common concern for new R users when running the code above is the meaning
-behind the numbers in square brackets to the left of the output. These are not
-part of the output itself. Instead, they provide a counter telling you which
-result number appears just to the left of right of it. The first line will
-always start with `[1]`because it always starts with the first result. The
-second line's number will depend on the width of your screen when you ran the
-code.
+A common concern for new R users when running the code above is the meaning behind
+the numbers in square brackets to the left of the output. These are not part of the
+output itself. Instead, they provide a counter telling you which result number appears
+just to the left of right of it. The first line will always start with `[1]` because
+it always starts with the first result. The second line's number will depend on the
+width of your screen when you ran the code.
 
 ## Practice: Largest Cities Dataset
 
@@ -242,15 +254,16 @@ Looking at the data, try to answer the following questions.
 
 How many rows are in the data set? **Answer**:
 
-What are the observations in the dataset. **Answer**:
+What are the observations in the dataset. **Answer**: Each observation is a city.
 
-List three of the variables in the dataset. **Answer**:
+List three of the variables in the dataset. **Answer**: name, country, and population
+are three examples.
 
 The population variables are given in millions of people. How many
-people live in all of Tokyo? **Answer**:
+people live in all of Tokyo? **Answer**: 37.4 million
 
 How people live in Atlanta (Note: you will have to open the data
-explorer to see this data)? **Answer**:
+explorer to see this data)? **Answer**: 5.57 million
 
 ## Practice: Formatting
 
@@ -262,13 +275,13 @@ the code correctly. I did not include any spaces! Put the correct spaces into
 the code to make it match the style guide given in the notes.
 
 ```{r}
-new_data<-mutate(cities,city_density=city_pop/city_area*1000)
-new_data<-arrange(new_data,desc(city_density))
-select(new_data,name,country,city_density)
+new_data <- mutate(cities, city_density = city_pop / city_area * 1000)
+new_data <- arrange(new_data, desc(city_density))
+select(new_data, name, country, city_density)
 ```
 
 Make sure to run the code after you are done. What city in the dataset has, on
-average, the most people per square kilometer? **Answer**:
+average, the most people per square kilometer? **Answer**: Shenzhen, China.
 
 ## What next?
 
