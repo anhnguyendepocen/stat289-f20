@@ -54,26 +54,12 @@ class: center, inverse, middle, title-slide
 
 ---
 
-# Me!
+# Questions
 
-- From New England: born in Maine, school in MA, ME, CT
-- Research on large text and image datasets in linguistics and cultural studies
-- Came to Richmond in 2016
-- Last year in Lyon, France
-- Some previous work:
-    - IBM (Healthcare)
-    - Travelers (Insurance)
-    - DARPA (social media)
-    - AT&T (location analytics)
-- Own a Shih-Tzu named Sargent (you will likely see and hear him at some point)
-
----
-
-# You?
-
-1. Name, year, and (intended) major(s)
-2. Academic  
-3. Fun fact.
+1. Name
+2. Favorite food or cuisine  
+3. Favorite place or city
+4. Field(s) of interest
 
 ---
 class: center, inverse, middle, title-slide
@@ -116,26 +102,17 @@ Do pay attention, as I will use this video as a reference throughout the next fe
 
 # Outline
 
-The course content is broken roughly into two parts. In the first we learn so core
-techniques for working with data. These notes take about 6 weeks of the semester to cover,
-focusing on four main tasks:
+The course content is broken roughly into two parts. In the first we learn so
+core techniques for working with data. These notes take about 6 weeks of the
+semester to cover, focusing on four main tasks:
 
 1. Creating and organising data using a tabular data model.
 2. Learning and applying a theory for data visualisation (Grammar of Graphics).
 3. Learning and applying a theory for data manipulation (data table verbs).
 4. Learning and applying a method for storytelling with data.
 
---
-
-And in the second part, we will apply these core methods to specific tasks. These include:
-
-5. Methods for working with textual data.
-6. Methods for working with spatial data.
-7. Methods for working with network data.
-8. Techniques for collecting and organising data from a web-based API.
-
-The specific applications may change slightly based on the pace of the course and student
-interest.
+And in the second part, we will practice applying these core methods to
+specific tasks.
 
 ---
 
@@ -205,9 +182,8 @@ course meetings:
 
 - Use your UR Zoom login account.
 - Include a profile photo (but does not to literally be a "profile photo").
-- Include preferred pronouns in your Zoom profile (hint: add to the last name field).
+- Camera is optional. Feel free to turn on and off as needed.
 - Be prepared to share screen if called on.
-- Generally recommended to leave camera off.
 - Chat window is the easiest way to indicate that you have a question (either post or just
 type "?").
 - Welcome to "raise hand" or shout out your question if that seems easiest.
@@ -240,16 +216,15 @@ time-zones and situations at home.
 
 As an alternative, in this course students will be given the option to follow the material
 asychronously. In lieu of the participation grade, students following this option will be
-scheduled for a short oral examination towards the end of the semester. The grading
-weighting becomes, instead:
+scheduled for 1-2 oral examinations during the semester. The grading weighting
+becomes, instead:
 
 - **Projects** 70%
 - **Oral Examination** 30%
 
 
 In the interest of equity, this option is open to all students, but must be chosen during
-the first week of the semester. You will have a chance to select this option at the end of
-today's class.
+the first week of the semester.
 
 ---
 
@@ -266,7 +241,7 @@ the core ideas of course.
 
 For students electing the standard grading scheme, satisfactory participation includes:
 
-- missing a maximum of two course meetings
+- attending most course meetings
 - arriving on time for class
 - actively following along with the day's materials
 - raising questions (in the Zoom chat or verbally) when stuck
