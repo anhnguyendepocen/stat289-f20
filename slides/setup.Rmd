@@ -125,6 +125,32 @@ the new file(s).
 ---
 class: center, inverse, middle, title-slide
 
+# Tabular Data
+
+---
+background-image: url("img/tidy-0.png")
+background-position: center
+background-size: contain
+
+# Tabular Data Terminology
+
+---
+background-image: url("img/tidy-1.png")
+background-position: center
+background-size: contain
+
+# Tabular Data Terminology
+
+---
+background-image: url("img/tidy-2.png")
+background-position: center
+background-size: contain
+
+# Tabular Data Terminology
+
+---
+class: center, inverse, middle, title-slide
+
 # Local Setup (optional)
 
 ---

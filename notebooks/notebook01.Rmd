@@ -44,7 +44,7 @@ various parts of the RCloud software.
 We now want to give a very brief overview of how to run R code. We
 will now only show snippets of R code and the output rather than a
 screen shot of the entire RStudio session. Though, know that you
-should think of each of the snippets as occuring inside of one of
+should think of each of the snippets as occurring inside of one of
 the grey boxes in an RMarkdown file.
 
 In one of its most basic forms, R can be used as a fancy calculator. We already
@@ -136,7 +136,7 @@ We will learn how to use numerous functions throughout the semester.
 The goal of this course is to learn how to work with data. Not surprisingly,
 we will learn a number of functions for loading data into R. In the next
 class we will introduce more of the details around organizing and loading
-data. Let's just see a quick example for now. We will load a dataset called
+data. Let's just see a quick example for now. We will load a data set called
 `foods.csv` that is stored in the folder `data`. To start, we need to load
 the appropriate R library. (Note: Usually we will do this at the start of the
 notebook.)
@@ -145,17 +145,17 @@ notebook.)
 library(tidyverse)
 ```
 
-Next, the following code uses the function `read_csv` to load this dataset into R,
+Next, the following code uses the function `read_csv` to load this data set into R,
 save it as an object called `food`, and prints out the first several rows.
 
 ```{r, message=FALSE}
-food <- read_csv(file.path("data", "food.csv"))
+food <- read_csv("data/food.csv")
 food
 ```
 
-You should also notice that the food dataset appears in the upper left-hand
+You should also notice that the food data set appears in the upper left-hand
 corner of the screen. Clicking on it will open an Excel-like version of the
-dataset. We will be working with these food data as a source of examples
+data set. We will be working with these food data as a source of examples
 throughout the first few weeks of the class.
 
 ## Formatting
@@ -167,12 +167,12 @@ This makes it easier to read and debug in the future. We will follow the followi
 guidelines:
 
 - always put one space before and after an equals sign or assignment arrow
-- always put one space after a comma, but no space before a comma
 - always put one space around mathematical operations (such as `+` and `*`)
+- always put one space after a comma, but no space before a comma
 
 In the code block below, I wrote some code that selects all of the
 fruits and vegetables and produces a scatter plot with all the vegetables
-in the dataset. We will learn more about these functions code over the
+in the data set. We will learn more about these functions code over the
 next few weeks. For now, just reformat the code.
 
 ```{r}
@@ -239,10 +239,10 @@ just to the left of right of it. The first line will always start with `[1]` bec
 it always starts with the first result. The second line's number will depend on the
 width of your screen when you ran the code.
 
-## Practice: Largest Cities Dataset
+## Practice: Largest Cities data set
 
-We will make extensive use of a dataset that has information about the largest
-cities (by population) in the world. To read in and print out this dataset, run
+We will make extensive use of a data set that has information about the largest
+cities (by population) in the world. To read in and print out this data set, run
 the following lines of code:
 
 ```{r, message=FALSE}
@@ -252,11 +252,11 @@ cities
 
 Looking at the data, try to answer the following questions.
 
-How many rows are in the data set? **Answer**:
+How many rows are in the data set? **Answer**: 81 cities.
 
-What are the observations in the dataset. **Answer**: Each observation is a city.
+What are the observations in the data set. **Answer**: Each observation is a city.
 
-List three of the variables in the dataset. **Answer**: name, country, and population
+List three of the variables in the data set. **Answer**: name, country, and population
 are three examples.
 
 The population variables are given in millions of people. How many
@@ -267,7 +267,7 @@ explorer to see this data)? **Answer**: 5.57 million
 
 ## Practice: Formatting
 
-In the code block below, I wrote some code to add a new column to the dataset
+In the code block below, I wrote some code to add a new column to the data set
 that describes the population density for each city (1000s of people per square
 kilometer) and sorts from the most dense to the least dense. We will learn
 this code over the next 6 chapters. For now, I want to focus on formatting
@@ -280,7 +280,7 @@ new_data <- arrange(new_data, desc(city_density))
 select(new_data, name, country, city_density)
 ```
 
-Make sure to run the code after you are done. What city in the dataset has, on
+Make sure to run the code after you are done. What city in the data set has, on
 average, the most people per square kilometer? **Answer**: Shenzhen, China.
 
 ## What next?
