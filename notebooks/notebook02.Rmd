@@ -1,6 +1,10 @@
 ---
-title: "Notebook 02"
-output: html_document
+title: "Notebook 02 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
 ---
 
 ## Getting Started
@@ -133,7 +137,9 @@ scatterplot from the food dataset, choosing any two variables for the two
 axes:
 
 ```{r}
-
+food %>%
+  ggplot() +
+    geom_point(aes(x = vitamin_a, y = iron))
 ```
 
 In the next few classes we will see how to modify and build on this basic
@@ -187,7 +193,8 @@ specifically to building graphics in R:
 - indent every line below `ggplot` by an additional two spaces (four total)
 
 As with our original set of style guidelines, you will make your life a lot
-easier if you get used to these rules right from the start.
+easier if you get used to these rules right from the start. Note that hitting
+TAB should give you two spaces in the RStudio Cloud editor.
 
 ## Practice
 
@@ -232,19 +239,24 @@ because there are some missing data values and it will be helpful to turn off
 the warnings about these data rows.
 
 ```{r, warning=FALSE}
-
+cities %>%
+  ggplot() +
+    geom_point(aes(x = population, y = city_pop))
 ```
 
 Now, in the code region below, produce a scatter plot with population on the
 x-axis and metro population on the y-axis.
 
 ```{r, warning=FALSE}
-
+cities %>%
+  ggplot() +
+    geom_point(aes(x = population, y = metro_pop))
 ```
 
 Which of the two regional populations (metro or city) seem to more closely
 relate to the U.N.'s definition of a cities population (e.g., the `population`
-variable). **Answer**:
+variable). **Answer**: The metropolitan population is much closer to the UN
+definition than the city population variable.
 
 ## Text Plot
 
@@ -252,18 +264,24 @@ Produce a plot with population on the x-axis and metro population on the y-axis
 and label each point with the city name.
 
 ```{r, warning=FALSE}
-
+cities %>%
+  ggplot() +
+    geom_text(aes(x = population, y = metro_pop, label = city))
 ```
 
 What two cities seem to have the largest (absolute) discrepancy between their
-UN population and the metro population? **Answer**:
+UN population and the metro population? **Answer**: Jakarta and Seoul seem to
+stand out the most (their metro populations are much larger than the offical
+UN population numbers).
 
 Produce a plot with a text geometry where longitude (`lon`) is on the x-axis,
 latitude is on the y-axis (`lat`), and the labels are given by the city names
 (`name`).
 
 ```{r}
-
+cities %>%
+  ggplot() +
+    geom_text(aes(x = lon, y = lat, label = name))
 ```
 
 This should roughly resemble a map of the world. In the code below, produce
@@ -271,8 +289,12 @@ a modified version of this plot, replacing the text layer with a text repel
 layer.
 
 ```{r}
-
+cities %>%
+  ggplot() +
+    geom_text_repel(aes(x = lon, y = lat, label = name))
 ```
 
 Which of these two plots do you find easier to read, and why? (Note, there is
-no clear correct answer here). **Answer**:
+no clear correct answer here). **Answer**: I slightly prefer the second, but it
+would be better to, perhaps, show only a subset of the labels. We will see how
+to do this soon!

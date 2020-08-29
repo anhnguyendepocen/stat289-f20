@@ -1,4 +1,5 @@
 notebook01.Rmd
+notebook02.Rmd
 data/food.csv
 data/koppen_metadata.csv
 data/largest_cities.csv
