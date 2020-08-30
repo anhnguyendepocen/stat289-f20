@@ -183,6 +183,19 @@ food %>%
 This is still a bit busy in the lower left-hand corner, but should be slightly
 easier to read in the middle of the plot.
 
+We can make the plot a bit more readable by adding two *layers*, one with
+the text and another with the points. To do this, just add the two geometries
+together like this:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_text_repel(aes(x = calories, y = total_fat, label = item)) +
+    geom_point(aes(x = calories, y = total_fat))
+```
+
+Next class we will see how to further improve this plot.
+
 ### Formatting code
 
 The first notebook stress the importance of following a few style guidelines
@@ -285,13 +298,14 @@ cities %>%
 ```
 
 This should roughly resemble a map of the world. In the code below, produce
-a modified version of this plot, replacing the text layer with a text repel
-layer.
+a modified version of this plot, replacing the text layer with two layers:
+a text repel layer and well as a point layer.
 
 ```{r}
 cities %>%
   ggplot() +
-    geom_text_repel(aes(x = lon, y = lat, label = name))
+    geom_text_repel(aes(x = lon, y = lat, label = name)) +
+    geom_point(aes(x = lon, y = lat))
 ```
 
 Which of these two plots do you find easier to read, and why? (Note, there is
