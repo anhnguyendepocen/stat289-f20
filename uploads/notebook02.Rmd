@@ -24,7 +24,6 @@ food <- read_csv(file.path("data", "food.csv"))
 
 I have set the options `include=FALSE` and `message=FALSE` to avoid cluttering
 the solutions with all the output from this code.
-
 ## Pipes
 
 We are going to make extensive use of an operator called a *pipe* throughout
@@ -32,21 +31,21 @@ the course. Let's take a moment to understand what this operator does. We will
 do this using an admittedly silly example, but the idea will make more sense as
 we see some examples.
 
-Consider the task of taking the cosine of the sine of the square-root of the
-logarithm of the number 20. We can compute this in R by nesting each of these
-functions inside of one another:
+Consider the task of taking the cosine of the base-2 logarithm of the
+square-root of the sine of the number 20. We can compute this in R by nesting
+each of these functions inside of one another:
 
 ```{r}
-cos(sin(sqrt(log(20))))
+cos(log(sqrt(sin(20)), base = 2))
 ```
 
 Alternatively we could split each of these operations into their own line using
 a temporary variable and the assignment operator:
 
 ```{r}
-result <- log(20)
+result <- sin(20)
 result <- sqrt(result)
-result <- sin(result)
+result <- log(result, base = 2)
 result <- cos(result)
 result
 ```
@@ -60,9 +59,9 @@ It works like this:
 
 ```{r}
 20 %>%
-  log() %>%
-  sqrt() %>%
   sin() %>%
+  sqrt() %>%
+  log(base = 2) %>%
   cos()
 ```
 
@@ -87,10 +86,10 @@ of independent *layers*. To describe a specific layer, we need to specify
 several elements:
 
 - *data*: the dataset from which data will be taken to construct the plot
-- *aes*: a mapping from elements of the plot to columns in our data set (i.e.,
-the position on the x-axis or the color of our points); it stands for aesthetics
 - *geom*: a description of what kinds of objects to plot (i.e., points, labels,
 or boxes)  
+- *aes*: a mapping from elements of the plot to columns in our data set (i.e.,
+the position on the x-axis or the color of our points); it stands for aesthetics
 
 You can describe virtually any type of visualization by putting together these
 elements.
@@ -104,16 +103,15 @@ language of the grammar of graphics we can describe this with the following
 elements:
 
 - *data*: our data set is called `food`
-- *aes*: the x-axis will be associated with `calories` and the y-axis with
-`total_fat`
 - *geom*: we will build a plot with a points geometry; each row of data is
 represented by a point
+- *aes*: the x-axis will be associated with `calories` and the y-axis with
+`total_fat`
 
 ### Scatter plot example
 
-The easiest way to understand how we good these elements within **ggplot** is by
-seeing an example. Here is the code to specify the data, aes, and geom, along
-with the output plot:
+The easiest way to understand how we specify these elements within **ggplot**
+is by seeing an example. Here is the code to specify the data, geom, and aes:
 
 ```{r}
 food %>%
@@ -176,6 +174,19 @@ food %>%
 
 This is still a bit busy in the lower left-hand corner, but should be slightly
 easier to read in the middle of the plot.
+
+We can make the plot a bit more readable by adding two *layers*, one with
+the text and another with the points. To do this, just add the two geometries
+together like this:
+
+```{r}
+food %>%
+  ggplot() +
+    geom_text_repel(aes(x = calories, y = total_fat, label = item)) +
+    geom_point(aes(x = calories, y = total_fat))
+```
+
+Next class we will see how to further improve this plot.
 
 ### Formatting code
 
@@ -267,8 +278,8 @@ latitude is on the y-axis (`lat`), and the labels are given by the city names
 ```
 
 This should roughly resemble a map of the world. In the code below, produce
-a modified version of this plot, replacing the text layer with a text repel
-layer.
+a modified version of this plot, replacing the text layer with two layers:
+a text repel layer and well as a point layer.
 
 ```{r}
 
