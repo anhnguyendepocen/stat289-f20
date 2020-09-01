@@ -10,7 +10,7 @@ output:
 ## Getting Started
 
 Before running this notebook, select "Session > Restart R and Clear Output" in
-the menu above to start a new R session. This will clear any old datasets and
+the menu above to start a new R session. This will clear any old data sets and
 give us a blank slate to start with.
 
 After starting a new session, run the following code chunk to load the
@@ -29,50 +29,6 @@ food <- read_csv(file.path("data", "food.csv"))
 I have set the options `include=FALSE` and `message=FALSE` to avoid cluttering
 the solutions with all the output from this code.
 
-## Pipes
-
-We are going to make extensive use of an operator called a *pipe* throughout
-the course. Let's take a moment to understand what this operator does. We will
-do this using an admittedly silly example, but the idea will make more sense as
-we see some examples.
-
-Consider the task of taking the cosine of the base-2 logarithm of the
-square-root of the sine of the number 20. We can compute this in R by nesting
-each of these functions inside of one another:
-
-```{r}
-cos(log(sqrt(sin(20)), base = 2))
-```
-
-Alternatively we could split each of these operations into their own line using
-a temporary variable and the assignment operator:
-
-```{r}
-result <- sin(20)
-result <- sqrt(result)
-result <- log(result, base = 2)
-result <- cos(result)
-result
-```
-
-This is a bit easier to read and allows us to apply any number of functions with
-complex optional parameters without running out of space. The downside is that
-we need to create, name, and keep track of temporary variable names. The pipe
-operator, written `%>%`, allows us to get the benefits of both techniques by
-passing the output of one function to the first argument of the next function.
-It works like this:
-
-```{r}
-20 %>%
-  sin() %>%
-  sqrt() %>%
-  log(base = 2) %>%
-  cos()
-```
-
-This may seem like overkill here, but it will be very useful in the code to
-come.
-
 ## Grammar of Graphics
 
 ### Elements
@@ -90,7 +46,7 @@ The core idea of the grammar of graphics is that visualizations are composed
 of independent *layers*. To describe a specific layer, we need to specify
 several elements:
 
-- *data*: the dataset from which data will be taken to construct the plot
+- *data*: the data set from which data will be taken to construct the plot
 - *geom*: a description of what kinds of objects to plot (i.e., points, labels,
 or boxes)
 - *aes*: a mapping from elements of the plot to columns in our data set (i.e.,
@@ -100,7 +56,7 @@ You can describe virtually any type of visualization by putting together these
 elements.
 
 To show how to use the grammar of graphics, we will start by using the food
-dataset introduced in the previous notes, with each row describing a particular
+data set introduced in the previous notes, with each row describing a particular
 item of food along with various nutritional information. The first plot we will
 make is a scatter plot that investigates the relationship between calories and
 the total fat (in grams) that are in a 100g portion of each food item. In the
@@ -130,9 +86,9 @@ into the function `ggplot`, which instructs R to start a new plot. Next, we add
 describes two aes values, `x = calories` and `y = total_fat`.
 
 In order to make a similar plot with different variables, or a different
-dataset, you can copy this code and change the associated variable names
+data set, you can copy this code and change the associated variable names
 (`food`, `calories`, and `total_fat`). In the code below create another
-scatterplot from the food dataset, choosing any two variables for the two
+scatterplot from the food data set, choosing any two variables for the two
 axes:
 
 ```{r}
@@ -153,7 +109,7 @@ only a small number of geometry types. To start, we will use the geometry
 example.
 
 The text geometry needs an additional aes called `label` to describe what
-variable in the dataset should be used as the label. Here, we use the variable
+variable in the data set should be used as the label. Here, we use the variable
 called `item` to label each point with the name of the specific food item in
 question (the column is called `item`):
 

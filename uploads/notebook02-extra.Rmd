@@ -25,6 +25,50 @@ food <- read_csv(file.path("data", "food.csv"))
 I have set the options `include=FALSE` and `message=FALSE` to avoid cluttering
 the solutions with all the output from this code.
 
+## Pipes
+
+We are going to make extensive use of an operator called a *pipe* throughout
+the course. Let's take a moment to understand what this operator does. We will
+do this using an admittedly silly example, but the idea will make more sense as
+we see some examples.
+
+Consider the task of taking the cosine of the base-2 logarithm of the
+square-root of the sine of the number 20. We can compute this in R by nesting
+each of these functions inside of one another:
+
+```{r}
+cos(log(sqrt(sin(20)), base = 2))
+```
+
+Alternatively we could split each of these operations into their own line using
+a temporary variable and the assignment operator:
+
+```{r}
+result <- sin(20)
+result <- sqrt(result)
+result <- log(result, base = 2)
+result <- cos(result)
+result
+```
+
+This is a bit easier to read and allows us to apply any number of functions with
+complex optional parameters without running out of space. The downside is that
+we need to create, name, and keep track of temporary variable names. The pipe
+operator, written `%>%`, allows us to get the benefits of both techniques by
+passing the output of one function to the first argument of the next function.
+It works like this:
+
+```{r}
+20 %>%
+  sin() %>%
+  sqrt() %>%
+  log(base = 2) %>%
+  cos()
+```
+
+This may seem like overkill here, but it will be very useful in the code to
+come.
+
 ## Grammar of Graphics
 
 ### Elements
