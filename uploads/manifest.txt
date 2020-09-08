@@ -1,6 +1,7 @@
 notebook01.Rmd
 notebook02.Rmd
 notebook03.Rmd
+notebook04.Rmd
 data/food.csv
 data/food_prices.csv
 data/koppen_metadata.csv
