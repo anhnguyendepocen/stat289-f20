@@ -52,7 +52,7 @@ food %>%
 Here we used the function `sm_mean` inside of the function `summarize` to
 produce the output. We specified which variable to compute the mean of by
 giving its name inside of the `sm_mean` function. The results shows us that the
-average amount of sugar in a 100g portion of all of the foods is 3.49g.
+average amount of sugar in a 100g portion of all of the foods is 3.419g.
 
 In order to compute multiple summaries at once, we can pass multiple functions
 together are once. For example, here we compute the mean value of three
