@@ -365,9 +365,10 @@ What two outliers stick out in this plot? **Answer**:
 
 ## Creating new categorical variables
 
-Create a bat plot of the `koppen_code` variable in the `cities` dataset with the
-categories ordered from largest to smallest. The labels are short so there
-should be no need to flip the axes in the plot.
+Create a bar plot showing the counts of the the `koppen_code` variable in the
+`cities` dataset. Order the groups categories ordered from the biggest to the
+smallest. The labels are short so there should be no need to flip the axes in
+the plot.
 
 ```{r question-05}
 

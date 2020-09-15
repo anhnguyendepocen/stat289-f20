@@ -1,0 +1,252 @@
+---
+title: "Notebook 07"
+output: html_document
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+
+food <- read_csv(file.path("data", "food.csv"))
+food_prices <- read_csv(file.path("data", "food_prices.csv"))
+```
+
+I have set the options `include=FALSE` and `message=FALSE` to avoid cluttering
+the solutions with all the output from this code.
+
+# Storytelling with Data
+
+## Overview
+
+Most classes in statistics and data science spend a lot of time discussing and
+practicing the technical skills of working with data such as building complex
+graphics, collecting and cleaning data, and building inferential and predictive
+models. Often little to no time is spent discussing how to present and use the
+output of these analyses. Today's notes are an attempt to partially rectify
+this. We will continue to make the presentation of our data a part of our
+discussion throughout the course.
+
+Todays material comes from a number of sources, which I suggest you check out
+if you are interested in studying these topics further. Specifically:
+
+- *Storytelling with Data* by Cole Nussbaumer Knaflic
+- *The Visual Display of Quantitative Information* by Edward Tufte
+- *Beautiful Evidence* by Edward Tufte
+- *The Functional Art* by Alberto Cairo
+- *Dear Data* by Giorgia Lupi and Stefanie Posavec
+
+I can share digital copies of these with students who are interested.
+
+Exploratory versus Explanatory
+
+1. Choosing effective visuals
+2. Reduce clutter
+3. Focusing attention
+4. Use narrative logic
+
+
+### Choosing effective visual
+
+Numbers
+Tables (regression model?)
+Scatterplot
+Scatterplot with bestfit line or curve
+Line plot(s)
+Slopegraph (line plot with only two time points)
+Bar plot
+Confidence interval plot
+Histogram, Box-plot, ribbon plot
+
+### Reduce clutter
+
+Use minimal themes (`theme_sm` or `theme_minimal`)
+Visual order of categories (`fct_inorder` and/or `fct_lump`)
+Avoid legends if possible `show.legend = FALSE`
+
+### Focusing Attention
+
+Now that we have decluttered our tables and visualizations, it is
+time to think about where we want to focus the attention of our
+audience. This should help focus on the key take-away point that
+are associated with our story. Two ways to focus attention are
+through the use of color and annotations, both of which we will
+focus on here.
+
+When using a visualization to make an argument or tell a story,
+I typically use three colors:
+
+- **black** for titles, axes, labels, and annotations
+- **light grey** to show data used primarily for context and
+for less-important annotations; I recommend something between
+"grey80" and "grey90"
+- one **highlight color** to show a particular part of the data
+of interest to the story; can also use to give particular
+attention to labels or annotations
+
+You have already seen approach in several examples from the last
+few notebooks.
+
+Generally you should consider using the same highlight color across
+all of your visualizations. While one highlight is often sufficient,
+there are cases for using multiple. You can use a lighter shade of
+the highlight color to show a secondary subset related to the first.
+It is also sometimes useful to use 2 or 3 different highlight colors
+if you have two groups of data to differentiate or if there are
+canonical colors that will make the plot quickly understandable
+(i.e., blue and red for Democrats and Republicans).
+
+Annotations are short textual labels or descriptions that are
+put on top of a plot to explain a region of the plot or a specific
+subset of the data. These can be used to give more context to the
+plot by giving descriptive names to extreme corners, for example
+the "healthy-wealthy" and "sick-poor" descriptions from Hans
+Roslin's presentation. They can also guide the audience to the
+purpose of a visualization by making an in-line argument. These
+annotations can be added as layers to plots in R, but it is often
+better and easier to add them afterwards using a different piece
+of software.
+
+Finally, we can also add manual guidelines to the plot to focus
+attention to a point of change in the plot. These often take the
+form of dashed horizontal or vertical lines. These can be created
+by adding explicit geometry layers, such as:
+
+```{r, eval = FALSE}
+# Just examples ; these will not run unless added to a plot
+geom_hline(yintercept = 1, linetype = "dashed")
+geom_vline(xintercept = 1, linetype = "dotted")
+geom_abline(slope = 1, intercept = 0, linetype = "longdash")
+```
+
+These are particularly helpful for showing a particular time
+point when using a date or time variable or for showing a
+line of parity with a slope of 1 and intercept of zero.
+
+### Narrative logic
+
+Three to five minutes. That approximately all the time you will
+generally have to tell a data-driven story. That's about how
+much time (at most) that I spend looking through a job application,
+scanning a paper, and reading most news articles. When giving
+presentations in academia or industry, you may have a slightly
+longer time-slot (10-20 minutes), but most of that will be spent
+setting up and having time for Q&A. Even in the rare cases where
+you have more time (teaching a class, for example!), this is
+often best spent telling a sequence of 3-5 minute stories such
+as this one.
+
+The key to making an effective story with data is to start by
+summarizing the key point of our presentation as one "big idea".
+This should take the form of a single sentence that gives your
+point of view and the desired outcome that you want your
+audience to walk away with. You may never actually present this
+big idea sentence, but it is helpful to write it down somewhere
+to clarify the main thesis of your story.
+
+How should you structure your limited time? There are a number
+of approaches; here I will outline one that I find to be a good
+starting point for most applications. I tend to think of the
+presentation as consisting of a small set of 1 to 3 slides. Each
+slide consists of a table or plot, narrated by a paragraph with
+a topic sentence and several supporting sentences. Depending on
+the application, the main points can be included on the slide in
+an abbreviated, bullet point form.
+
+There
+
+
+If you have slightly more time or space, this should be used to
+build out a longer contextual introduction and/or conclusions.
+In an oral presentation, this may be an outline or conclusions
+slide. For a paper, it could be a longer background section or
+
+
+
+
+### Example
+
+Let's put together all of the elements in this chapter to produce a plot of wheat prices
+that highlights the differences in prices following WWI and following WWII. We will add
+a complete set of titles and captions. I selected the second color by picking the
+complementary color of the maroon used for the first time period.
+
+```{r}
+food_prices %>%
+  ggplot(aes(year, wheat)) +
+    geom_line(color = "grey85") +
+    geom_line(
+      color = "maroon",
+      data = filter(food_prices, between(year, 1919, 1939))
+    ) +
+    geom_line(
+      color = "maroon",
+      data = filter(food_prices, between(year, 1945, 2015))
+    ) +
+    labs(
+      title = "Wheat Price Index, 1850 to 2015",
+      subtitle = "Commodity prices are given as a price index relative to real prices in 1900",
+      caption = "Jacks, D.S. (2019), \"A Typology of Real Commodity Prices in the Long Run.\" Cliometrica 13(2), 202-220.",
+      x = "Year",
+      y = "Price Index of Wheat (1900 = 100)"
+    )
+```
+
+To finish the plot off, and make it look particularly professional, it would be nice to add
+annotations explaining the main points that you want your audience to take-away from the plot.
+It is possible to do this directly in R with **ggplot2** annotations, but I find these somewhat
+awkward and time consuming. A better solution is to open the figure in another program such as
+Microsoft PowerPoint or the macOS Finder. Here is a plot I made by adding text labels and an
+arrow to the plot using the macOS Finder application:
+
+![](images/wheat_price.png)
+
+Notice that the plot both shows all of the data for the viewer, but guides them to the specific
+points of interest that we are interested. The subpoint explaining the peak int he 1970s is shown
+in a smaller font size, and in a dark grey, because it is secondary to the points I wanted to make
+about the overall trends in the two post-war periods.
+
+
+
+
+
+
+# Practice
+
+## Load Datasets
+
+We will work with the largest cities datasets:
+
+```{r, message=FALSE}
+theme_set(theme_minimal())
+
+cities <- read_csv(file.path("data", "largest_cities.csv"))
+```
+
+We will also work with the entire U.S. cities dataset:
+
+```{r, message=FALSE}
+us <- read_csv(file.path("data", "us_city_population.csv"))
+```
+
+Please refer to notebook02 for more information about these datasets and how
+these datasets are organized.
+
+## Labels and themes
+
+```{r question-1}
+
+```
