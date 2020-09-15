@@ -51,25 +51,61 @@ if you are interested in studying these topics further. Specifically:
 
 I can share digital copies of these with students who are interested.
 
-Exploratory versus Explanatory
+Today's notes are a very opinionated set of recommendations for how to start
+thinking about telling stories with data. Feel free to deviate from these
+suggestions in your work as need, though be prepared to explain why you
+choose to do something different. Note that the notes here are strictly about
+doing *explanatory* analysis; this is the mode where we want to convey
+a specific point of information to our audience. This differs from an
+exploratory presentation, where we expect the audience to help discover new
+things in the dataset. Many of the recommendations are different for these
+two modes, if not entirely contradictory.
+
+In the following sections we will break down the task of telling a story
+with data into four elements:
 
 1. Choosing effective visuals
 2. Reduce clutter
 3. Focusing attention
 4. Use narrative logic
 
+Each of these are discussed below.
 
-### Choosing effective visual
+### Choosing effective visuals
 
-Numbers
-Tables (regression model?)
-Scatterplot
-Scatterplot with bestfit line or curve
-Line plot(s)
-Slopegraph (line plot with only two time points)
-Bar plot
-Confidence interval plot
-Histogram, Box-plot, ribbon plot
+We have discussed a number of methods for producing graphics to describe our
+data, but have not spent much time talking about the specific uses of each
+graphic type. Here is a non-exhaustive list of common use-cases for some of
+the methods we have seen so far:
+
+- **scatterplot**'s are good at showing the relationship between two variables
+when at least on variable is continuous; they become hard to read when there
+are more than a few hundred points (or less if the data are heavily clustered);
+also useful for showing spatial data
+- **scatterplot with bestfit line** can be used to suggest a more model based
+relationship between two variables
+- **line plot** is useful for showing the relationship between time (almost
+always on the x-axis) and another continuous output; can show multiple lines
+on the same plot when needed
+- **slopegraph** is a line plot with only two points on the y-axis; this is a
+favorite in business analyses for showing the change of variables from one
+point in time to another
+- **bar plot** shows the relationship between a summary statistic and a
+categorical variable; often used to show counts, but also useful to show
+sums, means, and other concrete numeric variables
+- **confidence interval plot** show the average value of a continuous variable
+in relationship with a discrete variable
+- **histogram**, **box-plot**, **ribbon plot** all show the distribution of a
+continuous variable; these can be confusing for non-technical audiences, but
+are great for some applications
+- **numbers** one or two numbers can often serve as the best way to describe
+the output of a dataset; don't overlook this in cases where other methods only
+complicate the story
+- **tables** also have their uses, particularly when presenting the results of
+a regression analysis to a technical audience; I would generally avoid, however,
+with oral presentations as tables can be too difficult to interpret
+
+The sections below further explain;;;;
 
 ### Reduce clutter
 
@@ -138,7 +174,7 @@ line of parity with a slope of 1 and intercept of zero.
 
 ### Narrative logic
 
-Three to five minutes. That approximately all the time you will
+Three to five minutes. That is approximately all the time you will
 generally have to tell a data-driven story. That's about how
 much time (at most) that I spend looking through a job application,
 scanning a paper, and reading most news articles. When giving
@@ -166,23 +202,33 @@ a topic sentence and several supporting sentences. Depending on
 the application, the main points can be included on the slide in
 an abbreviated, bullet point form.
 
-There
+There are several strategies for how to build out each slide. Here
+are some common patterns that are useful to keep in mind:
 
+- start with a generic plot; highlight particular subset(s) in the second
+and/or third plot, or highlight particular annotations of the data to give
+it context
+- show one highlight of a subset of the data from multiple perspectives
+- start with a small set or range of the data and move out to
+a larger set ; start with a large set and drill down to a smaller
+set or region
+- show 2-3 plots with the same axes but different sections of the data;
+this can be useful for example to show geographic data over several regions
 
-If you have slightly more time or space, this should be used to
-build out a longer contextual introduction and/or conclusions.
-In an oral presentation, this may be an outline or conclusions
-slide. For a paper, it could be a longer background section or
-
-
-
+Again, usually you should limit yourself to just a few plots
+or slides. If you have slightly more time or space, this should
+be used to build out a longer contextual introduction and/or
+conclusions. In an oral presentation, this may be an outline or
+conclusions slide. For a paper, it could be a longer background
+section or set of conclusions.
 
 ### Example
 
-Let's put together all of the elements in this chapter to produce a plot of wheat prices
-that highlights the differences in prices following WWI and following WWII. We will add
-a complete set of titles and captions. I selected the second color by picking the
-complementary color of the maroon used for the first time period.
+Let's put together all of the elements in this chapter to produce a plot of
+wheat prices that highlights the differences in prices following WWI and
+following WWII. We will add a complete set of titles and captions. I selected
+the second color by picking the complementary color of the maroon used for the
+first time period.
 
 ```{r}
 food_prices %>%
@@ -205,24 +251,21 @@ food_prices %>%
     )
 ```
 
-To finish the plot off, and make it look particularly professional, it would be nice to add
-annotations explaining the main points that you want your audience to take-away from the plot.
-It is possible to do this directly in R with **ggplot2** annotations, but I find these somewhat
-awkward and time consuming. A better solution is to open the figure in another program such as
-Microsoft PowerPoint or the macOS Finder. Here is a plot I made by adding text labels and an
-arrow to the plot using the macOS Finder application:
+To finish the plot off, and make it look particularly professional, it would be
+nice to add annotations explaining the main points that you want your audience
+to take-away from the plot. It is possible to do this directly in R with
+**ggplot2** annotations, but I find these somewhat awkward and time consuming.
+A better solution is to open the figure in another program such as Microsoft
+PowerPoint or the macOS Finder. Here is a plot I made by adding text labels and
+an arrow to the plot using the macOS Finder application:
 
 ![](images/wheat_price.png)
 
-Notice that the plot both shows all of the data for the viewer, but guides them to the specific
-points of interest that we are interested. The subpoint explaining the peak int he 1970s is shown
-in a smaller font size, and in a dark grey, because it is secondary to the points I wanted to make
-about the overall trends in the two post-war periods.
-
-
-
-
-
+Notice that the plot both shows all of the data for the viewer, but guides them
+to the specific points of interest that we are interested. The sub point
+explaining the peak in the 1970s is shown in a smaller font size, and in a dark
+grey, because it is secondary to the points I wanted to make about the overall
+trends in the two post-war periods.
 
 # Practice
 
