@@ -396,7 +396,7 @@ summary {
 <div id="project-1" class="section level1">
 <h1>Project 1</h1>
 <p><strong>Due Date</strong>: Noon, 01 October 2020</p>
-<p><strong>Total Points</strong> 50</p>
+<p><strong>Total Points</strong> 60</p>
 <p>This page outlines the instructions for the first project. You should have a file <code>project01.Rmd</code> in your RStudio Cloud workspace where you can work on the project. Also, you should have been invited to a Richmond Box folder; please upload your work in the “project01” directory within this shared folder. Finally, note that there is a presentation component of the project that will be given in class on the 1 October.</p>
 <div id="instructions" class="section level2">
 <h2>Instructions</h2>
@@ -411,15 +411,15 @@ summary {
 <li>number of viewers</li>
 <li>a personal rating of how much you enjoy each episode</li>
 </ul>
-<p><strong>Sports</strong>: Create a dataset with observations equal to one game played by a favorite team. To get the minimum number of data points, this could be one season of the NFL (with pre-season), two seasons of college football, a long play-off run in the NBA or NHL, or a similar length of time for your favorite sport. Record the following variables:</p>
+<p><strong>Sports</strong>: Create a dataset where each row corresponds to one game played by a particular sports team. To get the minimum number of data points, this could be one season of the NFL (with pre-season), two seasons of college football, a long play-off run in the NBA or NHL, or a similar length of time for your favorite sport. Record the following information:</p>
 <ul>
 <li>opposing team</li>
 <li>game number (if doing a season); season (if multiple seasons); series (if doing an NBA/NHL playoff run); or similar metric</li>
 <li>date of the game</li>
 <li>score differential (your team has a positive number if they win; negative otherwise)</li>
-<li>attendance, viewership numbers, or other metric of interest; if not possible, though it should be for most U.S. sports, create your own metric of how exciting the game was</li>
+<li>attendance, viewership numbers, or other metric of interest; if this is not possible (though it should be for most U.S. sports) create your own metric of how exciting the game was</li>
 </ul>
-<p><strong>Recipes</strong>: Create a dataset of recipes. I suggest grabbing them from a website such as AllRecipes.com, but another site could work as well. Record the following variables:</p>
+<p><strong>Recipes</strong>: Create a dataset of recipes. I suggest grabbing them from a website such as AllRecipes.com, but another site could work as well. Record the following information:</p>
 <ul>
 <li>name of the dish</li>
 <li>a categories for the dishes (side/main/dessert, type of food, or whatever else makes sense for your data)</li>
@@ -428,16 +428,17 @@ summary {
 <li>overall rating (number of stars or other metric)</li>
 </ul>
 <p>Feel free to add any additional variables that you think will help you tell a story with the dataset.</p>
-<p>Once you have the dataset constructed, export as a csv file and read it into R. Spend some time producing an interesting visualization, with a particular focus on telling a story about yourself. This could be your favorite TV episode(s), something you remember from a specific sports game, or a particular memory of cooking a food item. Make sure to add useful labels and follow the guidelines in <code>notebook08</code>. Save the graphic and add some manual annotations. Then, write a short description (around 250 words) describing the data and telling a story about the plot in your favorite text editor.</p>
-<p>When you are finished, <strong>export the essay as a pdf</strong>, and upload it along with the annotated graphic (should be one of: pdf, png, jpg) and csv file to box. Be prepared to give a 3 minute presentation about your plot in class on the project’s due date. You do not have to upload your R script.</p>
+<p>Once you have the dataset constructed, export as a csv file and read it into R. Spend some time producing an interesting visualization, with a particular focus on telling a story about yourself. This could be your favorite TV episode(s), something you remember from a specific sports game, or a particular memory of cooking a food item. Make sure to add useful labels and follow the guidelines in <code>notebook08</code>. Save the graphic and add some manual annotations. Then, write a short description (around 250 words) describing the data and telling a story about the plot in your favorite text editor. Finally, construct a data dictionary as an additional table and export this as a csv file as well.</p>
+<p>When you are finished, <strong>export the essay as a pdf</strong>, and upload it along with the annotated graphic (should be one of: pdf, png, jpg), csv file of your data, and the csv file of your data dictionary to box. Be prepared to give a 3 minute presentation about your plot in class on the project’s due date. You do not have to upload your R script.</p>
 </div>
 <div id="rubric" class="section level2">
 <h2>Rubric</h2>
 <p>The project will be graded out of 50 points, according to the following rubric:</p>
 <ul>
 <li><strong>5 points</strong> all files uploaded correctly and in the correct format</li>
-<li><strong>5 points</strong> the constructed dataset follows the specifications above</li>
+<li><strong>10 points</strong> the constructed dataset follows the specifications above</li>
 <li><strong>5 points</strong> the constructed dataset follows the guidelines in Notebook07</li>
+<li><strong>5 points</strong> the data dictionary is a clear and complete</li>
 <li><strong>20 points</strong> the data visualization follows the guidelines in Notebook08 for telling a story with data; specifically, it uses a reasonable plot-type, avoids clutter, focuses attention, includes labels and annotations, and makes good use of color and (when needed) scales</li>
 <li><strong>10 points</strong> the data-driven story is free of most typos, clearly relates to the visualization, and illustrates thoughtful consideration of the data and what it is able to show</li>
 <li><strong>5 points</strong> oral presentation has been practiced, tells an interesting story, and lasts approximately three minutes</li>
