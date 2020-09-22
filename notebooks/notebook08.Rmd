@@ -357,3 +357,20 @@ to the specific points of interest that we are interested. The sub point
 explaining the peak in the 1970s is shown in a smaller font size, and in a dark
 grey, because it is secondary to the points I wanted to make about the overall
 trends in the two post-war periods.
+
+
+## Practice
+
+For today's practice, you are going to use the `foods` datatset to create an
+annotated graphic about your favorite food(s) (or at least, your favorite food
+that is in the dataset). In the code block below, produce a scatter plot of
+any two variables that you find interesting and highlight your favorite 1-3
+food items. Use the `ggsave` function to export a version of the image into
+the output directory.
+
+```{r}
+
+```
+
+Once you have your image, download the file and add one or more manual
+annotations to the image.
