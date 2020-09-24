@@ -42,9 +42,9 @@ A primary key and the corresponding foreign key in another table form a
 in another.
 
 A table join is a way of combining two tables based on relations. The goal is
-to up a foreign key in one table with the primary key in another table, to add
-new variables from one dataset into another dataset. Several examples will make
-this notion more clear.
+to match up a foreign key in one table with the primary key in another table,
+to add new variables from one dataset into another dataset. Several examples
+will make this notion more clear.
 
 ## Joining data by key
 
@@ -72,12 +72,10 @@ datasets by matching up rows that have the same values in the corresponding
 columns.
 
 For example, it could be helpful to include the columns `vegan`, `vegetarian`,
-and `pescatarian` in the foods dataset. In order to do this, we want to put the
-columns in the diet dataset into the food dataset in a way that is similar to
-the `bind_cols` function. However, rather than "lining up" the rows, we can to
+and `pescatarian` in the foods dataset. In order to do this, we need to
 associate a row in the food dataset with the row in the diet dataset that
-contains the same value of the variable `food_group`. The function to achieve
-this is `left_join`; we pipe in the larger dataset that we want to join columns
+contains the same value of the variable `food_group`. We do this using the
+function `left_join`; we pipe in the larger dataset that we want to join columns
 to, provide the name of the table to grab columns from, and indicate what
 column will be used to combine the two datasets.
 
@@ -176,7 +174,7 @@ koppen
 
 ## Joining Climate Data
 
-In the code block below, I am ussing the `left_join` function to combine the
+In the code block below, I am using the `left_join` function to combine the
 `cities` dataset with the `koppen` metadata. Note that the key has a different
 name in each of the two datasets.
 
@@ -197,7 +195,7 @@ It turns out that both the `cities` dataset and the `koppen` dataset both
 contain a variable named "name". In R, a dataset cannot contain two columns
 with the same names. By default, `left_join` adds a suffix to distinguish
 variables that came from the first dataset and those that came from the
-second dataset. I generally find, the default suffix values to not be
+second dataset. I generally find the default suffix values to not be
 ideal because they change both the names in the left table (the one that
 contains the observations of interest) as well as the the new metadata
 columns. Let's see how to change these suffix values.
@@ -217,9 +215,9 @@ Verify that the variable names match what you expected to find in the new
 dataset. The same suffix option can be used to modify the output for other
 table joins.
 
-Below, draw a plot with longitude on the x-axis and longitude on the y-axis.
-Color the points based on the default Köppen codes using an identity color
-scale:
+Below, pipe the joined dataset from the last question into a plot with
+longitude on the x-axis and latitude on the y-axis. Color the points based on
+the default Köppen codes using an identity color scale:
 
 ```{r, question-02}
 
@@ -262,8 +260,8 @@ plot with the new labels.
 ```
 
 Note that these plots may not work locally on your own machine, depending on
-the character set you choose. They should run on the Linux server running
-RStudio Cloud, however.
+the character set you choose. They should, however, run on the Linux server
+running RStudio Cloud.
 
 ## Manual colors with a legend
 
@@ -283,4 +281,4 @@ Below, redo your plot with this color value and scale.
 ```
 
 The plot should like nice, but does requires a wide screen to see all of the
-defaults given the long descriptions in the legend.
+colors given the long descriptions in the legend.
