@@ -14,6 +14,7 @@ library(smodels)
 
 theme_set(theme_minimal())
 options(pillar.min_character_chars = 15)
+Sys.setlocale("LC_TIME", "en_US.UTF-8")
 ```
 
 # Project 1
@@ -123,3 +124,42 @@ and lasts approximately three minutes
 
 You will receive a grade for your work through the shared Box folder. A current
 participation grade will also be included.
+
+## Coding Notes
+
+We will be going more in-depth about ways of working with date and date-time
+data in the coming weeks. Some of you may, however, need to work with date
+objects in the plot for this project. Let's say, for example you have recorded
+the day, month, and year of some events:
+
+```{r, echo=FALSE}
+data_science <- tibble(
+  class_day = c(27, 1, 3, 8, 10, 15),
+  class_month = c(8, 9, 9, 9, 9, 9),
+  class_year = c(2020, 2020, 2020, 2020, 2020, 2020),
+  topic = c("Intro", "Graphics", "Graphics", "Database", "Database", "Database")
+)
+```
+```{r}
+data_science
+```
+
+By loading the **lubridate** package, we can use the mutate function to create
+a new column that stores the full date as it's own variable like this
+
+```{r, message=FALSE}
+library(lubridate)
+
+data_science <- data_science %>%
+  mutate(class_date = make_date(class_year, class_month, class_day))
+data_science
+```
+
+This column can be used within plots, like this:
+
+```{r}
+data_science %>%
+  ggplot(aes(class_date, topic)) +
+    geom_point() +
+    theme_sm()
+```
