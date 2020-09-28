@@ -283,9 +283,9 @@ see fit.
 As one last step, let's add some color to the plot. Below, modify the code
 from the previous chunk to include a mutate verb that sets a variable
 called `color` to "#FF7F7F" if the population decreased between 1950 and
-2010 and to "#ADD8E6" if the population increased. You should be able to
+2010 and to "#7FFF7F" if the population increased. You should be able to
 do this with a single call to `if_else`. Then, color the lines with this
-color using `scale_color_identify`. Also, make the line size `1.5` to make
+color using `scale_color_identity`. Also, make the line size `1.5` to make
 the colors stand out more. Finally, order the cities by their size in 1950.
 
 
@@ -329,7 +329,7 @@ us_cities <- us %>%
 ```
 
 Run the answer to your last question with the new dataset `us_cities` and
-verify that the names are not "proper" R variable names:
+verify that the names are now "proper" R variable names:
 
 ```{r, question-08}
 
@@ -344,6 +344,11 @@ two cities change together over time.
 ```{r, question-09}
 
 ```
+
+Note that the `geom_path` geometry is different than the `geom_line` geometry.
+The latter always connects dots from the smallest x-value to the largest
+x-value, whereas the path geometry connects the dots in the order they appear
+in the data.
 
 ## Closing Thoughts
 

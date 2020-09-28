@@ -1,5 +1,5 @@
 ---
-title: "Notebook 09 -- Solutions"
+title: "Notebook 9 -- Solutions"
 output:
   html_document:
     theme: cosmo
@@ -46,9 +46,9 @@ A primary key and the corresponding foreign key in another table form a
 in another.
 
 A table join is a way of combining two tables based on relations. The goal is
-to up a foreign key in one table with the primary key in another table, to add
-new variables from one dataset into another dataset. Several examples will make
-this notion more clear.
+to match up a foreign key in one table with the primary key in another table,
+to add new variables from one dataset into another dataset. Several examples
+will make this notion more clear.
 
 ## Joining data by key
 
@@ -76,12 +76,10 @@ datasets by matching up rows that have the same values in the corresponding
 columns.
 
 For example, it could be helpful to include the columns `vegan`, `vegetarian`,
-and `pescatarian` in the foods dataset. In order to do this, we want to put the
-columns in the diet dataset into the food dataset in a way that is similar to
-the `bind_cols` function. However, rather than "lining up" the rows, we can to
+and `pescatarian` in the foods dataset. In order to do this, we need to
 associate a row in the food dataset with the row in the diet dataset that
-contains the same value of the variable `food_group`. The function to achieve
-this is `left_join`; we pipe in the larger dataset that we want to join columns
+contains the same value of the variable `food_group`. We do this using the
+function `left_join`; we pipe in the larger dataset that we want to join columns
 to, provide the name of the table to grab columns from, and indicate what
 column will be used to combine the two datasets.
 
@@ -180,7 +178,7 @@ koppen
 
 ## Joining Climate Data
 
-In the code block below, I am ussing the `left_join` function to combine the
+In the code block below, I am using the `left_join` function to combine the
 `cities` dataset with the `koppen` metadata. Note that the key has a different
 name in each of the two datasets.
 
@@ -195,13 +193,13 @@ and the default color added into the dataset.
 
 Something, however, has happened to the first variable in the combined
 dataset. What is the (new) name of the first variable in the combined
-output? **Answer**: `name.x`
+output? **Answer**:
 
 It turns out that both the `cities` dataset and the `koppen` dataset both
 contain a variable named "name". In R, a dataset cannot contain two columns
 with the same names. By default, `left_join` adds a suffix to distinguish
 variables that came from the first dataset and those that came from the
-second dataset. I generally find, the default suffix values to not be
+second dataset. I generally find the default suffix values to not be
 ideal because they change both the names in the left table (the one that
 contains the observations of interest) as well as the the new metadata
 columns. Let's see how to change these suffix values.
@@ -210,7 +208,7 @@ The `left_join` function has an optional argument called `suffix`. You
 can supply two string values to it to describe what suffix values are
 placed on the first and second tables in the join. The default value is
 `c(".x", ".y")`. I typically find something with the first entry empty
-to be more pratical. So, for example: `c("", "_koppen")`. In the code
+to be more practical. So, for example: `c("", "_koppen")`. In the code
 below, repeat the left join with this suffix option:
 
 ```{r, question-01}
@@ -222,15 +220,15 @@ Verify that the variable names match what you expected to find in the new
 dataset. The same suffix option can be used to modify the output for other
 table joins.
 
-Below, draw a plot with longitude on the x-axis and longitude on the y-axis.
-Color the points based on the default Köppen codes using an identity color
-scale:
+Below, pipe the joined dataset from the last question into a plot with
+longitude on the x-axis and latitude on the y-axis. Color the points based on
+the default Köppen codes using an identity color scale:
 
 ```{r, question-02}
 cities %>%
   left_join(koppen, by = c("koppen_code" = "code"), suffix = c("", "_koppen")) %>%
-  ggplot() +
-    geom_point(aes(x = lon, y = lat, color = color)) +
+  ggplot(aes(lon, lat)) +
+    geom_point(aes(color = color)) +
     scale_color_identity()
 ```
 
@@ -254,15 +252,15 @@ continent_names <- tibble(
 continent_names
 ```
 
-In the code below, join the `cities` dataset with the `continent_names` dataset.
+In the code below, join the `cities` dataset with the `continent_ka` dataset.
 Pipe the data into a plot with longitude on the x-axis and latitude on the
 y-axis, coloring the points with the variable `continent_ka`.
 
 ```{r, question-03}
 cities %>%
-  left_join(continent_names, by = c("continent" = "continent")) %>%
-  ggplot() +
-    geom_point(aes(x = lon, y = lat, color = continent_ka))
+  left_join(continent_names, by = "continent") %>%
+  ggplot(aes(lon, lat)) +
+    geom_point(aes(color = continent_ka))
 ```
 
 The plot should now show the legend in Georgian. In the code below, repeat
@@ -272,18 +270,18 @@ plot with the new labels.
 ```{r, question-04}
 continent_names <- tibble(
   continent = c("Asia", "South America", "North America", "Africa", "Europe"),
-  continent_fr = c("l'Asie", "l'Amérique du Sud", "l'Amérique du Nord", "l'Afrique", "l'Europe")
+  continent_fr = c("Asie", "Amérique du Sud", "Amérique du Nord", "Afrique", "Europe")
 )
 
 cities %>%
-  left_join(continent_names, by = c("continent" = "continent")) %>%
-  ggplot() +
-    geom_point(aes(x = lon, y = lat, color = continent_fr))
+  left_join(continent_names, by = "continent") %>%
+  ggplot(aes(lon, lat)) +
+    geom_point(aes(color = continent_fr))
 ```
 
 Note that these plots may not work locally on your own machine, depending on
-the character set you choose. They should run on the Linux server running
-RStudio Cloud, however.
+the character set you choose. They should, however, run on the Linux server
+running RStudio Cloud.
 
 ## Manual colors with a legend
 
@@ -301,10 +299,10 @@ Below, redo your plot with this color value and scale.
 ```{r, question-05}
 cities %>%
   left_join(koppen, by = c("koppen_code" = "code"), suffix = c("", "_koppen")) %>%
-  ggplot() +
-    geom_point(aes(x = lon, y = lat, color = color)) +
+  ggplot(aes(lon, lat)) +
+    geom_point(aes(color = color)) +
     scale_color_manual(values = koppen$color, labels = koppen$name)
 ```
 
 The plot should like nice, but does requires a wide screen to see all of the
-defaults given the long descriptions in the legend.
+colors given the long descriptions in the legend.

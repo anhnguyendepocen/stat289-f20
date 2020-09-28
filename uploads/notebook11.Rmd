@@ -1,0 +1,68 @@
+---
+title: "Notebook 10"
+output: html_document
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+```
+
+## Movies Data
+
+```{r, message=FALSE}
+movies <- read_csv(file.path("data", "movies_50_years.csv"))
+m_genre <- read_csv(file.path("data", "movies_50_years_genre.csv"))
+m_color <- read_csv(file.path("data", "movies_50_years_color.csv"))
+```
+
+### Base-R style summaries.
+
+```{r}
+movies %>%
+  group_by(year) %>%
+  summarize(sm_mean(rating_count)) %>%
+  ggplot(aes(year, rating_count_mean)) +
+    geom_line() +
+    geom_point()
+```
+
+
+### 
+
+```{r}
+m_color %>%
+  filter(color_type == "hue") %>%
+  group_by(year, title) %>%
+  arrange(desc(percentage)) %>%
+  slice(1) %>%
+  group_by(color) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(color, count)) +
+    geom_col(aes(fill = color), color = "black") + 
+    scale_fill_identity()
+```
+
+
+
+
+
+
+
+
+
+
