@@ -30,7 +30,7 @@ m_genre <- read_csv(file.path("data", "movies_50_years_genre.csv"))
 m_color <- read_csv(file.path("data", "movies_50_years_color.csv"))
 ```
 
-### Base-R style summaries.
+### 
 
 ```{r}
 movies %>%
@@ -42,7 +42,7 @@ movies %>%
 ```
 
 
-### 
+###
 
 ```{r}
 m_color %>%
@@ -53,16 +53,6 @@ m_color %>%
   group_by(color) %>%
   summarize(sm_count()) %>%
   ggplot(aes(color, count)) +
-    geom_col(aes(fill = color), color = "black") + 
+    geom_col(aes(fill = color), color = "black") +
     scale_fill_identity()
 ```
-
-
-
-
-
-
-
-
-
-
