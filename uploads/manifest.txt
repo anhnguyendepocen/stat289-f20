@@ -8,6 +8,7 @@ notebook07.Rmd
 notebook08.Rmd
 notebook09.Rmd
 notebook10.Rmd
+notebook11.Rmd
 project01.Rmd
 data/food.csv
 data/food_prices.csv
@@ -16,3 +17,8 @@ data/food_recipes.csv
 data/koppen_metadata.csv
 data/largest_cities.csv
 data/us_city_population.csv
+data/movies_50_years.csv
+data/movies_50_years_genre.csv
+data/movies_50_years_people.csv
+data/movies_50_years_data_dictionary.csv
+data/movies_50_years_color.csv

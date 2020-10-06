@@ -1,6 +1,10 @@
 ---
-title: "Notebook 11"
-output: html_document
+title: "Notebook 11 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
 ---
 
 ## Getting Started
@@ -20,6 +24,7 @@ library(stringi)
 
 theme_set(theme_minimal())
 options(dplyr.summarise.inform = FALSE)
+options(width = 77L)
 ```
 
 ## Movies Data
@@ -87,7 +92,14 @@ from smallest to largest and consider flipping the axes if your screen is too
 narrow to read the vertical-bar version of the plot.
 
 ```{r, question-01}
-
+m_genre %>%
+  group_by(genre) %>%
+  summarize(sm_count()) %>%
+  arrange(desc(count)) %>%
+  mutate(genre = fct_inorder(genre)) %>%
+  ggplot(aes(genre, count)) +
+    geom_col() +
+    coord_flip()
 ```
 
 Now, we are going to do something a bit more complicated. In the chunk below,
@@ -95,7 +107,14 @@ create a visualization that shows which genre tag is used the most in each
 year. The plot is easy; creating the dataset will take some work.
 
 ```{r, question-02}
-
+m_genre %>%
+  group_by(year, genre) %>%
+  summarize(sm_count()) %>%
+  group_by(year) %>%
+  arrange(desc(count)) %>%
+  slice(1) %>%
+  ggplot(aes(year, genre)) +
+    geom_point(aes(size = count))
 ```
 
 Finally, we are going to create a dataset that has one row for each film that
@@ -104,16 +123,25 @@ collapses all of the genres for a film into a single value using the function
 `sm_paste`.
 
 ```{r, question-03}
-
+m_genre %>%
+  group_by(year, title) %>%
+  summarize(sm_paste(genre))
 ```
 
 And then, create a dataset that associates each film to the "least popular"
-genre associated with it. For example *MASH* is listed as a comedy, drama, and
-war film. You should have seen above that the "war" tag is much less common
-than "comedy" or "drama", so it should be associated with "war".
+genre associated with it. For example *MASH* is both a comedy, drama, and war
+film. You should have seen above that the "war" tag is much less common than
+"comedy" or "drama", so it should be associated with "war".
 
 ```{r, question-04}
-
+m_genre %>%
+  group_by(genre) %>%
+  mutate(sm_count()) %>%
+  arrange(desc(count)) %>%
+  group_by(year, title) %>%
+  slice(1) %>%
+  ungroup() %>%   # not needed here, but good practice to ungroup when done
+  select(-count)  # also probably do not need `count` anymore, so remove it
 ```
 
 Assigning the least-popular genre typically gives the most appropriate tag to
@@ -127,7 +155,11 @@ to 100). Use whatever method you find to be the easiest or most reliable, but
 do not resort to manually checking the values for each film.
 
 ```{r, question-05}
-
+m_color %>%
+  group_by(year, title) %>%
+  summarize(sm_sum(percentage)) %>%
+  ungroup() %>%
+  summarize(sm_min(percentage_sum), sm_max(percentage_sum))
 ```
 
 Next, associate each film to the color that is most dominent in each film
@@ -137,7 +169,15 @@ according to the associated color name. Note that you will have to use the
 aesthetic "fill" and scale `scale_fill_identity` to do this.
 
 ```{r, question-06}
-
+m_color %>%
+  group_by(year, title) %>%
+  arrange(desc(percentage)) %>%
+  slice(1) %>%
+  group_by(color) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(color, count)) +
+    geom_col(aes(fill = color), color = "black") +
+    scale_fill_identity()
 ```
 
 Redo the same below, but now include the **two** most dominant colors. Note any
@@ -145,7 +185,15 @@ patterns that you see in relation to the first plot. Note: this should be any
 easy tweak of your last plot.
 
 ```{r, question-07}
-
+m_color %>%
+  group_by(year, title) %>%
+  arrange(desc(percentage)) %>%
+  slice(1:2) %>%
+  group_by(color) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(color, count)) +
+    geom_col(aes(fill = color), color = "black") +
+    scale_fill_identity()
 ```
 
 Finally, filter out just those rows where `color_type` is hue and use
@@ -154,7 +202,11 @@ associated with each color. Pipe this into a plot to show the relationship
 between the red intensity and the orange intensity.
 
 ```{r, question-08}
-
+m_color %>%
+  filter(color_type == "hue") %>%
+  pivot_wider(names_from = "color", values_from = "percentage") %>%
+  ggplot(aes(red, orange)) +
+    geom_point()
 ```
 
 ### Movie People
@@ -165,7 +217,15 @@ plot the pattern over the 50 years of data that we have available to us.
 Do you notice anything strange about the dataset?
 
 ```{r, question-09}
-
+m_people %>%
+  filter(role == "starring") %>%
+  filter(gender == "female") %>%
+  group_by(year, title) %>%
+  summarize(sm_count()) %>%
+  summarize(sm_mean(count)) %>%
+  ggplot(aes(year, count_mean)) +
+    geom_point() +
+    geom_line()
 ```
 
 Filter the data to those names where the gender confidence score is
@@ -173,7 +233,8 @@ less than 0.6. Note any patterns that you see and consider caveats that
 any gender-based analysis on the larger dataset should consider.
 
 ```{r, question-10}
-
+m_people %>%
+  filter(gender_conf < 0.6)
 ```
 
 Now, make a plot showing the number of films starring by the 20 most prolific
@@ -181,12 +242,31 @@ directors with the bars filled according to an actor's gender. Note, consider
 grouping the data by both gender and person before doing the summarization.
 
 ```{r, question-11}
-
+m_people %>%
+  filter(role == "starring") %>%
+  group_by(gender, person) %>%
+  summarize(sm_count()) %>%
+  arrange(desc(count)) %>%
+  ungroup() %>%
+  slice(1:20) %>%
+  ggplot(aes(person, count)) +
+    geom_col(aes(fill = gender)) +
+    coord_flip()
 ```
 
 You will (hopefully) notice something strange in the plot above. Fix this by
 only including actors with a high gender confidence score (above 0.95 perhaps?).
 
 ```{r, question-12}
-
+m_people %>%
+  filter(role == "starring") %>%
+  filter(gender_conf > 0.95) %>%
+  group_by(gender, person) %>%
+  summarize(sm_count()) %>%
+  arrange(desc(count)) %>%
+  ungroup() %>%
+  slice(1:20) %>%
+  ggplot(aes(person, count)) +
+    geom_col(aes(fill = gender)) +
+    coord_flip()
 ```
