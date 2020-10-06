@@ -33,7 +33,7 @@ projects.
 The groups are listed below for your information. They should populate
 automatically in Zoom.
 
-### Section 01 (13h)
+### Section 01 (13h30)
 
 **Group 1**: John C., Anna, Ani, Eliza
 
@@ -48,7 +48,7 @@ automatically in Zoom.
 **Group 6**: Jeremy, Jackson, Brian
 
 
-### Section 02 (14h30)
+### Sectionm 02 (15h00)
 
 **Group 1**: Joseph, Vadim, Ebby, Karim
 
