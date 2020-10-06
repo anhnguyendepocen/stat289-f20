@@ -1,10 +1,6 @@
 ---
-title: "Notebook 12 -- Solutions"
-output:
-  html_document:
-    theme: cosmo
-    highlight: zenburn
-    css: "note-style.css"
+title: "Notebook 11"
+output: html_document
 ---
 
 ## Getting Started
@@ -24,7 +20,6 @@ library(stringi)
 
 theme_set(theme_minimal())
 options(dplyr.summarise.inform = FALSE)
-options(width = 77L)
 ```
 
 ## Movies Data
@@ -84,15 +79,7 @@ patterns that you see in relation to the first plot. Note: this should be any
 easy tweak of your last plot.
 
 ```{r, question-01}
-m_color %>%
-  group_by(year, title) %>%
-  arrange(desc(percentage)) %>%
-  slice(1:2) %>%
-  group_by(color) %>%
-  summarize(sm_count()) %>%
-  ggplot(aes(color, count)) +
-    geom_col(aes(fill = color), color = "black") +
-    scale_fill_identity()
+
 ```
 
 Finally, filter out just those rows where `color_type` is hue and use
@@ -101,11 +88,7 @@ associated with each color. Pipe this into a plot to show the relationship
 between the red intensity and the orange intensity.
 
 ```{r, question-02}
-m_color %>%
-  filter(color_type == "hue") %>%
-  pivot_wider(names_from = "color", values_from = "percentage") %>%
-  ggplot(aes(red, orange)) +
-    geom_point()
+
 ```
 
 ### Movie People
@@ -116,15 +99,7 @@ plot the pattern over the 50 years of data that we have available to us.
 Do you notice anything strange about the dataset?
 
 ```{r, question-03}
-m_people %>%
-  filter(role == "starring") %>%
-  filter(gender == "female") %>%
-  group_by(year, title) %>%
-  summarize(sm_count()) %>%
-  summarize(sm_mean(count)) %>%
-  ggplot(aes(year, count_mean)) +
-    geom_point() +
-    geom_line()
+
 ```
 
 Filter the data to those names where the gender confidence score is
@@ -132,8 +107,7 @@ less than 0.6. Note any patterns that you see and consider caveats that
 any gender-based analysis on the larger dataset should consider.
 
 ```{r, question-04}
-m_people %>%
-  filter(gender_conf < 0.6)
+
 ```
 
 Now, make a plot showing the number of films starring by the 20 most prolific
@@ -141,31 +115,12 @@ directors with the bars filled according to an actor's gender. Note, consider
 grouping the data by both gender and person before doing the summarization.
 
 ```{r, question-05}
-m_people %>%
-  filter(role == "starring") %>%
-  group_by(gender, person) %>%
-  summarize(sm_count()) %>%
-  arrange(desc(count)) %>%
-  ungroup() %>%
-  slice(1:20) %>%
-  ggplot(aes(person, count)) +
-    geom_col(aes(fill = gender)) +
-    coord_flip()
+
 ```
 
 You will (hopefully) notice something strange in the plot above. Fix this by
 only including actors with a high gender confidence score (above 0.95 perhaps?).
 
 ```{r, question-06}
-m_people %>%
-  filter(role == "starring") %>%
-  filter(gender_conf > 0.95) %>%
-  group_by(gender, person) %>%
-  summarize(sm_count()) %>%
-  arrange(desc(count)) %>%
-  ungroup() %>%
-  slice(1:20) %>%
-  ggplot(aes(person, count)) +
-    geom_col(aes(fill = gender)) +
-    coord_flip()
+
 ```

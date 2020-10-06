@@ -1,0 +1,222 @@
+---
+title: "Notebook 12 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+```
+
+## Movies Data
+
+Over the next few classes we will be working with a dataset of movies I have
+constructed consisting of the top 100 gross films for each year from 1970 to
+2019. The data comes from IMDb. Today we will focus on getting familiar with
+the various components of the data. Let's read in the four tables of data,
+as well as a data dictionary, and then go through each of the tables.
+
+```{r, message=FALSE}
+movies <- read_csv(file.path("data", "movies_50_years.csv"))
+m_genre <- read_csv(file.path("data", "movies_50_years_genre.csv"))
+m_people <- read_csv(file.path("data", "movies_50_years_people.csv"))
+m_dict <- read_csv(file.path("data", "movies_50_years_data_dictionary.csv"))
+m_color <- read_csv(file.path("data", "movies_50_years_color.csv"))
+```
+
+### Movies Table
+
+Start by plotting the average number of ratings (`rating_count`) for each
+year of the dataset. What patterns do you notice?
+
+```{r, question-01}
+movies %>%
+  group_by(year) %>%
+  summarize(sm_mean(rating_count)) %>%
+  ggplot(aes(year, rating_count_mean)) +
+    geom_line() +
+    geom_point()
+```
+
+It will be helpful for some analyses to have a variable called `decade` in the
+dataset, because year may be too grainular to use. In the code below, create a
+decade variable using the variable `year` (i.e., 1972 => 1970, 1996 => 1990)
+and the function `floor`, which removes the decimal part of the year. Using
+floor, you can get decade with a few basic mathematical operations. Once you
+are confident your code is correct, add this variable into our copy of the
+`movies` dataset.
+
+```{r, question-02}
+movies <- movies %>%
+  mutate(decade = floor(year / 10) * 10)
+```
+
+Create a confidence interval showing the average rating of each film for each
+year of the dataset and plot these with `geom_pointrange` with year on the
+x-axis. Do you notice a trend? Do you find it hard to find the trend in the
+data?
+
+```{r, message=FALSE, question-03}
+movies %>%
+  group_by(year) %>%
+  summarize(sm_mean_cl_normal(rating)) %>%
+  ggplot(aes(year, rating_mean)) +
+    geom_pointrange(aes(ymin = rating_ci_min, ymax = rating_ci_max))
+```
+
+Repeat the previous task, but group by decade in place of year. You should find
+this easier to read, and find that the confidence intervals are smaller due to
+the larger amount of data for each point.
+
+```{r, message=FALSE, question-04}
+movies %>%
+  group_by(decade) %>%
+  summarize(sm_mean_cl_normal(rating)) %>%
+  ggplot(aes(decade, rating_mean)) +
+    geom_pointrange(aes(ymin = rating_ci_min, ymax = rating_ci_max))
+```
+
+Select the top grossing film from each year. Scroll through the list; how many
+of these films do you know (approximately, no need to formally count)?
+
+```{r, question-05}
+movies %>%
+  group_by(year) %>%
+  slice(1)
+```
+
+Now, take the 25th highest-gross film in each year. How familiar are these? Do
+you know some decade better than others?
+
+```{r, question-06}
+movies %>%
+  group_by(year) %>%
+  slice(25)
+```
+
+And finally, repeat with the 100th highest gross film in each year. Keep in
+mind how common (or not) these films seem to you as we work through the
+remainder of the dataset.
+
+```{r, question-07}
+movies %>%
+  group_by(year) %>%
+  slice(100)
+```
+
+### Movies Table Subsets
+
+Here, we are going to explore a few different ways to subset the movies dataset.
+For some analyses it is possible to use the entire dataset, but for others it
+may help to reduce the size and scope a bit. We will focus on the types of
+subsetting that are a bit less obvious. You do not need to save the subsets of
+data; just plot or print them to the notebook as needed.
+
+To start, select the 10 movies from each year that have the highest number of
+IMDb ratings:
+
+```{r, question-08}
+movies %>%
+  arrange(desc(rating_count)) %>%
+  group_by(year) %>%
+  slice(1:10)
+```
+
+Next, select every movie that made more than 10% (gross) of the maximum gross
+budget for a film in the year associated with the film. Count the number of
+films selected in each year by this metric and show a bar plot of the pattern
+over time.
+
+```{r, question-09}
+movies %>%
+  group_by(year) %>%
+  mutate(sm_max(gross)) %>%
+  filter(gross > 0.1 * gross_max) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(year, count)) +
+    geom_col()
+```
+
+We can also select a specific sheet of movies based on a search string using
+the `stri_detect` function, like this:
+
+```{r, question-10}
+movies %>%
+  filter(stri_detect(title, fixed = "Lord of the Rings:"))
+```
+
+Now, use a similar approach to extract all of the Harry Potter movies in the
+dataset:
+
+```{r, question-11}
+movies %>%
+  filter(stri_detect(title, fixed = "Harry Potter"))
+```
+
+You can do a similar search for terms in the description field. Do this
+below to find instances of the term "alien":
+
+```{r, question-12}
+movies %>%
+  filter(stri_detect(description, fixed = "alien"))
+```
+
+One issue with the code above is that it will not find terms where alien is
+captialized. The function `stri_trans_tolower` takes a string and returns a
+non-captilized version of it. In the code below, create a lowered version of
+the description variable and detect "alien" again; did this add any new films?
+
+```{r, question-13}
+movies %>%
+  mutate(description_lower = stri_trans_tolower(description)) %>%
+  filter(stri_detect(description_lower, regex = "alien"))
+```
+
+Using the code you created above, draw a bar plot showing the number of
+alien films in each year:
+
+```{r, question-14}
+movies %>%
+  mutate(description_lower = stri_trans_tolower(description)) %>%
+  filter(stri_detect(description_lower, regex = "alien")) %>%
+  group_by(year) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(year, count)) +
+    geom_col()
+```
+
+Finally, we can use a similar approach to create a new variable rather than
+filtering the data. Below, create a variable named `term_alien` based on
+whether a film has the term alien in its description. Compute a confidence
+interval plot showing the distribution of the variable `poster_brightness`.
+
+```{r, question-15}
+movies %>%
+  mutate(description_lower = stri_trans_tolower(description)) %>%
+  mutate(term_alien = stri_detect(description_lower, regex = "alien")) %>%
+  group_by(term_alien) %>%
+  summarize(sm_mean_cl_normal(poster_brightness)) %>%
+  ggplot(aes(term_alien, poster_brightness_mean)) +
+    geom_pointrange(aes(ymin = poster_brightness_ci_min, ymax = poster_brightness_ci_max))
+```
+
+Take note of the pattern that you see. We will see how to automate this process of
+detecting terms in free text fields in a future class.
