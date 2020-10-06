@@ -3,7 +3,7 @@ movies,year,Year movie was released.
 movies,title,IMDb title of the film.
 movies,mpa,Motion Piction Association film rating.
 movies,runtime,Runtime in minutes.
-movies,gross,Gross theatrical earnings in absolute USD.
+movies,gross,Gross theatrical earnings in millions of USD.
 movies,rating_count,Number of IMDb ratings as of January 2020.
 movies,rating,Average of IMDb rating (1-10) as of January 2020.
 movies,metacritic,Average metacritic score (1-100)
