@@ -1,0 +1,57 @@
+---
+title: "Class Groups"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+Sys.setlocale("LC_TIME", "en_US.UTF-8")
+```
+
+For the second part of the semester, most of our class time will consist of
+working through several large, complex datasets in small groups. To facilitate
+this, we will use fixed groups based (roughly) on student preferences. I
+expect you to interact and collaborate with your group during class; this will
+be a major component of your participation grade. For the projects themselves,
+you will have the option to work with your group, with a subset of your group,
+or alone according to your preference.
+
+Note: Students taken the course asychronously should continue to work through
+the notebooks as usual on their own. If feasible, of course, you are welcome
+to form an independent group of asychronous students for the purpose of the
+projects.
+
+The groups are listed below for your information. They should populate
+automatically in Zoom.
+
+### Section 01 (13h)
+
+**Group 1**: John C., Anna, Ani, Eliza
+
+**Group 2**: Pedro, Ahsan, Alistair
+
+**Group 3**: John L., Ruiyi, Zhesi
+
+**Group 4**: Jiayi D., Gabbie, Scarlett, Sabrina
+
+**Group 5**: Jenny, Naron, Paige
+
+**Group 6**: Jeremy, Jackson, Brian
+
+
+### Section 02 (14h30)
+
+**Group 1**: Joseph, Vadim, Ebby, Karim
+
+**Group 2**: Yunqi, Jiayi N., Jingyao, Yizhi, Joe
+
+**Group 3**: Allison, Gavin, Kelly, Yueren, Bryant
