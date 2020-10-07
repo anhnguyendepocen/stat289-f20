@@ -137,7 +137,7 @@ film. You should have seen above that the "war" tag is much less common than
 m_genre %>%
   group_by(genre) %>%
   mutate(sm_count()) %>%
-  arrange(desc(count)) %>%
+  arrange(count) %>%
   group_by(year, title) %>%
   slice(1) %>%
   ungroup() %>%   # not needed here, but good practice to ungroup when done
@@ -178,4 +178,34 @@ m_color %>%
   ggplot(aes(color, count)) +
     geom_col(aes(fill = color), color = "black") +
     scale_fill_identity()
+```
+
+
+Redo the same below, but now include the **two** most dominant colors. Note any
+patterns that you see in relation to the first plot. Note: this should be any
+easy tweak of your last plot.
+
+```{r, question-07}
+m_color %>%
+  group_by(year, title) %>%
+  arrange(desc(percentage)) %>%
+  slice(1:2) %>%
+  group_by(color) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(color, count)) +
+    geom_col(aes(fill = color), color = "black") +
+    scale_fill_identity()
+```
+
+Finally, filter out just those rows where `color_type` is hue and use
+a wide pivot to create a dataset with one row per film and a column
+associated with each color. Pipe this into a plot to show the relationship
+between the red intensity and the orange intensity.
+
+```{r, question-08}
+m_color %>%
+  filter(color_type == "hue") %>%
+  pivot_wider(names_from = "color", values_from = "percentage") %>%
+  ggplot(aes(red, orange)) +
+    geom_point()
 ```

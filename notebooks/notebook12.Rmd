@@ -46,68 +46,6 @@ m_color <- read_csv(file.path("data", "movies_50_years_color.csv"))
 See notebook11 and the data dictionary for more information about the available
 variables.
 
-### Movie Color
-
-Start by verifying that the percentage values for each film each add up to 100
-(there may be some slight rounding error, but everything should be very close
-to 100). Use whatever method you find to be the easiest or most reliable, but
-do not resort to manually checking the values for each film.
-
-```{r}
-m_color %>%
-  group_by(year, title) %>%
-  summarize(sm_sum(percentage)) %>%
-  ungroup() %>%
-  summarize(sm_min(percentage_sum), sm_max(percentage_sum))
-```
-
-Next, associate each film to the color that is most dominent in each film
-poster. Plot a count of the most dominant colors using a bar plot. No need for
-any labels, titles, or other finishing touches, but do try to color the bars
-according to the associated color name. Note that you will have to use the
-aesthetic "fill" and scale `scale_fill_identity` to do this.
-
-```{r}
-m_color %>%
-  group_by(year, title) %>%
-  arrange(desc(percentage)) %>%
-  slice(1) %>%
-  group_by(color) %>%
-  summarize(sm_count()) %>%
-  ggplot(aes(color, count)) +
-    geom_col(aes(fill = color), color = "black") +
-    scale_fill_identity()
-```
-
-Redo the same below, but now include the **two** most dominant colors. Note any
-patterns that you see in relation to the first plot. Note: this should be any
-easy tweak of your last plot.
-
-```{r, question-01}
-m_color %>%
-  group_by(year, title) %>%
-  arrange(desc(percentage)) %>%
-  slice(1:2) %>%
-  group_by(color) %>%
-  summarize(sm_count()) %>%
-  ggplot(aes(color, count)) +
-    geom_col(aes(fill = color), color = "black") +
-    scale_fill_identity()
-```
-
-Finally, filter out just those rows where `color_type` is hue and use
-a wide pivot to create a dataset with one row per film and a column
-associated with each color. Pipe this into a plot to show the relationship
-between the red intensity and the orange intensity.
-
-```{r, question-02}
-m_color %>%
-  filter(color_type == "hue") %>%
-  pivot_wider(names_from = "color", values_from = "percentage") %>%
-  ggplot(aes(red, orange)) +
-    geom_point()
-```
-
 ### Movie People
 
 Compute the number of people listed as starring in each film, compute the
@@ -115,7 +53,7 @@ average number of people listed as starring in a film for each year, and
 plot the pattern over the 50 years of data that we have available to us.
 Do you notice anything strange about the dataset?
 
-```{r, question-03}
+```{r, question-01}
 m_people %>%
   filter(role == "starring") %>%
   filter(gender == "female") %>%
@@ -131,7 +69,7 @@ Filter the data to those names where the gender confidence score is
 less than 0.6. Note any patterns that you see and consider caveats that
 any gender-based analysis on the larger dataset should consider.
 
-```{r, question-04}
+```{r, question-02}
 m_people %>%
   filter(gender_conf < 0.6)
 ```
@@ -140,7 +78,7 @@ Now, make a plot showing the number of films starring by the 20 most prolific
 directors with the bars filled according to an actor's gender. Note, consider
 grouping the data by both gender and person before doing the summarization.
 
-```{r, question-05}
+```{r, question-03}
 m_people %>%
   filter(role == "starring") %>%
   group_by(gender, person) %>%
@@ -156,7 +94,7 @@ m_people %>%
 You will (hopefully) notice something strange in the plot above. Fix this by
 only including actors with a high gender confidence score (above 0.95 perhaps?).
 
-```{r, question-06}
+```{r, question-04}
 m_people %>%
   filter(role == "starring") %>%
   filter(gender_conf > 0.95) %>%
@@ -168,4 +106,86 @@ m_people %>%
   ggplot(aes(person, count)) +
     geom_col(aes(fill = gender)) +
     coord_flip()
+```
+
+
+### Movies Table
+
+Start by plotting the average number of ratings (`rating_count`) for each
+year of the dataset. What patterns do you notice?
+
+```{r, question-05}
+movies %>%
+  group_by(year) %>%
+  summarize(sm_mean(rating_count)) %>%
+  ggplot(aes(year, rating_count_mean)) +
+    geom_line() +
+    geom_point()
+```
+
+It will be helpful for some analyses to have a variable called `decade` in the
+dataset, because year may be too grainular to use. In the code below, create a
+decade variable using the variable `year` (i.e., 1972 => 1970, 1996 => 1990)
+and the function `floor`, which removes the decimal part of the year. Using
+floor, you can get decade with a few basic mathematical operations. Once you
+are confident your code is correct, add this variable into our copy of the
+`movies` dataset.
+
+```{r, question-06}
+movies <- movies %>%
+  mutate(decade = floor(year / 10) * 10)
+```
+
+Create a confidence interval (`sm_mean_cl_normal`) showing the average rating
+of each film for each year of the dataset and plot these with `geom_pointrange`
+with year on the x-axis. Do you notice a trend? Do you find it hard to find the
+trend in the data?
+
+```{r, message=FALSE, question-07}
+movies %>%
+  group_by(year) %>%
+  summarize(sm_mean_cl_normal(rating)) %>%
+  ggplot(aes(year, rating_mean)) +
+    geom_pointrange(aes(ymin = rating_ci_min, ymax = rating_ci_max))
+```
+
+Repeat the previous task, but group by decade in place of year. You should find
+this easier to read, and find that the confidence intervals are smaller due to
+the larger amount of data for each point.
+
+```{r, message=FALSE, question-08}
+movies %>%
+  group_by(decade) %>%
+  summarize(sm_mean_cl_normal(rating)) %>%
+  ggplot(aes(decade, rating_mean)) +
+    geom_pointrange(aes(ymin = rating_ci_min, ymax = rating_ci_max))
+```
+
+Select the top grossing film from each year. Scroll through the list; how many
+of these films do you know (approximately, no need to formally count)?
+
+```{r, question-09}
+movies %>%
+  group_by(year) %>%
+  slice(1)
+```
+
+Now, take the 25th highest-gross film in each year (Note: NOT The films 1-25,
+just the 25th, so one film per year). How familiar are these? Do
+you know some decade better than others?
+
+```{r, question-10}
+movies %>%
+  group_by(year) %>%
+  slice(25)
+```
+
+And finally, repeat with the 100th highest gross film in each year. Keep in
+mind how common (or not) these films seem to you as we work through the
+remainder of the dataset.
+
+```{r, question-11}
+movies %>%
+  group_by(year) %>%
+  slice(100)
 ```
