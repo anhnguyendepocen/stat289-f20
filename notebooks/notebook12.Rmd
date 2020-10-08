@@ -57,7 +57,6 @@ anything strange about the dataset?
 ```{r, question-01}
 m_people %>%
   filter(role == "starring") %>%
-  filter(gender == "female") %>%
   group_by(year, title) %>%
   summarize(sm_count()) %>%
   summarize(sm_mean(count)) %>%
