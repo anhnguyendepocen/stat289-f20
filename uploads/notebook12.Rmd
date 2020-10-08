@@ -61,8 +61,8 @@ any gender-based analysis on the larger dataset should consider.
 
 ```
 
-Now, make a plot showing the number of films starring by the 20 most prolific
-directors with the bars filled according to an actor's gender. Note, consider
+Now, make a plot showing the number of films starring the 20 most prolific
+actors with the bars filled according to an actor's gender. Note, consider
 grouping the data by both gender and person before doing the summarization.
 
 ```{r, question-03}
