@@ -99,7 +99,7 @@ are confident your code is correct, add this variable into our copy of the
 ```
 
 Create a confidence interval (`sm_mean_cl_normal`) showing the average rating
-of each film for each year of the dataset and plot these with `geom_pointrange`
+of films for each year of the dataset and plot these with `geom_pointrange`
 with year on the x-axis. Do you notice a trend? Do you find it hard to find the
 trend in the data?
 
