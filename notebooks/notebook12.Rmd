@@ -27,6 +27,7 @@ options(dplyr.summarise.inform = FALSE)
 options(width = 77L)
 ```
 
+
 ## Movies Data
 
 Over the next few classes we will be working with a dataset of movies I have
@@ -48,10 +49,10 @@ variables.
 
 ### Movie People
 
-Compute the number of people listed as starring in each film, compute the
-average number of people listed as starring in a film for each year, and
-plot the pattern over the 50 years of data that we have available to us.
-Do you notice anything strange about the dataset?
+Summarize the average number of people listed as starring in a film for each
+year (first count the number per film and then take the average), and plot the
+pattern over the 50 years of data that we have available to us. Do you notice
+anything strange about the dataset?
 
 ```{r, question-01}
 m_people %>%
@@ -74,8 +75,8 @@ m_people %>%
   filter(gender_conf < 0.6)
 ```
 
-Now, make a plot showing the number of films starring by the 20 most prolific
-directors with the bars filled according to an actor's gender. Note, consider
+Now, make a plot showing the number of films starring the 20 most prolific
+actors with the bars filled according to an actor's gender. Note, consider
 grouping the data by both gender and person before doing the summarization.
 
 ```{r, question-03}
@@ -137,7 +138,7 @@ movies <- movies %>%
 ```
 
 Create a confidence interval (`sm_mean_cl_normal`) showing the average rating
-of each film for each year of the dataset and plot these with `geom_pointrange`
+of films for each year of the dataset and plot these with `geom_pointrange`
 with year on the x-axis. Do you notice a trend? Do you find it hard to find the
 trend in the data?
 
