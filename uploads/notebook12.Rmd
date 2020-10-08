@@ -44,10 +44,10 @@ variables.
 
 ### Movie People
 
-Compute the number of people listed as starring in each film, compute the
-average number of people listed as starring in a film for each year, and
-plot the pattern over the 50 years of data that we have available to us.
-Do you notice anything strange about the dataset?
+Summarize the average number of people listed as starring in a film for each
+year (first count the number per film and then take the average), and plot the
+pattern over the 50 years of data that we have available to us. Do you notice
+anything strange about the dataset?
 
 ```{r, question-01}
 
