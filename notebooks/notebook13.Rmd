@@ -1,0 +1,103 @@
+---
+title: "Notebook 13 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+options(width = 77L)
+```
+
+## Movies Data
+
+Over the next few classes we will be working with a dataset of movies I have
+constructed consisting of the top 100 grossing films for each year from 1970 to
+2019. The data comes from IMDb. Today we will focus on getting familiar with
+the various components of the data. Let's read in the four tables of data,
+as well as a data dictionary, and then go through each of the tables.
+
+```{r, message=FALSE}
+movies <- read_csv(file.path("data", "movies_50_years.csv"))
+m_genre <- read_csv(file.path("data", "movies_50_years_genre.csv"))
+m_people <- read_csv(file.path("data", "movies_50_years_people.csv"))
+m_dict <- read_csv(file.path("data", "movies_50_years_data_dictionary.csv"))
+m_color <- read_csv(file.path("data", "movies_50_years_color.csv"))
+```
+
+See notebook11 and the data dictionary for more information about the available
+variables.
+
+### Movie Joins
+
+
+
+```{r}
+m_people %>%
+  filter(role == "starring") %>%
+  filter(rank == 1) %>%
+  filter(gender_conf > 0.95) %>%
+  left_join(movies, by = c("year", "title")) %>%
+  group_by(gender) %>%
+  summarize(sm_mean_cl_normal(rating)) %>%
+  ggplot(aes(gender, rating_mean)) +
+    geom_pointrange(aes(ymin = rating_ci_min, ymax = rating_ci_max)) +
+    theme_sm()
+```
+
+
+### Textual Table
+
+```{r}
+movies %>% 
+  mutate(tokens = stri_extract_all(description, regex = "[\\w]+")) %>%
+  select(year, title, tokens) %>%
+  unnest(cols = c(tokens))
+```
+
+```{r}
+m_tokens <- movies %>% 
+  mutate(token = stri_extract_all(description, regex = "[\\w]+")) %>%
+  select(year, title, token) %>%
+  unnest(cols = c(token)) %>%
+  mutate(token = stri_trans_tolower(token))
+
+m_tokens
+```
+
+```{r}
+m_tokens %>%
+  group_by(token) %>%
+  mutate(sm_count()) %>%
+  group_by(year, title) %>%
+  arrange(count) %>%
+  slice(1) 
+
+movies %>%
+  filter(title == "Cliffs of the Wailing River") %>%
+  select(year, title, description)
+```
+
+
+
+
+
+
