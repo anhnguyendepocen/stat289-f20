@@ -1,0 +1,35 @@
+---
+title: "Project 02 -- Instructions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+Sys.setlocale("LC_TIME", "en_US.UTF-8")
+```
+
+# Project 1
+
+**Due Date**: Noon, 01 October 2020
+
+**Total Points** 60
+
+This page outlines the instructions for the first project. You should
+have a file `project01.Rmd` in your RStudio Cloud workspace where you can
+work on the project. Also, you should have been invited to a Richmond Box
+folder; please upload your work in the "project01" directory within this
+shared folder. Finally, note that there is a presentation component of the
+project that will be given in class on the 1 October.
+
+## Instructions
+
+For this project
