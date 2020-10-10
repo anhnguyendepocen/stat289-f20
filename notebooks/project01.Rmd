@@ -106,7 +106,7 @@ not have to upload your R script.
 
 ## Rubric
 
-The project will be graded out of 50 points, according to the following rubric:
+The project will be graded out of 60 points, according to the following rubric:
 
 - **5 points** all files uploaded correctly and in the correct format
 - **10 points** the constructed dataset follows the specifications above

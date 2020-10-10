@@ -67,14 +67,14 @@ m_people %>%
 ### Textual Table
 
 ```{r}
-movies %>% 
+movies %>%
   mutate(tokens = stri_extract_all(description, regex = "[\\w]+")) %>%
   select(year, title, tokens) %>%
   unnest(cols = c(tokens))
 ```
 
 ```{r}
-m_tokens <- movies %>% 
+m_tokens <- movies %>%
   mutate(token = stri_extract_all(description, regex = "[\\w]+")) %>%
   select(year, title, token) %>%
   unnest(cols = c(token)) %>%
@@ -89,15 +89,9 @@ m_tokens %>%
   mutate(sm_count()) %>%
   group_by(year, title) %>%
   arrange(count) %>%
-  slice(1) 
+  slice(1)
 
 movies %>%
   filter(title == "Cliffs of the Wailing River") %>%
   select(year, title, description)
 ```
-
-
-
-
-
-

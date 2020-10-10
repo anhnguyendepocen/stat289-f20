@@ -24,24 +24,19 @@ m_dict <- read_csv(file.path("data", "movies_50_years_data_dictionary.csv"))
 m_color <- read_csv(file.path("data", "movies_50_years_color.csv"))
 ```
 
-## Instructions
+## Overview
 
-The goal of this project is to demonstrate your ability to doing something 
+The goal of this project is to demonstrate your ability to doing something
 interesting and non-trivial with the movies dataset. The final output will be
-this RMarkdown file *knit* into HTML. More detailed instructions are given 
+this RMarkdown file *knit* into HTML. More detailed instructions are given
 on the Project 2 page linked to from the course website.
 
-## Project 
+**Project Team**:
 
-```{r, fig.width=4, fig.asp = .62}
-movies %>%
-  ggplot(aes(poster_brightness, poster_saturation)) +
-    geom_point()
-```
+**Thesis Statement**:
 
+## Project
 
-```{r, fig.width=6, fig.asp = .62}
-movies %>%
-  ggplot(aes(poster_brightness, poster_saturation)) +
-    geom_point()
+```{r}
+
 ```

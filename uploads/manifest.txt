@@ -11,6 +11,8 @@ notebook10.Rmd
 notebook11.Rmd
 notebook12.Rmd
 project01.Rmd
+project02.Rmd
+note-style.css
 data/food.csv
 data/food_prices.csv
 data/food_diet_restrictions.csv

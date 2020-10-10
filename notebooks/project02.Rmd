@@ -17,19 +17,100 @@ options(pillar.min_character_chars = 15)
 Sys.setlocale("LC_TIME", "en_US.UTF-8")
 ```
 
-# Project 1
+**Due Date**: Noon, 22 October 2020 (Thursday)
 
-**Due Date**: Noon, 01 October 2020
+**Total Points**: 60
 
-**Total Points** 60
-
-This page outlines the instructions for the first project. You should
-have a file `project01.Rmd` in your RStudio Cloud workspace where you can
-work on the project. Also, you should have been invited to a Richmond Box
-folder; please upload your work in the "project01" directory within this
-shared folder. Finally, note that there is a presentation component of the
-project that will be given in class on the 1 October.
+This page outlines the instructions for the second project. You should
+have a file `project02.Rmd` in your RStudio Cloud workspace where you can
+work on the project. Note that the form of this assignment differs from
+the first.
 
 ## Instructions
 
-For this project
+For this project you will generate a thesis statement and supporting data-driven
+argument using the movies datasets that were introduced in class. Note that a
+thesis statement is not the same an hypothetical thesis statement, also known
+as an *hypothesis*. You will write your analysis in an
+RMarkdown file; the only thing to hand-in is your *knit* html film. There
+should be enough writing (in full, proofread sentences) intermixed with the
+output datasets and plots to understand your argument and the meaning of the
+output without having to understand the code.
+
+We will be working on this project in class in your groups, but each student
+will submit their own copy of the assignment. These can range from carbon-copies
+of everyone in your group to a completely re-done version of the project.
+If feasible, you're welcome to work together with your group or a subset of your
+group outside of class. However, you are not allowed to work directly or share
+code with students outside of your assigned class group. Asynchronous students
+should work on and submit the project on their own.
+
+Your data-drive argument should involve a thesis statement that requires putting
+together two or more data tables in the movies dataset but can be addressed
+without any additional external data. Here are several directions to start
+thinking about where you may want to go with this project:
+
+- How does genre effect the colors in a movie poster?
+- How does the gender of the main actors relate to the genre(s) of the film?
+- What are the relationships between genre and gross sales, ratings, or other
+metrics pertaining to the films?
+- How does the gender of the main actors relate to the success of the film?
+- Investigate a small set of actors or directors and relate to the movie
+metrics.
+- Investigate the relationship between the gender of the 1st and 2nd actors
+listed in the films and relate to the movie genre or other movie metrics.
+- Looking at change over time (or decade) is a promising direction, but you will
+need to incorporate another table to be valid for the assignment. To do this,
+consider filtering to just one or two genres (e.g., make use of the genre
+table).
+
+These are just suggestions to get you started. Feel free to consider other
+relationships that you can investigate with this data. Note that will need to
+start looking at these questions and *then* formulate a thesis statement based
+on what the data shows.
+
+Some advice, but note that these are strict guidelines, that you may find
+helpful:
+
+- It is possible to spend far too much or far too little time exploring the
+data before deciding on a thesis statement for the project. Try to spend the
+first class exploring possibilities, but once you make a decision about your
+topic, avoid the temptation to significantly adjust it unless you truly find
+yourself stuck.
+- Consider making use of the confidence interval ranges in your analysis. They
+are an important tool for many, but not all, tasks.
+- If looking at change over time, consider using decades rather than raw years
+in your analysis.
+- Consider taking a subset of the movies table, such as only including a smaller
+set of films for each year (i.e., top-30, or those that grossed at least 10% of
+the amount from the highest grossing film in a year).
+- You can use the code `{r, fig.width=4, fig.asp = .62}` at the start of a
+code chunk to control the size and aspect ratio of a figure. Changing these
+can significantly improve the readability of a figure.
+
+I will be happy to answer general questions about the project in class, and
+am always happy to help with R code questions (i.e., "We want to make a plot
+that  does X, but are not sure how because of Y".). However, coming up with an
+interesting thing to look at is generally your responsibility. I have already
+provided a number of possibilities above to get everyone started.
+
+## Rubric
+
+The project will be graded out of 60 points, according to the following rubric:
+
+- **20 points** You have a strong, interesting, and focused thesis statement
+(one sentence) that can be supported by the data and puts together information
+from two or more tables.  
+- **20 points** Your data visualizations and interlaced text offer strong
+support for your overall argument without including unrelated tangents.
+- **20 points** The included graphics follow the general guidelines from
+Notebook08 such as removing clutter, including axis labels and a title. However,
+you will not be able to (easily) include annotations and these are not needed
+for this project.
+
+As noted above, please submit your *knit* Rmd file as an HTML document on Box.
+Note that you will not be able to properly preview the file on Box, but should
+be able to view in locally on your machine. Everyone must submit their own
+copy of the project, even if it is exactly the same as others in your group.
+You will receive a grade for your work through the shared Box folder. A current
+participation grade will also be included.
