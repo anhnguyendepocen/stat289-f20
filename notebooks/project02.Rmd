@@ -69,8 +69,7 @@ relationships that you can investigate with this data. Note that will need to
 start looking at these questions and *then* formulate a thesis statement based
 on what the data shows.
 
-Some advice, but note that these are strict guidelines, that you may find
-helpful:
+Some advice that you may find helpful (note: these are requirements):
 
 - It is possible to spend far too much or far too little time exploring the
 data before deciding on a thesis statement for the project. Try to spend the

@@ -1,0 +1,232 @@
+---
+title: "Notebook 14 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+library(lubridate)
+library(sf)
+library(units)
+library(RcppRoll)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+options(width = 77L)
+options(lubridate.week.start = 1)
+Sys.setlocale(locale = "en_US.UTF-8")
+
+sm_centroid <- function(data) {
+  suppressWarnings({ z <- st_coordinates(st_centroid(data)) })
+  return(tibble(lon = z[,1], lat = z[,2]))
+}
+```
+
+## French COVID-19 
+
+### Load the Data
+
+We will be using the same datasets from the previous notebooks:
+
+```{r, message = FALSE}
+dept <- read_sf(file.path("data", "france_departement.geojson"))
+pop <- read_csv(file.path("data", "france_departement_population.csv"))
+covid <- read_csv(file.path("data", "france_departement_covid.csv"))
+```
+
+This time, we will look into the temporal components of the data 
+and see how they can be integrated into the spatial visualisations.
+
+### Plotting Dates
+
+```{r}
+covid %>%
+  filter(departement == 69) %>%
+  ggplot(aes(date, deceased)) +
+    geom_line()
+```
+
+https://rdrr.io/r/base/strptime.html
+
+```{r}
+covid %>%
+  filter(departement == 69) %>%
+  ggplot(aes(date, deceased)) +
+    geom_line() +
+    scale_x_date(date_breaks = "month", date_labels = "%B")
+```
+
+```{r}
+Sys.setlocale(locale = "fr_FR.UTF-8")
+
+covid %>%
+  filter(departement == 69) %>%
+  ggplot(aes(date, deceased)) +
+    geom_line() +
+    scale_x_date(date_breaks = "month", date_labels = "%B")
+```
+
+### Working with date variables
+
+```{r}
+covid %>%
+  mutate(year = year(date), month = month(date), day = day(date)) %>%
+  select(date, year, month, day) %>%
+  unique()
+```
+
+```{r}
+covid %>%
+  mutate(date_next = date + 2) %>%
+  select(date, date_next) %>%
+  unique()
+```
+
+```{r}
+covid %>%
+  mutate(week = isoweek(date)) %>%
+  select(date, week) %>%
+  unique()
+```
+
+```{r}
+covid %>%
+  mutate(wday = wday(date, label = TRUE, abbr = FALSE)) %>%
+  select(date, wday) %>%
+  unique()
+```
+
+```{r}
+covid %>%
+  mutate(wday = wday(date, locale = "fr_FR.UTF-8", label = TRUE, abbr = FALSE)) %>%
+  select(date, wday) %>%
+  unique()
+```
+
+### Window Functions
+
+```{r}
+covid_day <- covid %>%
+  group_by(date) %>%
+  summarize(sm_sum(hospitalised)) %>%
+  mutate(hosp = hospitalised_sum) %>%
+  select(date, hosp)
+covid_day
+```
+
+```{r}
+covid_day %>%
+  mutate(hosp_next = lead(hosp), hosp_next_week = lead(hosp, n = 7))
+```
+
+```{r}
+covid_day %>%
+  mutate(hosp_last = lag(hosp), hosp_last_default = lag(hosp, default = 0))
+```
+
+```{r}
+covid_day %>%
+  mutate(h_sum = roll_meanr(hosp, n = 2))
+```
+
+```{r}
+covid_day %>%
+  mutate(
+    h_sum_7 = roll_meanr(hosp, n = 7),
+    h_sum_30 = roll_meanr(hosp, n = 30)
+  ) %>%
+  ggplot(aes(x = date, y = hosp)) +
+    geom_line() +
+    geom_line(aes(y = h_sum_7), linetype = "dashed") +
+    geom_line(aes(y = h_sum_30), linetype = "dotted")
+```
+
+## Practice
+
+```{r}
+covid %>%
+  filter(departement == 69) %>%
+  arrange(date) %>%
+  mutate(
+    hospitalised_1week = lag(hospitalised, n = 7),
+    h_delta = hospitalised - hospitalised_1week,
+    color = if_else(h_delta > 0, "red", "green"),
+    wday = wday(date)  
+  ) %>%
+  filter(wday == 1) %>%
+  ggplot(aes(date, hospitalised_1week)) +
+    geom_segment(
+      aes(xend = date, yend = hospitalised, color = color),
+      arrow = arrow(length = unit(0.02, "npc"))
+    ) +
+    scale_x_date(date_breaks = "month", date_labels = "%B") +
+    scale_color_identity()
+```
+
+```{r}
+covid %>%
+  filter(departement %in% c(67, 59, 69, 75)) %>%
+  group_by(departement_name) %>%
+  arrange(date) %>%
+  mutate(
+    hospitalised_1week = lag(hospitalised, n = 7),
+    h_delta = hospitalised - hospitalised_1week,
+    color = if_else(h_delta > 0, "red", "green"),
+    wday = wday(date)  
+  ) %>%
+  filter(wday == 1) %>%
+  ggplot(aes(date, hospitalised_1week)) +
+    geom_segment(
+      aes(xend = date, yend = hospitalised, color = color),
+      arrow = arrow(length = unit(0.02, "npc"))
+    ) +
+    scale_x_date(date_breaks = "2 months", date_labels = "%B") +
+    scale_color_identity() +
+    facet_wrap(~departement_name)
+```
+
+```{r}
+covid %>%
+  filter(departement == 69) %>%
+  mutate(new_deaths = deceased - lag(deceased, n = 1)) %>%
+  ggplot(aes(date, new_deaths)) +
+    geom_line()
+```
+
+```{r}
+covid %>%
+  filter(departement == 69) %>%
+  mutate(new_deaths = deceased - lag(deceased, n = 1)) %>%
+  mutate(new_deaths_roll = roll_meanr(new_deaths, n = 7)) %>%
+  ggplot(aes(date, new_deaths_roll)) +
+    geom_line()
+```
+
+```{r}
+covid %>%
+  group_by(departement) %>%
+  mutate(new_deaths = deceased - lag(deceased, n = 1)) %>%
+  group_by(date) %>%
+  summarize(sm_sum(new_deaths)) %>%
+  mutate(wday = wday(date, label = TRUE, abbr = FALSE)) %>%
+  group_by(wday) %>%
+  summarize(sm_mean(new_deaths_sum))
+```
+
+
