@@ -1,0 +1,217 @@
+---
+title: "Project 03"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+library(lubridate)
+library(sf)
+library(units)
+library(RcppRoll)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+options(width = 77L)
+options(lubridate.week.start = 1)
+Sys.setlocale(locale = "en_US.UTF-8")
+
+sm_centroid <- function(data) {
+  suppressWarnings({ z <- st_coordinates(st_centroid(data)) })
+  return(tibble(lon = z[,1], lat = z[,2]))
+}
+```
+
+## US County COVID-19
+
+This project is more like a graded notebook than an independent 
+project. There are several questions that you need to address with
+the data. Once you are finished knit the document and hand in the 
+HTML file with your answers.
+
+Unless otherwise noted, you do not need to include manual labels 
+in the answers.
+
+### Load the Data
+
+There are three datasets that you will use in this project. They
+are similar to the datasets we had with the French data: a spatial
+object (county), a dataset of demographic data, and a dataset of
+daily Coronavirus records at the county level.
+
+```{r, message = FALSE}
+county <- read_sf(file.path("data", "us_counties.geojson"))
+covid <- read_csv(file.path("data", "us_county_covid.csv"))
+demog <- read_csv(file.path("data", "us_county_metadata.csv"))
+```
+
+The COVID-19 dataset is a bit simplier than the one from France. It
+has only new case counts and newly reported deaths. Note that these
+are only the counties with complete data from 01 April 2020.
+
+```{r}
+covid
+```
+
+The demographic data gives several points of information about each county. Unless
+otherwise noted, the data comes from 2019.
+
+```{r}
+demog
+```
+
+Most of the variables should be self-explanatory. Unemployment rate is in percentages (0-100),
+median household income in USD. February and August average temperatures are in Celsius. The
+`physicians_per_pop` give the number of active physicians per 100k residents according to the
+AAMC in 2018. Note that there is information for almost every county in the US, even if there
+are not records in the COVID-19 dataset.
+
+### Showing Spatial Data
+
+Plot the average February temperature in each county, excluding Alaska (AK), Hawaii (HI) and
+Puerto Rico (PR). Use `scale_fill_distiller` with an appropriate color scale and an appropriate
+spatial projection.
+
+```{r}
+county %>%
+  inner_join(demog, by = c("fips", "state")) %>%
+  filter(!(state %in% c("AK", "HI", "PR"))) %>%
+  st_transform(5070) %>%
+  ggplot() +
+    geom_sf(aes(fill = feb_temp_avg), size = 0) +
+    scale_fill_distiller(palette = "Spectral", guide = "legend", n.breaks = 10) +
+    theme_void()
+```
+
+Now, show the unemployment rate for each county in Puerto Rico (it's one of the few
+variables we have access to). Make sure to choose a reasonable projection
+(seach http://epsg.io/ perhaps?) and color scale.
+
+```{r}
+county %>%
+  inner_join(demog, by = c("fips", "state")) %>%
+  filter(state == "PR") %>%
+  st_transform(3991) %>%
+  ggplot() +
+    geom_sf(aes(fill = unemployment_rate), size = 0) +
+    scale_fill_distiller(palette = "Spectral", guide = "legend", n.breaks = 10) +
+    theme_void()
+```
+
+Finally, show the number of new coronavirus deaths on 1 May 2020 for each county, excluding
+Alaska (AK), Hawaii (HI) and Puerto Rico (PR). Use an appropriate color scale and spatial
+projection.
+
+```{r}
+county %>%
+  inner_join(demog, by = c("fips", "state")) %>%
+  inner_join(filter(covid, date %in% ymd(c("2020-05-01")))) %>%
+  filter(!(state %in% c("AK", "HI", "PR"))) %>%
+  st_transform(5070) %>%
+  ggplot() +
+    geom_sf(aes(fill = cases), size = 0) +
+    scale_fill_distiller(palette = "Spectral", guide = "legend", n.breaks = 10) +
+    theme_void() +
+    facet_wrap(~date)
+```
+
+What three regions seem to have the worst numbers as of 1 May? **Answer**:
+
+### Time Series Data
+
+Create a dataset of the 8 counties with the largest population:
+
+```{r}
+top_counties <- arrange(demog, desc(population)) %>%
+  slice(1:8)
+```
+
+Now, show a time series plot with time on the x-axis and number of cases on the y-axis
+for the 8 counties with the largest population. Color the lines based on the county
+and force the x-axis to label each month in the data with the month name.
+
+```{r}
+covid %>%
+  semi_join(top_counties, by = c("fips", "state")) %>%
+  ggplot(aes(date, cases)) +
+    geom_line(aes(color = county)) +
+    scale_x_date(date_breaks = "month", date_labels = "%B")
+```
+
+For each county, compute the number of new cases per 100k residents for each
+day. Then, compute the average rate (new cases per 100k people) of new cases
+as a function of the day of the week. Show the relationship between day of the
+week and the rate mean on a scatterplot.
+
+```{r}
+covid %>%
+  inner_join(demog, by = c("fips", "state")) %>%
+  mutate(rate = cases / population * 100000) %>%
+  mutate(wday = wday(date, label = TRUE, abbr = FALSE)) %>%
+  group_by(wday) %>%
+  summarize(sm_mean(rate)) %>%
+  ggplot(aes(wday, rate_mean)) +
+    geom_point()
+```
+
+### Window Functions
+
+```{r}
+covid_lag <- covid %>%
+  group_by(fips, state) %>%
+  mutate(cases_1_week = lag(cases, n = 7), cases_2_week = lag(cases, n = 2), cases_3_week = lag(cases, n = 14))
+```
+
+
+```{r}
+covid_lag %>%
+  ungroup() %>%
+  summarize(sm_cor(deaths, cases), sm_cor(deaths, cases_1_week), sm_cor(deaths, cases_2_week), sm_cor(deaths, cases_3_week))
+```
+
+
+```{r}
+covid_lag <- covid %>%
+  mutate(cases = roll_meanr(cases, n = 7), deaths = roll_meanr(deaths, n = 7)) %>%
+  group_by(fips, state) %>%
+  mutate(cases_1_week = lag(cases, n = 7), cases_2_week = lag(cases, n = 14), cases_3_week = lag(cases, n = 21))
+```
+
+
+```{r}
+covid_lag %>%
+  ungroup() %>%
+  summarize(sm_cor(deaths, cases), sm_cor(deaths, cases_1_week), sm_cor(deaths, cases_2_week), sm_cor(deaths, cases_3_week))
+```
+
+
+### Demographics
+
+
+
+
+
+
+
+
+
+
+
+
+
