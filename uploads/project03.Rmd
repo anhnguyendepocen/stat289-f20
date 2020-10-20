@@ -1,0 +1,56 @@
+---
+title: "Project 02"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+library(sf)
+library(units)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+options(width = 77L)
+
+sm_centroid <- function(data) {
+  suppressWarnings({ z <- st_coordinates(st_centroid(data)) })
+  return(tibble(lon = z[,1], lat = z[,2]))
+}
+
+meta <- read_csv(file.path("data", "us_county_metadata.csv"))
+covid <- read_csv(file.path("data", "us_county_covid.csv"))
+county <- read_sf(file.path("data", "us_counties.geojson"))
+```
+
+## Overview
+
+The goal of this project is to demonstrate your ability to doing something
+interesting and non-trivial with the movies dataset. The final output will be
+this RMarkdown file *knit* into HTML. More detailed instructions are given
+on the Project 2 page linked to from the course website.
+
+**Project Team**:
+
+**Thesis Statement**:
+
+## Project
+
+```{r}
+county %>%
+  inner_join(meta, by = "fips") %>%
+  filter(!(state %in% c("AK", "HI", "PR"))) %>%
+  #filter(state == "VA") %>%
+  left_join(filter(covid, date == "2020-09-10"), by = "fips") %>%
+  st_transform(5070) %>%
+  ggplot() +
+    geom_sf(aes(fill = deaths / population * 10000), color = "black", size = 0) +
+    scale_fill_distiller(trans = "log2", palette = "Spectral", guide = "legend", n.breaks = 10, na.value = "#00000000") +
+    theme_void()
+```

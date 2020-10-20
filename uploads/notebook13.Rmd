@@ -42,10 +42,10 @@ working with spatial data. In the next notebook we will see techniques for
 working with data containing a date variable.
 
 Here are the three French datasets that we will be working with. They contain
-spatial, population metadata, and coronavirus numbers at the level of French
-*départements*. These are geographic areas that are one of the most important
-political entities in modern France. There are 101 départements; 96 in mainland
-Europe and 5 overseas (called the *DOM*, or  Départements d'outre-mer).
+spatial information, population metadata, and coronavirus numbers at the level
+of French *départements*. These are geographic areas that are an important
+political entities in France. There are 101 départements; 96 in mainland Europe
+and 5 overseas (called the *DOM*, or  Départements d'outre-mer).
 
 ```{r, message = FALSE}
 dept <- read_sf(file.path("data", "france_departement.geojson"))
@@ -54,12 +54,12 @@ covid <- read_csv(file.path("data", "france_departement_covid.csv"))
 ```
 
 The coronavirus data is stored with one row for each combination of day and
-département. We have the total number of people who died in each day from
+département. We have the cumulative number of people who died in each day from
 COVID-19, the total number currently in hospital, the total number currently
 in *reanimation* (this is similar to ICU, but not exactly equivalent, so I
-used the french term here), and the number of newly recovered. Notice that
-deceased and recovered are the *new* counts of people who have died or
-recovered, whereas hospitalised and reanimation are the current total numbers
+used the french term here), and the cumulative number of newly recovered. Notice
+that deceased and recovered are the *total* counts of people who have died or
+recovered, whereas hospitalised and reanimation are the numbers at that moment
 of patients in each group. There are columns indicating the number of new
 hospitalisations and reanimations, but these have many missing data points.
 
@@ -67,8 +67,9 @@ hospitalisations and reanimations, but these have many missing data points.
 covid
 ```
 
-Note that the either the `departement` or `departement_name` can be used as a
-primary key for the data. You only need one to uniquely describe a location.
+Note that, along with date, either the `departement` or `departement_name` can
+be used as a primary key for the data. You only need one to uniquely describe a
+location.
 
 Unlike the United States, France collects and publishes very little demographic
 data about its citizens. One of the few variables we will be able to look at for
@@ -83,11 +84,11 @@ demographic variables to work with.
 
 ### Working with spatial data
 
-We also have loaded spatial data about each département in France in the form
-of a simply frames object. The data was loaded from a "geojson" file, a
+We also have loaded spatial data about each département in France in the form of
+a *simple feature collection*. The data was loaded from a "geojson" file: a
 plain-text, open specification for describing spatial data and associated
-metadata. Printing out the dataset shows that it is not too different
-from an "ordinary" table of data:
+metadata. Printing out the dataset shows that it is not too different from an
+"ordinary" table of data:
 
 ```{r}
 dept
@@ -125,10 +126,16 @@ dept %>%
     geom_sf()
 ```
 
-We can control the way the map looks by adjusting the color (border color),
-fill (interior color), size (width of the border), and alpha (transparency
-of the shapes) just as with any other geometry. Here, we will make the
-borders very small and show the overall population of each département:
+We can control the way the map looks by adjusting the aesthetics, just as with
+any other geometry:
+
+  - color (border color)
+  - fill (interior color)
+  - size (width of the border)
+  - alpha (transparency of the shapes)
+
+Here, we will make the borders very small and show the overall population of
+each département:
 
 ```{r}
 dept %>%
@@ -141,13 +148,13 @@ dept %>%
 
 You may disagree, but I think that's a pretty nice map with not too much
 extra work! While you may be surprised to see this, the largest population
-is in fact in the *Nord* département and not Paris (though the latter has
+is in fact in the Nord département and not Paris (though the latter has
 a much higher population density).
 
 Two other spatial geometries exist: `geom_sf_text` and `geom_sf_label` for
 adding labels to a plot. For example, here we can name some of the areas:
 
-```{r}
+```{r, warning=FALSE}
 dept %>%
   left_join(pop, by = "departement") %>%
   slice(1:96) %>%
@@ -171,11 +178,11 @@ dept %>%
 ```
 
 From there, we could join to the population data and compute the population
-density of each département. We can also use the function `sm_centroid` to
-compute the lon and lat coordinates of the centroid of each region in our
-dataset. This is useful for quickly plotting large spatial datasets without
-needing all the machinery of the spatial geometries (which are great, but can
-be slow at scale).
+density of each area. We can also use the function `sm_centroid` to compute
+the lon and lat coordinates of the centroid of each region in our dataset.
+This is useful for quickly plotting large spatial datasets without needing
+all the machinery of the spatial geometries (which are great, but can be
+slow at scale).
 
 ```{r}
 dept %>%
@@ -184,11 +191,10 @@ dept %>%
 
 We can also use the `st_transform` function to *project* the coordinates in our
 dataset into a coordinate system to best plot our data. Each coordinate system
-uses a numeric code called is EPSG (https://epsg.io/) code; you can look up the
+uses a numeric code called is [EPSG](https://epsg.io/) code; you can look up the
 best one for the region you are interested in. For example, for Metropolitain
 France we might use [EPSG:3943](https://epsg.io/3943). This can be done with the
-following code; note that this create a slightly more accurate map of the
-data (note that the lines of longitude are no-longer parallel):
+following code.
 
 ```{r}
 dept %>%
@@ -197,6 +203,9 @@ dept %>%
   ggplot() +
     geom_sf()
 ```
+
+Note that this create a slightly more accurate map of the data and that the
+y-axis and lines of longitude are no-longer parallel.
 
 Likewise, for Guadeloupe, Martinique and Guyane we might use
 [EPSG:2972](https://epsg.io/2972):
@@ -229,13 +238,13 @@ North or South Pole.
 
 ### Map projections
 
-To get a better sense of how map projections work, slice the `dept` to include
-only rows 96-101. This gives one département in Europe and all of the DOM. Plot
-the data using both `geom_sf` and `geom_sf_text` (for a label, use
+To get a better sense of how map projections work, slice the `dept` data to
+include only rows 96-101. This gives one département in Europe and all of the
+DOM. Plot the data using both `geom_sf` and `geom_sf_text` (for a label, use
 `departement_name`). Do not project the data, so that it uses just longitude
 and latitude. Note that Val-d'Oise is in Europe.
 
-```{r, question-01}
+```{r, question-01, warning = FALSE}
 
 ```
 
@@ -248,7 +257,7 @@ the x- and y-axes.
 
 ```
 
-Finally, use the EPSG:5879 projection with the same data:
+Finally, use the EPSG-5879 projection with the same data:
 
 ```{r, question-03}
 
@@ -262,7 +271,7 @@ near Mayotte and La Réunion.
 Combine the methods in the notes to add a population density variable to the
 dataset (people per square kilometer). Plot the data spatially using
 color to show the population density for the first 96 rows of the dataset.
-Use a viridis color scale appropropriate project.
+Use a viridis color scale and appropropriate projection.
 
 ```{r, question-04}
 
@@ -289,8 +298,7 @@ Other options for palettes include:
   - **Diverging:** BrBG, PiYG, PRGn, PuOr, RdBu, RdGy, RdYlBu, RdYlGn, Spectral
   - **Qualitative:** Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3
   - **Sequential:** Blues, BuGn, BuPu, GnBu, Greens, Greys, Oranges, OrRd, PuBu,
-                    PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr,
-                    YlOrRd
+                    PuBuGn, PuRd, Purples, RdPu, Reds, YlGn, YlGnBu, YlOrBr, YlOrRd
 
 Keep this in mind as we continue to work with spatial data, as the defaults will
 often look terrible and be hard to interpret.
@@ -300,7 +308,7 @@ often look terrible and be hard to interpret.
 It is time to get a little bit more complicated. Let's read in a dataset of
 the largest French cities:
 
-```{r}
+```{r, message=FALSE}
 cities <- read_csv(file.path("data", "france_cities.csv"))
 cities
 ```
@@ -310,7 +318,7 @@ spatial object with the following code:
 
 ```{r}
 cities <- st_as_sf(cities, coords = c("lon", "lat"), remove = FALSE)
-st_crs(cities) <- 4326
+st_crs(cities) <- 4326  # set the default projection; EPSG-4326 => lat/long
 cities
 ```
 
@@ -318,8 +326,8 @@ Unlike the geometries in `dept`, each row here is only a single point rather
 than a polygon. We can do spatial scatterplots without dealing with geometry
 objects, but need to do this convertion to make projections work correctly.
 
-In the code below, take the last plat you made and add a `geom_sf_label` layer
-showing the names and locations of the larger 10 French cities. This helps add
+In the code below, take the last plot you made and add a `geom_sf_label` layer
+showing the names and locations of the largest 10 French cities. This helps add
 context to the plot for anyone not particularly familiar with the locations of
 the major cities (Paris is already easy to see; the others less-so).
 
@@ -327,23 +335,24 @@ the major cities (Paris is already easy to see; the others less-so).
 
 ```
 
-You can adjust the number of cities based on how large the plot is.
+You can adjust the number of cities based on how large the plot is on your screen.
 
 ### Integrating the COVID-19 data
 
 Finally, let's integrate a bit of the COVID-19 data into our spatial analysis.
-Start by creating a dataset called `covid_summary` that has one row for each
-département and a column giving the total number of COVID-19 deaths per 1000
-residents. This will require using the `pop` and `covid` datasets.
+Start by creating a dataset called `covid_april` by filtering the data to
+include only the data from "2020-04-30" and compute the number of COVID-19
+deaths per 100k residents. This will require using the `pop` and `covid`
+datasets.
 
 ```{r, question-07}
 
 ```
 
 For the 96 départements in Metropolitain France, draw a map showing the
-number of peopple who have died from COVID-19 per 1000 residents. Consider
-using the code you had in the previous plot (with a distiller palette and
-the top cities shown).
+number of people who have died from COVID-19 per 1000 residents on 30 April.
+Consider using the code you had in the previous plot (with a distiller
+palette and the top cities shown).
 
 ```{r, question-08}
 

@@ -1,0 +1,75 @@
+---
+title: "Notebook 15 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+library(lubridate)
+library(sf)
+library(units)
+library(RcppRoll)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+options(width = 77L)
+options(lubridate.week.start = 1)
+Sys.setlocale(locale = "en_US.UTF-8")
+
+sm_centroid <- function(data) {
+  suppressWarnings({ z <- st_coordinates(st_centroid(data)) })
+  return(tibble(lon = z[,1], lat = z[,2]))
+}
+```
+
+## US County COVID-19
+
+### Load the Data
+
+```{r, message = FALSE}
+county <- read_sf(file.path("data", "us_counties.geojson"))
+covid <- read_csv(file.path("data", "us_county_covid.csv"))
+demog <- read_csv(file.path("data", "us_county_metadata.csv"))
+```
+
+
+```{r}
+covid
+```
+
+```{r}
+demog
+```
+
+```{r}
+county %>%
+  inner_join(demog, by = "fips") %>%
+  inner_join(filter(covid, date == "2020-06-24")) %>%
+  filter(!(state %in% c("Alaska", "Hawaii"))) %>%
+  st_transform(5070) %>%
+  ggplot() +
+    geom_sf(aes(fill = feb_temp_avg), size = 0) +
+    scale_fill_distiller(palette = "Spectral", guide = "legend", n.breaks = 10) +
+    theme_void()
+```
+
+
+
+
+
