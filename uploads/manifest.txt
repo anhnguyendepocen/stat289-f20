@@ -15,6 +15,7 @@ project01.Rmd
 project02.Rmd
 note-style.css
 data/food.csv
+data/france_cities.csv
 data/food_prices.csv
 data/food_diet_restrictions.csv
 data/food_recipes.csv
