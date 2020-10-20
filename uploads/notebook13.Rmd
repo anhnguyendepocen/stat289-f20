@@ -30,6 +30,16 @@ sm_centroid <- function(data) {
 }
 ```
 
+We also need another package that was not originally installed. Uncomment
+the following line, run it, and then re-comment it.
+
+```{r}
+#install.packages("lwgeom")
+```
+
+It does not need to be directly loaded, but is needed "under the hood" by some
+of the other spatial packages.
+
 ## French COVID-19 Data
 
 ### Overview
