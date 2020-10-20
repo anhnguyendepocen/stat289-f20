@@ -10,6 +10,7 @@ notebook09.Rmd
 notebook10.Rmd
 notebook11.Rmd
 notebook12.Rmd
+notebook13.Rmd
 project01.Rmd
 project02.Rmd
 note-style.css
@@ -25,3 +26,7 @@ data/movies_50_years_genre.csv
 data/movies_50_years_people.csv
 data/movies_50_years_data_dictionary.csv
 data/movies_50_years_color.csv
+data/france_departement_covid.csv
+data/france_departement_population.csv
+data/france_departement.geojson
+
