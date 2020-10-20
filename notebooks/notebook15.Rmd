@@ -59,9 +59,8 @@ demog
 
 ```{r}
 county %>%
-  inner_join(demog, by = "fips") %>%
-  inner_join(filter(covid, date == "2020-06-24")) %>%
-  filter(!(state %in% c("Alaska", "Hawaii"))) %>%
+  inner_join(demog, by = c("fips", "state")) %>%
+  filter(!(state %in% c("AK", "HI", "PR"))) %>%
   st_transform(5070) %>%
   ggplot() +
     geom_sf(aes(fill = feb_temp_avg), size = 0) +
@@ -69,7 +68,22 @@ county %>%
     theme_void()
 ```
 
+```{r}
+county %>%
+  inner_join(demog, by = c("fips", "state")) %>%
+  inner_join(filter(covid, date %in% ymd(c("2020-09-01", "2020-10-01")))) %>%
+  filter(!(state %in% c("AK", "HI", "PR"))) %>%
+  st_transform(5070) %>%
+  ggplot() +
+    geom_sf(aes(fill = cases), size = 0) +
+    scale_fill_distiller(palette = "Spectral", guide = "legend", n.breaks = 10) +
+    theme_void() +
+    facet_wrap(~date)
+```
 
-
+```{r}
+covid %>%
+  group_by(date)
+```
 
 
