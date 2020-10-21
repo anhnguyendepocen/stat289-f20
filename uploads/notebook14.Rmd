@@ -12,6 +12,10 @@ give us a blank slate to start with.
 After starting a new session, run the following code chunk to load the
 libraries and data that we will be working with today.
 
+```{r}
+#install.packages("RcppRoll")
+```
+
 ```{r, include=FALSE, message=FALSE}
 library(tidyverse)
 library(ggrepel)
