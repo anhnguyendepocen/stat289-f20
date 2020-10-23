@@ -40,12 +40,12 @@ sm_centroid <- function(data) {
 
 ## US County COVID-19
 
-This project is more like a graded notebook than an independent 
+This project is more like a graded notebook than an independent
 project. There are several questions that you need to address with
-the data. Once you are finished knit the document and hand in the 
+the data. Once you are finished knit the document and hand in the
 HTML file with your answers.
 
-Unless otherwise noted, you do not need to include manual labels 
+Unless otherwise noted, you do not need to include manual labels
 in the answers.
 
 ### Load the Data
@@ -202,16 +202,3 @@ covid_lag %>%
 
 
 ### Demographics
-
-
-
-
-
-
-
-
-
-
-
-
-
