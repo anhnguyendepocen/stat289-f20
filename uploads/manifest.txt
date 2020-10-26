@@ -14,6 +14,7 @@ notebook13.Rmd
 notebook14.Rmd
 project01.Rmd
 project02.Rmd
+project03.Rmd
 note-style.css
 data/food.csv
 data/france_cities.csv
@@ -31,4 +32,6 @@ data/movies_50_years_color.csv
 data/france_departement_covid.csv
 data/france_departement_population.csv
 data/france_departement.geojson
-
+data/us_counties.geojson
+data/us_county_covid.csv
+data/us_county_metadata.csv

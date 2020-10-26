@@ -1,5 +1,5 @@
 ---
-title: "Project 02"
+title: "Project 03"
 output:
   html_document:
     theme: cosmo
@@ -7,50 +7,147 @@ output:
     css: "note-style.css"
 ---
 
+## Overview
+
+Each of the five prompts below provide a question prompt that you need to
+address with one or more tables and/or plots. You only need to include text
+where explicitly asked for, however please include each graphic or output in
+its own code chunk. However you do need to properly label each plot (just a
+title is okay, but axes should have labels and color palettes should be
+chosen appropriately).
+
+More detailed instructions are given on the Project 3 page linked to from the
+course website.
+
+**Project Team**:
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
 ```{r, include=FALSE, message=FALSE}
 library(tidyverse)
 library(ggrepel)
 library(smodels)
 library(stringi)
+library(lubridate)
 library(sf)
 library(units)
+library(RcppRoll)
 
 theme_set(theme_minimal())
 options(dplyr.summarise.inform = FALSE)
 options(width = 77L)
+options(lubridate.week.start = 1)
+Sys.setlocale(locale = "en_US.UTF-8")
 
 sm_centroid <- function(data) {
   suppressWarnings({ z <- st_coordinates(st_centroid(data)) })
   return(tibble(lon = z[,1], lat = z[,2]))
 }
-
-meta <- read_csv(file.path("data", "us_county_metadata.csv"))
-covid <- read_csv(file.path("data", "us_county_covid.csv"))
-county <- read_sf(file.path("data", "us_counties.geojson"))
 ```
 
-## Overview
+### Load the Data
 
-The goal of this project is to demonstrate your ability to doing something
-interesting and non-trivial with the movies dataset. The final output will be
-this RMarkdown file *knit* into HTML. More detailed instructions are given
-on the Project 2 page linked to from the course website.
+There are three datasets that you will use in this project. They
+are similar to the datasets we had with the French data: a spatial
+object (county), a dataset of demographic data, and a dataset of
+daily Coronavirus records at the county level.
 
-**Project Team**:
+```{r, message = FALSE}
+county <- read_sf(file.path("data", "us_counties.geojson"))
+covid <- read_csv(file.path("data", "us_county_covid.csv"))
+demog <- read_csv(file.path("data", "us_county_metadata.csv"))
+```
 
-**Thesis Statement**:
-
-## Project
+The COVID-19 dataset has fewer columns than the one from France. It
+has only cumulative case counts and reported deaths. Note that these
+are only the counties with complete data from 01 April 2020.
 
 ```{r}
-county %>%
-  inner_join(meta, by = "fips") %>%
-  filter(!(state %in% c("AK", "HI", "PR"))) %>%
-  #filter(state == "VA") %>%
-  left_join(filter(covid, date == "2020-09-10"), by = "fips") %>%
-  st_transform(5070) %>%
-  ggplot() +
-    geom_sf(aes(fill = deaths / population * 10000), color = "black", size = 0) +
-    scale_fill_distiller(trans = "log2", palette = "Spectral", guide = "legend", n.breaks = 10, na.value = "#00000000") +
-    theme_void()
+covid
+```
+
+The demographic data gives several points of information about each county.
+Unless otherwise noted, the data comes from 2019.
+
+```{r}
+demog
+```
+
+Most of the variables should be self-explanatory. Unemployment rate is in
+percentages (0-100), median household income in USD. February and August average
+temperatures are in Celsius. The `physicians_per_pop` give the number of active
+physicians per 100k residents according to the AAMC in 2018 at the state level.
+Note that there is information for almost every county in the US, even if there
+are no records in the COVID-19 dataset.
+
+## Prompts
+
+### 1. Spatial Extent
+
+**Question** Show a spatial visualization (i.e., a map) of the infection rate
+(cases per population) in the U.S. on 1 May 2020, 15 June 2020, and 1 October
+for the "lower 48" states (no Hawaii, Alaska, or Puerto Rico). Also, separately
+show the infection rate for Hawaii on 15 June 2020. Try to describe the patterns
+in a few short sentences. Make sure to use appropriate projections and color
+scales.
+
+```{r}
+
+```
+
+
+### 2. Political Party
+
+**Question** How does the general political affiliation at the county level
+relate to the observed case fatality rate (cases / deaths) and the overall
+infection rate (cases / population)? Answer the question on a month-by-month
+basis (i.e., compute the rates for each month separately, not cumulatively) and
+plot these showing the change over time.
+
+```{r}
+
+```
+
+
+### 3. Largest Counties
+
+**Question** Visualize the number of new cases in the 10 largest counties over
+the time range of the entire dataset for each day using a 7-day moving average.
+
+```{r}
+
+```
+
+
+### 4. Population Density
+
+**Question** Compute the population density of each county. Group the counties
+into 5 groups based on their population density and compute the overall fatality
+rate (cases / deaths), infection rate (cases / population) and mortality rate
+(deaths / cases) for each group on 1 October.
+
+```{r}
+
+```
+
+
+### 5. Cases and Deaths Lag
+
+**Question** At the county level, aggregated over each week, what's the "lag"
+between deaths and cases? That is, if we look at the number of deaths in one
+week in the dataset is it most closely correlated with the number of cases in
+the week in question, one week before, two weeks before, three weeks before,
+or more? As an optional challenge, try to plot the relationship without
+resorting to manually copying the numbers (you might need a pivot function
+here).
+
+```{r}
+
 ```
