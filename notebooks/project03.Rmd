@@ -62,3 +62,41 @@ be able to view in locally on your machine. Everyone must submit their own
 copy of the project, even if it is exactly the same as others in your group.
 You will receive a grade for your work through the shared Box folder. A current
 participation grade will also be included.
+
+## Notes and Hints
+
+In the interest of fairness, I will summarize some of the major notes and hints
+that I gave in class for the five questions.
+
+1. You need to join the spatial county data *into* the rest of the data,
+otherwise the spatial metadata will be lost. I recommend the projection **3083**
+for the lower 48 states. Projection **26961** seems to work well for Hawaii
+(not that the map will extend too far to the West; that is okay).
+2. I recommend grouping the counties into Democrat or Republican buckets, and
+then summarizing the data grouped by date and party. Keep in mind that you need
+to use window functions to determine the new numbers of cases (the data gives
+cumulative counts).
+3. Note that you should use only the top 8 counties (not the top 10). The
+`semi_join` function is your friend here, but you can also manually filter out
+fips codes. Do not use the county names to subset the data, because county names
+are not unique.
+4. There was an error in my description of the three rate variables. They
+should be: overall fatality rate (cases / deaths), infection rate
+(cases / population) and mortality rate (deaths / cases). It is much easier to
+do this question using the `sum` function, rather than `sm_sum`. An easy way to
+create buckets for the densities is with the following:
+
+```{r, eval = FALSE}
+county_density <- county %>%
+  left_join(demog, by = c("fips", "state")) %>%
+  mutate(area = as.numeric(set_units(st_area(geometry), "km^2"))) %>%
+  mutate(density = population / area) %>%
+  mutate(bucket = cut(log2(density + 1), breaks = 5, labels = FALSE)) %>%
+  as_tibble()
+```
+
+5. You need to be careful about the data grouping here. The data should be
+grouped by fips and state when calculating the lags, but completely ungrouped
+when computing the correlations with `sm_cor`.
+
+Note that you do not need to the spatial data
