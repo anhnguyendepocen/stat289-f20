@@ -1,0 +1,110 @@
+---
+title: "Notebook 15"
+output: html_document
+---
+
+## Getting Started
+
+Before running this notebook, select "Session > Restart R and Clear Output" in
+the menu above to start a new R session. This will clear any old data sets and
+give us a blank slate to start with.
+
+After starting a new session, run the following code chunk to load the
+libraries and data that we will be working with today.
+
+```{r, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+library(stringi)
+library(lubridate)
+library(sf)
+library(units)
+library(RcppRoll)
+library(hms)
+
+theme_set(theme_minimal())
+options(dplyr.summarise.inform = FALSE)
+options(width = 77L)
+options(lubridate.week.start = 1)
+Sys.setlocale(locale = "en_US.UTF-8")
+
+sm_centroid <- function(data) {
+  suppressWarnings({ z <- st_coordinates(st_centroid(data)) })
+  return(tibble(lon = z[,1], lat = z[,2]))
+}
+spatial_join <- function(...) {
+  return(st_as_sf(as_tibble(st_join(...))))
+}
+```
+
+## Chicago Data
+
+### Load the Data
+
+Let's load the data that we will be looking at through the remainder of the
+semester:
+
+```{r, message = FALSE}
+comarea <- read_sf(file.path("data", "chicago_community_areas.geojson"))
+ziparea <- read_sf(file.path("data", "zip_codes.geojson"))
+socio <- read_csv(file.path("data", "census_socioeconomic.csv"))
+medical <- read_csv(file.path("data", "chicago_medical_examiner_cases.csv.gz"))
+```
+
+This time, we will look into the temporal components of the data
+and see how they can be integrated into the spatial visualisations.
+
+## Time and Datetime objects
+
+### What is a date time object?
+
+```{r}
+medical
+```
+
+```{r}
+medical %>%
+  select(date_incident_iso) %>%
+  mutate(year = year(date_incident_iso), hour = hour(date_incident_iso), minute = minute(date_incident_iso))
+```
+
+```{r}
+medical %>%
+  select(date_incident_iso) %>%
+  mutate(date_incident_iso_plus1 = date_incident_iso + 1)
+```
+
+```{r}
+medical %>%
+  select(date_incident_iso, date_death_iso) %>%
+  mutate(diff = as.numeric(date_death_iso - date_incident_iso))
+```
+
+
+```{r}
+medical %>%
+  select(date_death_iso) %>%
+  mutate(time_death = as_hms(date_death_iso))
+```
+
+```{r}
+medical %>%
+  select(date_death_iso) %>%
+  mutate(hour_death_iso = floor_date(date_death_iso, "hour")) 
+```
+
+```{r}
+medical %>%
+  mutate(hour_death_iso = floor_date(date_death_iso, "hour")) %>%
+  mutate(hour_death_iso = as_hms(hour_death_iso)) %>%
+  group_by(hour_death_iso, opioid_related) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(hour_death_iso, count)) +
+    geom_point(aes(color = opioid_related)) +
+    geom_line(aes(color = opioid_related)) +
+    scale_y_continuous(limits = c(0, 2000))
+```
+
+## Practice
+

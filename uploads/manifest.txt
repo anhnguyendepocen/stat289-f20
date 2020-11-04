@@ -12,6 +12,7 @@ notebook11.Rmd
 notebook12.Rmd
 notebook13.Rmd
 notebook14.Rmd
+notebook15.Rmd
 project01.Rmd
 project02.Rmd
 project03.Rmd
@@ -35,3 +36,9 @@ data/france_departement.geojson
 data/us_counties.geojson
 data/us_county_covid.csv
 data/us_county_metadata.csv
+data/chicago_community_areas.geojson
+data/chicago_crimes_2001_2011.csv.gz
+data/chicago_crimes_2012_2020.csv.gz
+data/chicago_medical_examiner_cases.csv.gz
+data/zip_codes.geojson
+data/census_socioeconomic.csv
