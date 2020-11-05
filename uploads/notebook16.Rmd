@@ -66,8 +66,28 @@ medical
 ```{r}
 medical %>%
   select(date_incident_iso) %>%
-  mutate(year = year(date_incident_iso), hour = hour(date_incident_iso), minute = minute(date_incident_iso))
+  mutate(
+    year = year(date_incident_iso),
+    hour = hour(date_incident_iso),
+    minute = minute(date_incident_iso)
+  )
 ```
+
+### Creating Datatime Objects
+
+```{r}
+medical %>%
+  arrange(date_incident_iso) %>%
+  filter(date_incident_iso > make_datetime(2020, 3, 1, 5, 6)) 
+```
+
+```{r}
+medical %>%
+  arrange(date_incident_iso) %>%
+  filter(date_incident_iso > ymd_hms("2020-03-01 05:06:00"))
+```
+
+### Time Differences
 
 ```{r}
 medical %>%
@@ -78,9 +98,10 @@ medical %>%
 ```{r}
 medical %>%
   select(date_incident_iso, date_death_iso) %>%
-  mutate(diff = as.numeric(date_death_iso - date_incident_iso))
+  mutate(diff = date_death_iso - date_incident_iso)
 ```
 
+### Time Objects
 
 ```{r}
 medical %>%
@@ -93,6 +114,8 @@ medical %>%
   select(date_death_iso) %>%
   mutate(hour_death_iso = floor_date(date_death_iso, "hour")) 
 ```
+
+### Application
 
 ```{r}
 medical %>%
@@ -107,4 +130,22 @@ medical %>%
 ```
 
 ## Practice
+
+```{r}
+medical %>%
+  mutate(death_hour = floor_date(date_death_iso, "hour")) %>%
+  mutate(diff = death_hour - floor_date(death_hour, "week")) %>%
+  mutate(week_hour = make_datetime(2020, 11, 2) + diff) %>%
+  group_by(week_hour) %>%
+  summarize(sm_count()) %>%
+  ggplot(aes(week_hour, count)) +
+    geom_point() +
+    geom_line() +
+    scale_x_datetime(
+      date_breaks = "24 hours",
+      date_minor_breaks = "24 hours",
+      date_labels = "%a"
+    ) +
+    theme_sm()
+```
 
