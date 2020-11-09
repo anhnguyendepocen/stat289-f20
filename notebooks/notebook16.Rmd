@@ -1,6 +1,10 @@
 ---
-title: "Notebook 16"
-output: html_document
+title: "Notebook 16 -- Solutions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
 ---
 
 ## Getting Started
