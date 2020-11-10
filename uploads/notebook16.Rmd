@@ -180,9 +180,9 @@ medical %>%
 
 ### Time of Day: Opioid Related
 
-Repeate the code, but show the number of incidents (rather than deaths) that
-occur at each hour of the day, by whether the incident was opioid related or
-not.
+Repeat the code in the application above, but show the number of incidents
+(rather than deaths) that occur at each hour of the day, by whether the incident
+was opioid related or not.
 
 ```{r, question-01}
 
