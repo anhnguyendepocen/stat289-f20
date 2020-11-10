@@ -7,28 +7,11 @@ output:
     css: "note-style.css"
 ---
 
-## Overview
+## Solutions
 
-Each of the five prompts below provide a question prompt that you need to
-address with one or more tables and/or plots. You only need to include text
-where explicitly asked for, however please include each graphic or output in
-its own code chunk. However you do need to properly label each plot (just a
-title is okay, but axes should have labels and color palettes should be
-chosen appropriately).
-
-More detailed instructions are given on the Project 3 page linked to from the
-course website.
-
-**Project Team**:
-
-## Getting Started
-
-Before running this notebook, select "Session > Restart R and Clear Output" in
-the menu above to start a new R session. This will clear any old data sets and
-give us a blank slate to start with.
-
-After starting a new session, run the following code chunk to load the
-libraries and data that we will be working with today.
+This document gives solutions to the questions posed in Project 3. I had a bit
+of fun with some of these, and included additional tweaks that make the output
+look a bit nicer. These were not expected in my grading of the projects.
 
 ```{r, include=FALSE, message=FALSE}
 library(tidyverse)
@@ -50,42 +33,11 @@ sm_centroid <- function(data) {
   suppressWarnings({ z <- st_coordinates(st_centroid(data)) })
   return(tibble(lon = z[,1], lat = z[,2]))
 }
-```
 
-### Load the Data
-
-There are three datasets that you will use in this project. They
-are similar to the datasets we had with the French data: a spatial
-object (county), a dataset of demographic data, and a dataset of
-daily Coronavirus records at the county level.
-
-```{r, message = FALSE}
 county <- read_sf(file.path("data", "us_counties.geojson"))
 covid <- read_csv(file.path("data", "us_county_covid.csv"))
 demog <- read_csv(file.path("data", "us_county_metadata.csv"))
 ```
-
-The COVID-19 dataset has fewer columns than the one from France. It
-has only cumulative case counts and reported deaths. Note that these
-are only the counties with complete data from 01 April 2020.
-
-```{r}
-covid
-```
-
-The demographic data gives several points of information about each county.
-Unless otherwise noted, the data comes from 2019.
-
-```{r}
-demog
-```
-
-Most of the variables should be self-explanatory. Unemployment rate is in
-percentages (0-100), median household income in USD. February and August average
-temperatures are in Celsius. The `physicians_per_pop` give the number of active
-physicians per 100k residents according to the AAMC in 2018 at the state level.
-Note that there is information for almost every county in the US, even if there
-are no records in the COVID-19 dataset.
 
 ## Prompts
 
@@ -97,6 +49,13 @@ for the "lower 48" states (no Hawaii, Alaska, or Puerto Rico). Also, separately
 show the infection rate for Hawaii on 15 June 2020. Try to describe the patterns
 in a few short sentences. Make sure to use appropriate projections and color
 scales.
+
+**Solution Notes** I included explicit limits in the color scale in order to
+make the maps comparable to one another. For Hawaii, I manually set the limits
+of the x and y axes to zoom in on the actual data (there must be a better way
+to do this automatically, but I could not figure out how). I also included
+thick outlines for Hawaii; these are often too busy for counties but look nice
+when looking at island chains.
 
 ```{r}
 county %>%
@@ -175,6 +134,17 @@ infection rate (cases / population)? Answer the question on a month-by-month
 basis (i.e., compute the rates for each month separately, not cumulatively) and
 plot these showing the change over time.
 
+**Solution Notes** Several students asked a good question about whether we
+should compute the infection and fatality rates for each county and then take
+an average, or add together the deaths and cases and compute the rates on the
+entire data. The later is the better choice because it correctly weights the
+counties by their overall population. A small technical detail is that I
+filtered the data to only the first day of the month and then used the lead
+function, so that I have the counts for the ongoing month. I did it this way
+because R puts the month label on the first day of the month. Depending on your
+approach, you plot may be off-set by a month in relation to the labels on the
+x-axis.
+
 ```{r}
 party_data <- covid %>%
   filter(day(date) == 1) %>%
@@ -215,10 +185,18 @@ party_data %>%
 **Question** Visualize the number of new cases in the 8 largest counties over
 the time range of the entire dataset for each day using a 7-day moving average.
 
+**Solution Notes** I had to change the original question because the 9th largest
+county is Kings County (Brooklyn). New York only reports city-wide data, so
+this caused missing values to appear in the data. In my solution, I added on a
+layer we never learned called a facet wrap. This create a number of small
+plots, broken out by a new variable. Do not overuse this feature (that is why
+I never showed it in class), but it can produce very nice visualizations in
+the right situations.
+
 ```{r}
 top_counties <- demog %>%
   arrange(desc(population)) %>%
-  slice(1:8)
+  slice(1:8, 10)   # I will add in the 10th largest, to make the plot look nice
 
 covid %>%
   semi_join(top_counties, by = c("fips", "state")) %>%
@@ -227,12 +205,11 @@ covid %>%
   mutate(cases_new_smooth = roll_meanr(cases_new, n = 7)) %>%
   filter(!is.na(cases_new_smooth)) %>%
   ggplot(aes(date, cases_new_smooth)) +
-    geom_line(aes(color = county)) +
-    scale_x_date(date_breaks = "month", date_labels = "%B") +
+    geom_line(aes(color = county), show.legend = FALSE) +
+    scale_x_date(date_breaks = "month", date_labels = "%b") +
     theme_sm() +
     facet_wrap(~county)
 ```
-
 
 ### 4. Population Density
 
@@ -240,6 +217,14 @@ covid %>%
 into 5 groups based on their population density and compute the overall fatality
 rate (cases / deaths), infection rate (cases / population) and mortality rate
 (deaths / cases) for each group on 1 October.
+
+**Solution Notes** The `cut` function here is key to making the solution
+compact. I had originally expected you to come up with manual breaks, but that
+was probably too aggressive, in retrospect. The `cut` function takes the range
+of the data (minimum to maximum) and splits it into equally sized buckets. That
+is, the range of each bucket is equally size, not the amount of data in each.
+The density distribution has a heavy tail, so we need to take a log transform
+to make better choices about the cutoffs.
 
 ```{r}
 county_density <- county %>%
@@ -270,6 +255,15 @@ the week in question, one week before, two weeks before, three weeks before,
 or more? As an optional challenge, try to plot the relationship without
 resorting to manually copying the numbers (you might need a pivot function
 here).
+
+**Solution Notes** We would expect that the number of deaths in a county lead
+the number of cases. That is, the spike in cases usually comes several weeks
+before the spike in deaths. The solution here follows what I was expecting you
+to do for the question. Some students included a default value for the lags;
+I would not suggest this (how do you know there were zero cases outside the
+range of the data? I am fairly sure this is quite false, particularly for the
+counties hardest hit in the early months of the pandemic), but I did not take
+off any points for this.
 
 ```{r}
 covid %>%
@@ -302,6 +296,13 @@ covid %>%
   ggplot(aes(week_lag, value)) +
     geom_line()
 ```
+
+**Bonus** The code below is an modification/extension of question 5 that
+includes three changes: it uses 7-day rolling averages, computes the daily lags
+rather than weekly lags, and uses a weighted correlation as a function of the
+population. To do this without copying a lot of code, I use a for loop to cycle
+over each of the lags. In both plots you can see that deaths lag behind cases
+by about 3-4 weeks.
 
 ```{r}
 covid_new <- covid %>%
