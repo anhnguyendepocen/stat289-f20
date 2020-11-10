@@ -184,26 +184,15 @@ Repeate the code, but show the number of incidents (rather than deaths) that
 occur at each hour of the day, by whether the incident was opioid related or
 not.
 
-```{r}
-medical %>%
-  mutate(date_incident_iso = floor_date(date_incident_iso, "hour")) %>%
-  mutate(date_incident_iso = as_hms(date_incident_iso)) %>%
-  group_by(date_incident_iso, opioid_related) %>%
-  summarize(sm_count()) %>%
-  ggplot(aes(date_incident_iso, count)) +
-    geom_point(aes(color = opioid_related)) +
-    geom_line(aes(color = opioid_related)) +
-    scale_y_continuous(limits = c(0, NA))
+```{r, question-01}
+
 ```
 
 Do you notice anything strange? What percentage of non-opioid related deaths have
 an incident recorded exactly at midnight?
 
-```{r}
-medical %>%
-  mutate(hour = hour(date_incident_iso), minute = minute(date_incident_iso)) %>%
-  filter(!opioid_related) %>%
-  summarize(mean((hour == 0) &  (minute == 0)))
+```{r, question-02}
+
 ```
 
 Does there seem to be a data issue here?
@@ -214,10 +203,8 @@ Compute the time between the recorded death and the recorded incident. Order
 the data with the longest duration at the top. Do you see anything strange?
 Is there a data issue here?
 
-```{r}
-medical %>%
-  mutate(diff_time = as.numeric(date_death_iso - date_incident_iso)) %>%
-  arrange(desc(diff_time))
+```{r, question-03}
+
 ```
 
 I want you to investiage the median duration between the time of death and the
@@ -225,15 +212,8 @@ time of the incident within the top-100 most common `primary_cause` labels.
 Create a table with the median time for each of the top-100 categories and
 arrange the table from the shortest to the longest duration
 
-```{r}
-medical %>%
-  mutate(diff_time = as_hms(as.numeric(date_death_iso - date_incident_iso))) %>%
-  group_by(primary_cause) %>%
-  summarize(sm_count(), sm_median(diff_time)) %>%
-  arrange(desc(count)) %>%
-  slice(1:100) %>%
-  select(primary_cause, diff_time_median) %>%
-  arrange(diff_time_median)
+```{r, question-04}
+
 ```
 
 Note: If you have the difference in time in seconds, try using the function `as_hms`
@@ -248,34 +228,14 @@ not time of death) at each combination of hour of the day and month. Try to make
 plot look nice (no need for fancy labels, but maybe make sure to include real month
 names and properly formatted dates).
 
-```{r}
-medical %>%
-  filter(cold_related) %>%
-  mutate(
-    time = as_hms(floor_date(date_incident_iso, "hour")),
-    month = month(date_incident_iso, label = TRUE, abbr = FALSE)
-  ) %>%
-  group_by(month, time) %>%
-  summarize(sm_count()) %>%
-  ggplot(aes(time, month)) +
-    geom_point(aes(size = count), color = "#add8e6") +
-    scale_size_area()
+```{r, question-05}
+
 ```
 
 Repeat the previous question, but look at heat related deaths.
 
-```{r}
-medical %>%
-  filter(heat_related) %>%
-  mutate(
-    time = as_hms(floor_date(date_incident_iso, "2 hour")),
-    month = month(date_incident_iso, label = TRUE, abbr = FALSE)
-  ) %>%
-  group_by(month, time) %>%
-  summarize(sm_count()) %>%
-  ggplot(aes(time, month)) +
-    geom_point(aes(size = count), color = "#e6bbad") +
-    scale_size_area(breaks = c(1, 2))
+```{r, question-06}
+
 ```
 
 Do the patterns surprise you at all?
@@ -287,21 +247,6 @@ function of the hour of the week (hour 0 is Monday at midnight, hour 24 is Tuesd
 at midnight, etc). It will take a little bit of work to get this correct, particularly
 if you want to axes to be labelled correctly without resorting to hand labels.
 
-```{r}
-medical %>%
-  mutate(death_hour = floor_date(date_death_iso, "hour")) %>%
-  mutate(diff = death_hour - floor_date(death_hour, "week")) %>%
-  mutate(week_hour = make_datetime(2020, 11, 2) + diff) %>%
-  group_by(week_hour) %>%
-  summarize(sm_count()) %>%
-  ggplot(aes(week_hour, count)) +
-    geom_point() +
-    geom_line() +
-    scale_x_datetime(
-      date_breaks = "24 hours",
-      date_minor_breaks = "24 hours",
-      date_labels = "%a"
-    ) +
-    scale_y_continuous(limits = c(0, NA)) +
-    theme_sm()
+```{r, question-07}
+
 ```
