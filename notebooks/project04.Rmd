@@ -1,0 +1,92 @@
+---
+title: "Project 04 -- Instructions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: zenburn
+    css: "note-style.css"
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(smodels)
+
+theme_set(theme_minimal())
+options(pillar.min_character_chars = 15)
+Sys.setlocale("LC_TIME", "en_US.UTF-8")
+```
+
+**Due Date**: In Class, 3 December 2020 (Thursday; Last Day of Class)
+
+**Total Points**: 70
+
+This page outlines the instructions for the second project. You should
+have a file `project04.Rmd` in your RStudio Cloud workspace where you can
+work on the project.
+
+## Instructions
+
+Each group has been assigned a particular community area from Chicago. For this
+assignment you will be preparing a report in the form an RMarkdown file
+describing the pattern of a particular type of crime in this community area
+relative to the rest of the city. The crime type is one of the types under the
+`primary_type` variable in the dataset. You should keep an open mind about what
+type to use; you will probably find some are more interesting than others for
+your area.
+
+Your report should contain four sections:
+
+1. **Description of Community Area** Include several plots showing where your
+community area is within the city and describing the area in relation to the
+other areas using a few of the demographic variables. Is it a rich area? Do
+people commute long distances? Are there a lot of families? Just pick a few
+things; it does not need to be exhaustive. (2-4 plots)
+2. **Crime Rate** Show the rate (per person or per household) of crimes in your
+area relative to the rest of the city as a function of (i) the hour of the
+day, (ii) the month of the year, and (iii) the year. Use all of the data from
+2003 through 2019, inclusive. (3 plots)
+3. **Multivariate Analysis** In notebook17 we split the data into two regions
+and investigated the different arrest rate by hour of the day for these two
+regions. Using just the crimes from your selected primary type, repeat this
+analysis with your assigned region, but compute a different percentage. Pick
+something related to your crime type. This could be a domestic flag, a specific
+description type that is popular for your crime, or a common location.
+(1-2 plots)
+4. **COVID-19** Using data just from your area and your selected crime type,
+show how the rate of crime has changed as a result of the pandemic. Do this
+by showing (i) the number of crimes for each month from January 2019 through
+to the end of the dataset, and (ii) compare the number of crimes each hour of
+the day in the summer of 2019 to the summer of 2020. (2 plots)
+
+You need to include nice labels and colors for the plots. I expect that you
+will have around 10 graphics, broken up as given in the instructions. You will
+need a bit of text describing the patterns you see in each plot. Two or three
+sentences for each plot should be sufficient.
+
+On the last day of class, each group will present their report. I expect this to
+take 5-10 minutes each. Plan on every group member presenting roughly one
+section (to save time, one team member should be in charge of sharing their
+screen through the whole presentation). Your presentation should be an HTML
+file knit from the R code (please do not create a slide deck). You should also
+upload your report to Box as with the other assignments.
+
+**Remote Students** Please just upload your file to Box. No need for a
+presentation.
+
+## Rubric
+
+The project will be graded out of 60 points, according to the following rubric:
+
+- **60 points** You have properly labeled and correctly computed answers to
+each of the four sections outlined in the project description. 15 points each.
+- **10 points** Your presentation is well prepared; group members are organized
+about who is saying what. You do not need to "stop and think" about your
+plots and what they indicate before continuing.
+
+As noted above, please submit your *knit* Rmd file as an HTML document on Box.
+Note that you will not be able to properly preview the file on Box, but should
+be able to view in locally on your machine. Everyone must submit their own
+copy of the project, even if it is exactly the same as others in your group.
+You will receive a grade for your work through the shared Box folder. **This
+will include a final grade for the course.**
