@@ -14,6 +14,7 @@ notebook13.Rmd
 notebook14.Rmd
 notebook15.Rmd
 notebook16.Rmd
+notebook17.Rmd
 project01.Rmd
 project02.Rmd
 project03.Rmd
@@ -43,3 +44,5 @@ data/chicago_crimes_2012_2020.csv.gz
 data/chicago_medical_examiner_cases.csv.gz
 data/zip_codes.geojson
 data/census_socioeconomic.csv
+data/chicago_police_stations.geojson
+data/chicago_schools.geojson

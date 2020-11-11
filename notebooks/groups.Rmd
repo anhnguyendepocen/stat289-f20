@@ -35,23 +35,27 @@ automatically in Zoom.
 
 ### Section 01 (13h30)
 
-**Group 1**: John C., Anna, Ani, Eliza
+**Group 1**: John C., Anna, Ani, Eliza *[Lincoln Park]*
 
-**Group 2**: Pedro, Ahsan, Alistair
+**Group 2**: Pedro, Ahsan, Alistair *[South Lawndale]*
 
-**Group 3**: John L., Ruiyi, Zhesi
+**Group 3**: John L., Ruiyi, Zhesi *[Ashburn]*
 
-**Group 4**: Jiayi D., Gabbie, Scarlett, Sabrina
+**Group 4**: Jiayi D., Gabbie, Scarlett, Sabrina *[Loop]*
 
-**Group 5**: Jenny, Naron, Paige, Yuhan
+**Group 5**: Jenny, Naron, Paige, Yuhan, Yunqi *[South Lawndale]*
 
-**Group 6**: Jeremy, Jackson, Brian
+**Group 6**: Jeremy, Jackson, Brian *[Forest Glen]*
 
 
-### Sectionm 02 (15h00)
+### Section 02 (15h00)
 
-**Group 1**: Joseph, Vadim, Ebby, Karim
+**Group 1**: Joseph, Vadim, Ebby, Karim *[Norwood Park]*
 
-**Group 2**: Yunqi, Jiayi N., Jingyao, Yizhi, Joe
+**Group 2**: Yunqi, Jiayi N., Jingyao, Yizhi, Joe *[Near South Side]*
 
-**Group 3**: Allison, Gavin, Kelly, Yueren, Bryant
+**Group 3**: Allison, Gavin, Kelly, Yueren, Bryant *[Humboldt Park]*
+
+### All Asychronous Students
+
+For the final project, please use the *[Near West Side]* neighborhood.
