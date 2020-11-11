@@ -47,3 +47,4 @@ data/zip_codes.geojson
 data/census_socioeconomic.csv
 data/chicago_police_stations.geojson
 data/chicago_schools.geojson
+data/chicago_crimes_2001_2020_sample.rds

@@ -47,17 +47,20 @@ be helpful in your analysis.
 ### Load the Data
 
 Let's load the data that we will be looking at through the remainder of the
-semester:
+semester. By default it loads a 10% sample of the data; you can load the full
+dataset by uncommenting the other code; this requires increasing the resources
+on RStudio Cloud.
 
 ```{r, message = FALSE}
 comarea <- read_sf(file.path("data", "chicago_community_areas.geojson"))
 ziparea <- read_sf(file.path("data", "zip_codes.geojson"))
 socio <- read_csv(file.path("data", "census_socioeconomic.csv"))
 medical <- read_csv(file.path("data", "chicago_medical_examiner_cases.csv.gz"))
-crimes <- bind_rows(
-  read_csv(file.path("data", "chicago_crimes_2001_2011.csv.gz")),
-  read_csv(file.path("data", "chicago_crimes_2012_2020.csv.gz"))
-)
+crimes <- read_rds(file.path("data", "chicago_crimes_2001_2020_sample.rds"))
+#crimes <- bind_rows(
+#  read_csv(file.path("data", "chicago_crimes_2001_2011.csv.gz")),
+#  read_csv(file.path("data", "chicago_crimes_2012_2020.csv.gz"))
+#)
 schools <- read_sf(file.path("data", "chicago_schools.geojson"))
 police <- read_sf(file.path("data", "chicago_police_stations.geojson"))
 ```
