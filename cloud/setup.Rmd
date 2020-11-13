@@ -18,7 +18,8 @@ install.packages(
     "lubridate", "readxl", "rnaturalearth", "sf", "stringi", "xml2",
     "readr", "ggplot2", "stringi", "forcats", "ggrepel", "tidyr",
     "tidyverse", "Hmisc", "irlba", "devtools", "umap", "glmnet",
-    "remotes", "tidyverse", "knitr", "rmarkdown", "igraph"
+    "remotes", "tidyverse", "knitr", "rmarkdown", "igraph", "lwgeom",
+    "RcppRoll", "glmnet"
   )
 )
 ```
@@ -28,4 +29,5 @@ GitHub.
 
 ```{r}
 remotes::install_github("statsmaths/smodels", upgrade = "never")
+remotes::install_github("statsmaths/ggmaptile", upgrade = "never")
 ```
