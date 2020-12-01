@@ -76,7 +76,7 @@ presentation.
 
 ## Rubric
 
-The project will be graded out of 60 points, according to the following rubric:
+The project will be graded out of 70 points, according to the following rubric:
 
 - **60 points** You have properly labeled and correctly computed answers to
 each of the four sections outlined in the project description. 15 points each.
